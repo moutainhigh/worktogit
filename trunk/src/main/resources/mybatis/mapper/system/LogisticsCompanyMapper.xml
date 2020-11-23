@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.LogisticsCompanyDao">
+    <resultMap id="LogisticsCompanyMap" type="com.lwxf.industry4.webapp.domain.entity.system.LogisticsCompany">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="linkman" property="linkman" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="CHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="cityAreaName" property="cityAreaName"/>
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, name, city_area_id, address, linkman, tel, no, notes, status, creator, created,branch_id
+</sql>
+
+    <select id="selectById" resultMap="LogisticsCompanyMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM logistics_company
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="LogisticsCompanyMap">
+        SELECT
+        <include refid="columns"/>
+        FROM logistics_company
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="name != null">
+                    AND name = #{name}
+                </if>
+                <if test="cityAreaId != null">
+                    AND city_area_id = #{cityAreaId}
+                </if>
+                <if test="address != null">
+                    AND address = #{address}
+                </if>
+                <if test="linkman != null">
+                    AND linkman = #{linkman}
+                </if>
+                <if test="tel != null">
+                    AND tel = #{tel}
+                </if>
+                <if test="no != null">
+                    AND no = #{no}
+                </if>
+                <if test="notes != null">
+                    AND notes = #{notes}
+                </if>
+                <if test="status != null">
+                    AND status = #{status}
+                </if>
+                <if test="creator != null">
+                    AND creator = #{creator}
+                </if>
+                <if test="created != null">
+                    AND created = #{created}
+                </if>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+logistics_company(id, name, city_area_id, address, linkman, tel, no, notes, status, creator, created,branch_id)
+           VALUES(#{id}, #{name}, #{cityAreaId}, #{address}, #{linkman}, #{tel}, #{no}, #{notes}, #{status}, #{creator}, #{created},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE logistics_company
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('name') and name != null">
+                    name = #{name},
+                </if>
+                <if test="_parameter.containsKey('cityAreaId') and cityAreaId != null">
+                    city_area_id = #{cityAreaId},
+                </if>
+                <if test="_parameter.containsKey('address') and address != null">
+                    address = #{address},
+                </if>
+                <if test="_parameter.containsKey('linkman') and linkman != null">
+                    linkman = #{linkman},
+                </if>
+                <if test="_parameter.containsKey('tel') and tel != null">
+                    tel = #{tel},
+                </if>
+                <if test="_parameter.containsKey('no') and no != null">
+                    no = #{no},
+                </if>
+                <if test="_parameter.containsKey('notes')">
+                    notes = #{notes},
+                </if>
+                <if test="_parameter.containsKey('status') and status != null">
+                    status = #{status},
+                </if>
+                <if test="_parameter.containsKey('creator') and creator != null">
+                    creator = #{creator},
+                </if>
+                <if test="_parameter.containsKey('created') and created != null">
+                    created = #{created}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   logistics_company
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findAllNormalByBranchId" resultMap="LogisticsCompanyMap">
+        select
+        <include refid="columns"/>
+        from logistics_company where status = #{status} and branch_id = #{branchId}
+order by created desc
+    </select>
+    <select id="findByNO" resultMap="LogisticsCompanyMap">
+        select
+        <include refid="columns"/>
+        from logistics_company where no=#{no}
+
+    </select>
+
+    <select id="findByLogisticId" resultMap="LogisticsCompanyMap">
+        select
+            lc.id, lc.name, lc.city_area_id, lc.address, lc.linkman, lc.tel, lc.no, lc.notes, lc.status, lc.creator, lc.created,lc.branch_id
+               ,substring(ca.merger_name,4) as cityAreaName,u.name as creatorName
+        from logistics_company lc
+        left join city_area ca on lc.city_area_id=ca.id
+        left join user u on lc.creator=u.id
+        where lc.id=#{logisticId}
+    </select>
+
+
+    <select id="findLCNameAndNum" resultType="com.lwxf.industry4.webapp.domain.dto.system.LcNameAndNum">
+        select lc.name as lcName,count(lc.name) as lcNum
+        from dispatch_bill db
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        where db.id in(
+        select dispatch_bill_id  from dispatch_bill_item
+        where finished_stock_item_id in(
+            select id from finished_stock_item
+            where delivered is not null
+            and #{beginTime} &lt; operated
+            and(operated &lt; #{endTime} or operated like '%${endTime}%')
+            )
+        )
+        GROUP BY lc.name
+
+
+    </select>
+
+</mapper>

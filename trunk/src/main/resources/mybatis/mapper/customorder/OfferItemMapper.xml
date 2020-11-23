@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.OfferItemDao">
+    <resultMap id="OfferItemMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.OfferItem">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="num" property="num" jdbcType="INTEGER" />
+        <result column="subtotal" property="subtotal" jdbcType="DECIMAL" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="offer_id" property="offerId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, spec, unit_price, unit, num, subtotal, remarks, offer_id
+</sql>
+
+    <select id="selectById" resultMap="OfferItemMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   offer_item
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="OfferItemMap">
+SELECT <include refid="columns" />
+FROM   offer_item
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="spec != null">
+    AND spec = #{spec}
+</if>
+<if test="unitPrice != null">
+    AND unit_price = #{unitPrice}
+</if>
+<if test="unit != null">
+    AND unit = #{unit}
+</if>
+<if test="num != null">
+    AND num = #{num}
+</if>
+<if test="subtotal != null">
+    AND subtotal = #{subtotal}
+</if>
+<if test="remarks != null">
+    AND remarks = #{remarks}
+</if>
+<if test="offerId != null">
+    AND offer_id = #{offerId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+offer_item(id, name, spec, unit_price, unit, num, subtotal, remarks, offer_id)
+    VALUES(#{id}, #{name}, #{spec}, #{unitPrice}, #{unit}, #{num}, #{subtotal}, #{remarks}, #{offerId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE offer_item
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('spec')">
+    spec = #{spec},
+</if>
+    <if test="_parameter.containsKey('unitPrice')">
+    unit_price = #{unitPrice},
+</if>
+    <if test="_parameter.containsKey('unit')">
+    unit = #{unit},
+</if>
+    <if test="_parameter.containsKey('num')">
+    num = #{num},
+</if>
+    <if test="_parameter.containsKey('subtotal')">
+    subtotal = #{subtotal},
+</if>
+    <if test="_parameter.containsKey('remarks')">
+    remarks = #{remarks}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   offer_item
+WHERE  id = #{id}
+</delete>
+
+    <delete id="deleteByOfferId">
+        delete from offer_item where offer_id = #{id}
+    </delete>
+
+    <select id="findByOfferId" resultMap="OfferItemMap">
+        select <include refid="columns"/> from offer_item where offer_id = #{id}
+    </select>
+
+</mapper>

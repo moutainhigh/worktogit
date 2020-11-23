@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeExperienceDao">
+    <resultMap id="EmployeeExperienceMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeExperience">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="VARCHAR" />
+        <result column="achievement" property="achievement" jdbcType="VARCHAR" />
+        <result column="duty" property="duty" jdbcType="VARCHAR" />
+        <result column="prove" property="prove" jdbcType="VARCHAR" />
+        <result column="prove_tel" property="proveTel" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="EmployeeExperienceDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeExperienceDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="VARCHAR" />
+        <result column="achievement" property="achievement" jdbcType="VARCHAR" />
+        <result column="duty" property="duty" jdbcType="VARCHAR" />
+        <result column="prove" property="prove" jdbcType="VARCHAR" />
+        <result column="prove_tel" property="proveTel" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, company_name, position, start_time, end_time, company_employee_id, achievement, duty, prove, prove_tel
+</sql>
+
+    <select id="selectById" resultMap="EmployeeExperienceMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_experience
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeExperienceMap">
+SELECT <include refid="columns" />
+FROM   employee_experience
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="companyName != null">
+    AND company_name = #{companyName}
+</if>
+<if test="position != null">
+    AND position = #{position}
+</if>
+<if test="startTime != null">
+    AND start_time = #{startTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="companyEmployeeId != null">
+    AND company_employee_id = #{companyEmployeeId}
+</if>
+<if test="achievement != null">
+    AND achievement = #{achievement}
+</if>
+<if test="duty != null">
+    AND duty = #{duty}
+</if>
+<if test="prove != null">
+    AND prove = #{prove}
+</if>
+<if test="proveTel != null">
+    AND prove_tel = #{proveTel}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_experience(id, company_name, position, start_time, end_time, company_employee_id, achievement, duty, prove, prove_tel)
+             VALUES(#{id}, #{companyName}, #{position}, #{startTime}, #{endTime}, #{companyEmployeeId}, #{achievement}, #{duty}, #{prove}, #{proveTel})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_experience
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('companyName')">
+    company_name = #{companyName},
+</if>
+    <if test="_parameter.containsKey('position')">
+    position = #{position},
+</if>
+    <if test="_parameter.containsKey('startTime')">
+    start_time = #{startTime},
+</if>
+    <if test="_parameter.containsKey('endTime')">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('companyEmployeeId')">
+    company_employee_id = #{companyEmployeeId},
+</if>
+    <if test="_parameter.containsKey('achievement')">
+    achievement = #{achievement},
+</if>
+    <if test="_parameter.containsKey('duty')">
+    duty = #{duty},
+</if>
+    <if test="_parameter.containsKey('prove')">
+    prove = #{prove},
+</if>
+    <if test="_parameter.containsKey('proveTel')">
+    prove_tel = #{proveTel}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_experience
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByEid" resultMap="EmployeeExperienceDtoMap">
+        select <include refid="columns"/> from employee_experience where company_employee_id = #{eid}
+    </select>
+
+</mapper>

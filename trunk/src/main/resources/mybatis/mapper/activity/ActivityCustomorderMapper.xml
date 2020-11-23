@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.activity.ActivityCustomorderDao">
+    <resultMap id="ActivityCustomorderMap" type="com.lwxf.industry4.webapp.domain.entity.activity.ActivityCustomorder">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="activity_id" property="activityId" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="activity_params_id" property="activityParamsId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+id, activity_id, order_id, activity_params_id, created
+</sql>
+
+    <select id="selectById" resultMap="ActivityCustomorderMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   activity_customorder
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ActivityCustomorderMap">
+SELECT <include refid="columns" />
+FROM   activity_customorder
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="activityId != null">
+    AND activity_id = #{activityId}
+</if>
+<if test="orderId != null">
+    AND order_id = #{orderId}
+</if>
+<if test="activityParamsId != null">
+    AND activity_params_id = #{activityParamsId}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+activity_customorder(id, activity_id, order_id, activity_params_id, created)
+              VALUES(#{id}, #{activityId}, #{orderId}, #{activityParamsId}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE activity_customorder
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('activityId') and activityId != null">
+    activity_id = #{activityId},
+</if>
+    <if test="_parameter.containsKey('orderId') and orderId != null">
+    order_id = #{orderId},
+</if>
+    <if test="_parameter.containsKey('activityParamsId')">
+    activity_params_id = #{activityParamsId},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   activity_customorder
+WHERE  id = #{id}
+</delete>
+
+</mapper>

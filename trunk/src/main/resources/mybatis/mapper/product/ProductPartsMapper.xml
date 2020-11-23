@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductPartsDao">
+    <resultMap id="ProductPartsMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductParts">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="product_type" property="productType" jdbcType="CHAR" />
+        <result column="parts_type" property="partsType" jdbcType="TINYINT" />
+        <result column="produce_type" property="produceType" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="order_parts_identify" property="orderPartsIdentify" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="ProductPartsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.product.ProductPartsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="product_type" property="productType" jdbcType="CHAR" />
+        <result column="parts_type" property="partsType" jdbcType="TINYINT" />
+        <result column="produce_type" property="produceType" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="order_parts_identify" property="orderPartsIdentify" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="productTypeName" property="productTypeName" jdbcType="VARCHAR" />
+        <result column="partsTypeName" property="partsTypeName" jdbcType="VARCHAR" />
+        <result column="produceTypeName" property="produceTypeName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, product_type, parts_type, produce_type, creator, created, updator, updated, order_parts_identify,branch_id
+</sql>
+
+    <select id="selectById" resultMap="ProductPartsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_parts
+WHERE  id = #{id}
+</select>
+    <select id="findByProductType" resultMap="ProductPartsDtoMap">
+        SELECT b.value as productTypeName,bb.value as partsTypeName,bbb.value as produceTypeName,pp.*
+        FROM   product_parts pp
+        left join basecode b on pp.product_type=b.code
+        left join basecode bb on pp.parts_type=bb.code
+        left join basecode bbb on pp.produce_type=bbb.code
+        WHERE  pp.product_type = #{productType} and pp.branch_id=#{branchId}
+          and b.type='orderProductType'
+          and bb.type='produceOrderType'
+          and bbb.type='produceOrderWay'
+    </select>
+
+    <select id="findByType" resultMap="ProductPartsMap">
+        SELECT <include refid="columns" />
+        FROM   product_parts
+        WHERE  product_type = #{productType}
+          and parts_type=#{partsType}
+          and produce_type=#{produceType}
+and branch_id=#{branchId}
+    </select>
+
+    <select id="findByOrderProductId" resultMap="ProductPartsDtoMap">
+        SELECT b.value as productTypeName,bb.value as partsTypeName,bbb.value as produceTypeName,pp.order_parts_identify,pp.id,
+               pp.product_type, pp.parts_type, pp.produce_type, pp.creator, pp.created, pp.updator, pp.updated,
+               pp.order_parts_identify,pp.branch_id
+        FROM   product_parts pp
+        left join basecode b on pp.product_type=b.code
+         left join basecode bb on pp.parts_type=bb.code
+         left join basecode bbb on pp.produce_type=bbb.code
+        WHERE  b.type='orderProductType'
+            and bb.type='produceOrderType'
+            and bbb.type='produceOrderWay'
+              and
+              pp.id in (select product_parts_id from order_product_parts opp where opp.order_product_id=#{orderProductId})
+    </select>
+    <select id="selectByFilter" resultMap="ProductPartsMap">
+SELECT <include refid="columns" />
+FROM   product_parts
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="productType != null">
+    AND product_type = #{productType}
+</if>
+<if test="partsType != null">
+    AND parts_type = #{partsType}
+</if>
+<if test="produceType != null">
+    AND produce_type = #{produceType}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="updator != null">
+    AND updator = #{updator}
+</if>
+<if test="updated != null">
+    AND updated = #{updated}
+</if>
+<if test="orderPartsIdentify != null">
+    AND order_parts_identify = #{orderPartsIdentify}
+</if>
+    <if test="branchId != null">
+        AND branch_id = #{branchId}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_parts(id, product_type, parts_type, produce_type, creator, created, updator, updated, order_parts_identify,branch_id)
+       VALUES(#{id}, #{productType}, #{partsType}, #{produceType}, #{creator}, #{created}, #{updator}, #{updated}, #{orderPartsIdentify},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_parts
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('productType') and productType != null">
+    product_type = #{productType},
+</if>
+    <if test="_parameter.containsKey('partsType') and partsType != null">
+    parts_type = #{partsType},
+</if>
+    <if test="_parameter.containsKey('produceType') and produceType != null">
+    produce_type = #{produceType},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('updator')">
+    updator = #{updator},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+        branch_id = #{branchId},
+    </if>
+    <if test="_parameter.containsKey('updated')">
+    updated = #{updated},
+</if>
+    <if test="_parameter.containsKey('orderPartsIdentify')">
+    order_parts_identify = #{orderPartsIdentify}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_parts
+WHERE  id = #{id}
+</delete>
+
+</mapper>

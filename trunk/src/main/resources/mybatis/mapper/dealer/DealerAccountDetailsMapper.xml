@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealer.DealerAccountDetailsDao">
+    <resultMap id="DealerAccountDetailsMap" type="com.lwxf.industry4.webapp.domain.entity.dealer.DealerAccountDetails">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="dealer_account_id" property="dealerAccountId" jdbcType="CHAR" />
+        <result column="payment_id" property="paymentId" jdbcType="CHAR" />
+        <result column="funds" property="funds" jdbcType="TINYINT" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="is_used" property="used" jdbcType="BIT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="used_time" property="usedTime" jdbcType="TIMESTAMP" />
+        <result column="used_user" property="usedUser" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="columns">
+id, name, dealer_account_id, payment_id, funds, type, start_time, end_time, is_used, creator, created, used_time, used_user, notes, amount
+</sql>
+
+    <select id="selectById" resultMap="DealerAccountDetailsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dealer_account_details
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DealerAccountDetailsMap">
+SELECT <include refid="columns" />
+FROM   dealer_account_details
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="dealerAccountId != null">
+    AND dealer_account_id = #{dealerAccountId}
+</if>
+<if test="paymentId != null">
+    AND payment_id = #{paymentId}
+</if>
+<if test="funds != null">
+    AND funds = #{funds}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="startTime != null">
+    AND start_time = #{startTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="used != null">
+    AND is_used = #{used}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="usedTime != null">
+    AND used_time = #{usedTime}
+</if>
+<if test="usedUser != null">
+    AND used_user = #{usedUser}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dealer_account_details(id, name, dealer_account_id, payment_id, funds, type, start_time, end_time, is_used, creator, created, used_time, used_user, notes, amount)
+                VALUES(#{id}, #{name}, #{dealerAccountId}, #{paymentId}, #{funds}, #{type}, #{startTime}, #{endTime}, #{used}, #{creator}, #{created}, #{usedTime}, #{usedUser}, #{notes}, #{amount})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dealer_account_details
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('dealerAccountId') and dealerAccountId != null">
+    dealer_account_id = #{dealerAccountId},
+</if>
+    <if test="_parameter.containsKey('paymentId')">
+    payment_id = #{paymentId},
+</if>
+    <if test="_parameter.containsKey('funds') and funds != null">
+    funds = #{funds},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('startTime')">
+    start_time = #{startTime},
+</if>
+    <if test="_parameter.containsKey('endTime')">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('used')">
+    is_used = #{used},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('usedTime')">
+    used_time = #{usedTime},
+</if>
+    <if test="_parameter.containsKey('usedUser')">
+    used_user = #{usedUser},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('amount') and amount != null">
+    amount = #{amount}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dealer_account_details
+WHERE  id = #{id}
+</delete>
+
+    <select id="findAccountDetails" resultMap="DealerAccountDetailsMap">
+        SELECT
+        amount,created,autid_status,payment_id
+        from dealer_account_details
+        where dealer_account_id = #{accountId}
+    </select>
+
+
+    <select id="findByAccountId" resultMap="DealerAccountDetailsMap">
+        SELECT
+        <include refid="columns"/>
+        from dealer_account_details
+        where dealer_account_id = #{accountId}
+        order by is_used asc,created desc
+    </select>
+
+
+
+
+</mapper>

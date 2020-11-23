@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.quickshare.QuickshareCommentDao">
+    <resultMap id="QuickshareCommentMap" type="com.lwxf.industry4.webapp.domain.entity.quickshare.QuickshareComment">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="quickshare_id" property="quickshareId" jdbcType="CHAR" />
+        <result column="parent_id" property="parentId" jdbcType="CHAR" />
+        <result column="parent_creator" property="parentCreator" jdbcType="CHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="is_disabled" property="disabled" jdbcType="BIT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="QuickshareCommentDtoMap" type="com.lwxf.industry4.webapp.domain.dto.quickshare.QuickshareCommentDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="quickshare_id" property="quickshareId" jdbcType="CHAR" />
+        <result column="parent_id" property="parentId" jdbcType="CHAR" />
+        <result column="parent_creator" property="parentCreator" jdbcType="CHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="is_disabled" property="disabled" jdbcType="BIT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="commentName" property="commentName" jdbcType="VARCHAR" />
+        <result column="reCommentName" property="reCommentName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, quickshare_id, parent_id, parent_creator, creator, content, is_disabled, created
+</sql>
+    <sql id="columnDtos">
+        qc.id, qc.quickshare_id, qc.parent_id, qc.parent_creator, qc.creator, qc.content, qc.is_disabled, qc.created,qc.reCommentName
+    </sql>
+
+    <select id="selectById" resultMap="QuickshareCommentMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   quickshare_comment
+WHERE  id = #{id}
+</select>
+    <select id="findByParentId" resultMap="QuickshareCommentMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   quickshare_comment
+        WHERE  parent_id = #{commentId}
+    </select>
+
+    <select id="selectByFilter" resultMap="QuickshareCommentMap">
+SELECT <include refid="columns" />
+FROM   quickshare_comment
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="quickshareId != null">
+    AND quickshare_id = #{quickshareId}
+</if>
+<if test="parentId != null">
+    AND parent_id = #{parentId}
+</if>
+<if test="parentCreator != null">
+    AND parent_creator = #{parentCreator}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="disabled != null">
+    AND is_disabled = #{disabled}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+    <select id="selectQuickshareCommentByQsIds" parameterType="java.util.Set" resultMap="QuickshareCommentMap">
+        SELECT <include refid="columns" />
+        FROM   quickshare_comment where quickshare_id in
+        <foreach collection="collection" item="quickshareIds" open="(" separator="," close=")">
+            #{quickshareIds}
+        </foreach>
+        order by created asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+quickshare_comment(id, quickshare_id, parent_id, parent_creator, creator, content, is_disabled, created)
+            VALUES(#{id}, #{quickshareId}, #{parentId}, #{parentCreator}, #{creator}, #{content}, #{disabled}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE quickshare_comment
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('quickshareId') and quickshareId != null">
+    quickshare_id = #{quickshareId},
+</if>
+    <if test="_parameter.containsKey('parentId')">
+    parent_id = #{parentId},
+</if>
+    <if test="_parameter.containsKey('parentCreator')">
+    parent_creator = #{parentCreator},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('content') and content != null">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('disabled') and disabled != null">
+    is_disabled = #{disabled},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+    <update id="updateByParentId">
+     update quickshare_comment set parent_id = null where parent_id = #{commentId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   quickshare_comment
+WHERE  id = #{id}
+</delete>
+    <delete id="deleteByqsId" parameterType="String">
+        DELETE FROM   quickshare_comment
+        WHERE  quickshare_id = #{quickshareId}
+    </delete>
+
+    <select id="findQuickshareCommentListByqsId" parameterType="String" resultMap="QuickshareCommentDtoMap">
+        select <include refid="columnDtos" />,u.name commentName FROM
+        (select qc.*,u.name reCommentName from quickshare_comment qc
+        left join user u on qc.parent_creator=u.id)qc
+        left join user u
+        on qc.creator=u.id
+        WHERE  quickshare_id = #{quickshareId}
+    </select>
+</mapper>

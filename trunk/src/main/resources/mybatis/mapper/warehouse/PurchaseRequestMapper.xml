@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.procurement.PurchaseRequestDao">
+    <resultMap id="PurchaseRequestMap" type="com.lwxf.industry4.webapp.domain.entity.procurement.PurchaseRequest">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="purchaser" property="purchaser" jdbcType="CHAR" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="proposer" property="proposer" jdbcType="CHAR" />
+        <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="purchaser" property="purchaser" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="financial_audit" property="financialAudit" jdbcType="CHAR" />
+        <result column="financial_time" property="financialTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="PurchaseRequestDtoMap" type="com.lwxf.industry4.webapp.domain.dto.procurement.PurchaseRequestDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="purchaser" property="purchaser" jdbcType="CHAR" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="proposer" property="proposer" jdbcType="CHAR" />
+        <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="purchaser" property="purchaser" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="proposerName" property="proposerName"  />
+        <result column="purchaserName" property="purchaserName"  />
+        <result column="supplierName" property="supplierName"  />
+        <result column="financial_audit" property="financialAudit" jdbcType="CHAR" />
+        <result column="financial_time" property="financialTime" jdbcType="TIMESTAMP" />
+        <result column="financialAuditName" property="financialAuditName"  />
+    </resultMap>
+    <sql id="columns">
+        id, name, storage_id, category_id, quantity, notes, creator, created, status, no, amount, proposer, apply_time,supplier_id,purchaser,branch_id,financial_audit,financial_time
+    </sql>
+
+    <select id="selectById" resultMap="PurchaseRequestMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   purchase_request
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="PurchaseRequestMap">
+        SELECT <include refid="columns" />
+        FROM   purchase_request pr
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="storageId != null">
+                AND storage_id = #{storageId}
+            </if>
+            <if test="productId != null">
+                AND product_id = #{productId}
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="no != null">
+                AND no = #{no}
+            </if>
+            <if test="amount != null">
+                AND amount = #{amount}
+            </if>
+            <if test="proposer != null">
+                AND proposer = #{proposer}
+            </if>
+            <if test="applyTime != null">
+                AND apply_time = #{applyTime}
+            </if>
+            <if test="financialAudit != null">
+                AND financial_audit = #{financialAudit}
+            </if>
+            <if test="financialTime != null">
+                AND financial_time = #{financialTime}
+            </if>
+        </trim></where>
+
+    </select>
+    <select id="selectRequestListByFilter" resultMap="PurchaseRequestDtoMap">
+        SELECT pr.*,u.name proposerName,uu.name purchaserName,s.supplier_name supplierName,b.value requestType,uuu.name financialAuditName
+        FROM   purchase_request pr
+             left join supplier s on pr.supplier_id=s.id
+          left join basecode b on b.id=pr.category_id
+             left join user u on pr.proposer=u.id
+             left join user uu on pr.purchaser=uu.id
+             left join user uuu on pr.financial_audit=uuu.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                pr.id = #{id}
+            </if>
+            <if test="name != null">
+                AND pr.name like '%${name}%'
+            </if>
+            <if test="storageId != null">
+                AND pr.storage_id = #{storageId}
+            </if>
+            <if test="productId != null">
+                AND pr.product_id = #{productId}
+            </if>
+            <if test="categoryId != null">
+                AND pr.category_id=#{categoryId}
+            </if>
+            <if test="quantity != null">
+                AND pr.quantity = #{quantity}
+            </if>
+            <if test="notes != null">
+                AND pr.notes = #{notes}
+            </if>
+            <if test="creator != null">
+                AND pr.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND pr.created = #{created}
+            </if>
+            <if test="statusParam != null">
+                AND pr.status <![CDATA[ >= ]]> #{statusParam}
+            </if>
+            <if test="status != null">
+                AND pr.status =  #{status}
+            </if>
+            <if test="no != null">
+                AND pr.no like upper('%${no}%')
+            </if>
+            <if test="amount != null">
+                AND pr.amount = #{amount}
+            </if>
+            <if test="proposer != null">
+                AND pr.proposer = #{proposer}
+            </if>
+            <if test="applyTime != null">
+                AND pr.apply_time = #{applyTime}
+            </if>
+            <if test="userId != null">
+                AND (pr.proposer=#{userId} or pr.purchaser=#{userId} or pr.id in (select purchase_request_id from purchase_audit where user_id=#{userId}))
+            </if>
+            <if test="branchId != null">
+                AND pr.branch_id = #{branchId}
+            </if>
+            <if test="financialAudit != null">
+                AND financial_audit = #{financialAudit}
+            </if>
+            <if test="financialTime != null">
+                AND financial_time = #{financialTime}
+            </if>
+
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+            purchase_request(id, name, storage_id, category_id, quantity, notes, creator, created, status, no, amount, proposer, apply_time,supplier_id,purchaser,branch_id,financial_audit,financial_time)
+        VALUES(#{id}, #{name}, #{storageId}, #{categoryId}, #{quantity}, #{notes}, #{creator}, #{created}, #{status}, #{no}, #{amount}, #{proposer}, #{applyTime},#{supplierId},#{purchaser},#{branchId},#{financialAudit},#{financialTime})
+    </insert>
+
+    <update id="updateByMapContext">
+        UPDATE purchase_request
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('storageId')">
+                storage_id = #{storageId},
+            </if>
+            <if test="_parameter.containsKey('supplierId')">
+                supplier_id = #{supplierId},
+            </if>
+            <if test="_parameter.containsKey('purchaser')">
+                purchaser = #{purchaser},
+            </if>
+            <if test="_parameter.containsKey('categoryId') and categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="_parameter.containsKey('quantity') and quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('no') and no != null">
+                no = #{no},
+            </if>
+            <if test="_parameter.containsKey('amount')">
+                amount = #{amount},
+            </if>
+            <if test="_parameter.containsKey('proposer')">
+                proposer = #{proposer},
+            </if>
+            <if test="_parameter.containsKey('applyTime')">
+                apply_time = #{applyTime},
+            </if>
+            <if test="_parameter.containsKey('supplierId')">
+                supplier_id = #{supplierId},
+            </if>
+            <if test="_parameter.containsKey('purchaser')">
+                purchaser = #{purchaser},
+            </if>
+            <if test="_parameter.containsKey('branchId')">
+                branch_id = #{branchId},
+            </if>
+            <if test="_parameter.containsKey('financialAudit')">
+                financial_audit = #{financialAudit},
+            </if>
+            <if test="_parameter.containsKey('financialTime')">
+                financial_time = #{financialTime}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   purchase_request
+        WHERE  id = #{id}
+    </delete>
+
+</mapper>

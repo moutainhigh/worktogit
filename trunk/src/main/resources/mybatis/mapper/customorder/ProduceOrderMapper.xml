@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.ProduceOrderDao">
+    <resultMap id="ProduceOrderMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.ProduceOrder">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="custom_order_no" property="customOrderNo" jdbcType="VARCHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="CHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="completion_time" property="completionTime" jdbcType="TIMESTAMP"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="coordination_name" property="coordinationName" jdbcType="VARCHAR"/>
+        <result column="coordination_account" property="coordinationAccount" jdbcType="VARCHAR"/>
+        <result column="coordination_bank" property="coordinationBank" jdbcType="VARCHAR"/>
+        <result column="is_pay" property="pay" jdbcType="BIT"/>
+        <result column="type" property="type" jdbcType="BIT"/>
+        <result column="way" property="way" jdbcType="BIT"/>
+        <result column="state" property="state" jdbcType="BIT"/>
+        <result column="planned_time" property="plannedTime" jdbcType="TIMESTAMP"/>
+        <result column="actual_time" property="actualTime" jdbcType="TIMESTAMP"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR"/>
+        <result column="permit" property="permit" jdbcType="INTEGER"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER"/>
+        <result column="plan_created" property="planCreated"  jdbcType="TIMESTAMP"/>
+        <result column="plan_creator" property="planCreator"  jdbcType="CHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="deliverStatus" property="deliverStatus" jdbcType="INTEGER"/>
+        <result column="is_shipped" property="shipped" jdbcType="INTEGER"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="delivered" property="delivered" jdbcType="TIMESTAMP"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+    </resultMap>
+    <resultMap id="ProduceOrderDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customorder.ProduceOrderDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="custom_order_no" property="customOrderNo" jdbcType="VARCHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="CHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="completion_time" property="completionTime" jdbcType="TIMESTAMP"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="coordination_name" property="coordinationName" jdbcType="VARCHAR"/>
+        <result column="coordination_account" property="coordinationAccount" jdbcType="VARCHAR"/>
+        <result column="coordination_bank" property="coordinationBank" jdbcType="VARCHAR"/>
+        <result column="is_pay" property="pay" jdbcType="BIT"/>
+        <result column="type" property="type" jdbcType="BIT"/>
+        <result column="way" property="way" jdbcType="BIT"/>
+        <result column="state" property="state" jdbcType="BIT"/>
+        <result column="updateUserName" property="updateUserName"/>
+        <result column="creatorName" property="creatorName"/>
+        <result column="planned_time" property="plannedTime" jdbcType="TIMESTAMP"/>
+        <result column="actual_time" property="actualTime" jdbcType="TIMESTAMP"/>
+        <result column="estimatedDeliveryDate" property="estimatedDeliveryDate" jdbcType="TIMESTAMP"/>
+        <result column="merchandiserName" property="merchandiserName"/>
+        <result column="customerName" property="customerName"/>
+        <result column="dealerName" property="dealerName"/>
+        <result column="payTime" property="payTime"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR"/>
+        <result column="permit" property="permit" jdbcType="INTEGER"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER"/>
+        <result column="payName" property="payName"/>
+        <result column="typeName" property="typeName"/>
+        <result column="wayName" property="wayName"/>
+        <result column="stateName" property="stateName"/>
+        <result column="permitName" property="permitName"/>
+        <result column="companyId" property="companyId"/>
+        <result column="plan_created" property="planCreated"  jdbcType="TIMESTAMP"/>
+        <result column="plan_creator" property="planCreator"  jdbcType="CHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="logisticsCompany" property="logisticsCompany" />
+        <result column="deliver_status" property="deliverStatus" jdbcType="INTEGER"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="delivered" property="delivered" jdbcType="TIMESTAMP"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+        <result column="is_shipped" property="shipped" jdbcType="INTEGER"/>
+        <result column="partMark" property="partMark"/>
+        <result column="input_status" property="inputStatus"/>
+        <result column="has_deliver_count" property="hasDeliverCount"/>
+    </resultMap>
+
+    <resultMap id="coordinationPrintTableDto"
+               type="com.lwxf.industry4.webapp.domain.dto.printTable.CoordinationPrintTableDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="custom_order_no" property="customOrderNo" jdbcType="VARCHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="CHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="completion_time" property="completionTime" jdbcType="TIMESTAMP"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="coordination_name" property="coordinationName" jdbcType="VARCHAR"/>
+        <result column="coordination_account" property="coordinationAccount" jdbcType="VARCHAR"/>
+        <result column="coordination_bank" property="coordinationBank" jdbcType="VARCHAR"/>
+        <result column="is_pay" property="pay" jdbcType="BIT"/>
+        <result column="type" property="type" jdbcType="BIT"/>
+        <result column="way" property="way" jdbcType="BIT"/>
+        <result column="state" property="state" jdbcType="BIT"/>
+        <result column="planned_time" property="plannedTime" jdbcType="DATE"/>
+        <result column="actual_time" property="actualTime" jdbcType="DATE"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR"/>
+        <result column="permit" property="permit" jdbcType="INTEGER"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER"/>
+        <!--<result column="auditorName" property="auditorName"/>-->
+        <result column="dealerName" property="dealerName"/>
+        <result column="leaderName" property="leaderName"/>
+        <result column="leaderTel" property="leaderTel"/>
+        <result column="customerName" property="customerName"/>
+        <result column="customerTel" property="customerTel"/>
+        <!--<result column="payTime" property="payTime"/>-->
+        <result column="community" property="community"/>
+        <!--<result column="paymentNo" property="paymentNo"/>-->
+        <result column="plan_created" property="planCreated"  jdbcType="TIMESTAMP"/>
+        <result column="plan_creator" property="planCreator"  jdbcType="CHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="deliver_status" property="deliverStatus" jdbcType="INTEGER"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="delivered" property="delivered" jdbcType="TIMESTAMP"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+        <result column="is_shipped" property="shipped" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="payMentProduceOrderMap" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentProduceOrderDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="coordination_name" property="coordinationName" jdbcType="VARCHAR"/>
+        <result column="coordination_account" property="coordinationAccount" jdbcType="VARCHAR"/>
+        <result column="bank" property="bank" jdbcType="CHAR" />
+        <result column="funds" property="funds" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="auditor" property="auditor" jdbcType="CHAR" />
+        <result column="audited" property="audited" jdbcType="TIMESTAMP" />
+        <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
+        <result column="payee" property="payee" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="holder" property="holder" jdbcType="VARCHAR" />
+        <result column="holder_account" property="holderAccount" jdbcType="VARCHAR" />
+        <result column="deposit_bank" property="depositBank" jdbcType="VARCHAR" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="type" property="type" jdbcType="BIT"/>
+        <result column="way" property="way" jdbcType="BIT"/>
+        <result column="state" property="state" jdbcType="BIT"/>
+        <result column="planned_time" property="plannedTime" jdbcType="TIMESTAMP"/>
+        <result column="actual_time" property="actualTime" jdbcType="TIMESTAMP"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR"/>
+        <result column="permit" property="permit" jdbcType="INTEGER"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER"/>
+        <result column="plan_created" property="planCreated"  jdbcType="TIMESTAMP"/>
+        <result column="plan_creator" property="planCreator"  jdbcType="CHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="deliverStatus" property="deliverStatus" jdbcType="INTEGER"/>
+        <result column="is_shipped" property="shipped" jdbcType="INTEGER"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="delivered" property="delivered" jdbcType="TIMESTAMP"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+        <result column="payId" property="payId" jdbcType="CHAR"/>
+        <result column="payamount" property="payamount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="columns">
+id, custom_order_id, custom_order_no, no, creator, created, update_user, update_time, completion_time, count, notes, amount, coordination_name, coordination_account, coordination_bank, is_pay, type, way,state, planned_time, actual_time,branch_id,order_product_id,permit,resource_type,plan_created,plan_creator,flag,logistics_company_id,logistics_no,delivered,deliverer,deliver_status,is_shipped
+</sql>
+    <sql id="columnsqueryOrderOutsourcePayList">
+po.id, po.custom_order_id, po.custom_order_no, po.no, po.creator, po.created, po.update_user, po.update_time, po.completion_time, po.count, po.notes,
+po.amount, po.coordination_name, po.coordination_account, po.coordination_bank, po.is_pay,po.type, po.way,po.state, po.planned_time, po.actual_time,
+po.branch_id,po.order_product_id,po.permit,po.resource_type,po.plan_created,po.plan_creator,po.flag,po.logistics_company_id,
+po.logistics_no,po.delivered,po.deliverer,po.deliver_status,is_shipped
+</sql>
+    <sql id="columnDtos">
+p.id, p.custom_order_id, p.custom_order_no, p.no, p.creator, p.created, p.update_user, p.update_time, p.completion_time, p.count, p.notes, p.amount, p.coordination_name, p.coordination_account, p.coordination_bank, p.is_pay, p.type, p.way,p.state, u.name creatorName,uu.name updateUserName, p.planned_time, p.actual_time,p.branch_id,p.order_product_id,p.permit,p.resource_type,p.plan_created,p.plan_creator,p.flag,p.logistics_company_id,p.logistics_no,p.delivered,p.deliverer,p.deliver_status,p.is_shipped,p.input_status,p.has_deliver_count
+</sql>
+
+    <select id="selectById" resultMap="ProduceOrderMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM produce_order
+        WHERE id = #{id}
+    </select>
+    <select id="findListByProductId" resultMap="ProduceOrderMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM produce_order
+        WHERE order_product_id = #{productId}
+    </select>
+
+    <select id="queryOrderOutsourcePayList" resultMap="payMentProduceOrderMap">
+        SELECT po.*,p.id payId,p.status,p.amount payamount,p.pay_amount realPayamount,p.funds,p.type payType,p.way payway,p.bank,cp.name dealerName,cp.address dealerAddress
+        FROM  produce_order po
+        LEFT JOIN payment p  ON p.custom_order_id = po.id
+				LEFT JOIN custom_order co ON co.id = po.custom_order_id
+				LEFT JOIN company cp ON cp.id = co.company_id
+		where p.type ='4' and p.funds='44' and p.status ='0'
+    </select>
+    <select id="selectByFilter" resultMap="ProduceOrderMap">
+        SELECT t po.*,
+          <include refid="columns"/>
+        FROM produce_order po
+        LEFT JOIN produce_order po ON po.custom_order_id = p.custom_order_id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="customOrderId != null">
+                    AND custom_order_id = #{customOrderId}
+                </if>
+                <if test="customOrderNo != null">
+                    AND custom_order_no = #{customOrderNo}
+                </if>
+                <if test="no != null">
+                    AND no = #{no}
+                </if>
+                <if test="creator != null">
+                    AND creator = #{creator}
+                </if>
+                <if test="created != null">
+                    AND created = #{created}
+                </if>
+                <if test="updateUser != null">
+                    AND update_user = #{updateUser}
+                </if>
+                <if test="updateTime != null">
+                    AND update_time = #{updateTime}
+                </if>
+                <if test="completionTime != null">
+                    AND completion_time = #{completionTime}
+                </if>
+                <if test="count != null">
+                    AND count = #{count}
+                </if>
+                <if test="notes != null">
+                    AND notes = #{notes}
+                </if>
+                <if test="amount != null">
+                    AND amount = #{amount}
+                </if>
+                <if test="coordinationName != null">
+                    AND coordination_name = #{coordinationName}
+                </if>
+                <if test="coordinationAccount != null">
+                    AND coordination_account = #{coordinationAccount}
+                </if>
+                <if test="coordinationBank != null">
+                    AND coordination_bank = #{coordinationBank}
+                </if>
+                <if test="pay != null">
+                    AND is_pay = #{pay}
+                </if>
+                <if test="type != null">
+                    AND type = #{type}
+                </if>
+                <if test="way != null">
+                    AND way = #{way}
+                </if>
+                <if test="state != null">
+                    AND state = #{state}
+                </if>
+                <if test="plannedTime != null">
+                    AND planned_time = #{plannedTime}
+                </if>
+                <if test="actualTime != null">
+                    AND actual_time = #{actualTime}
+                </if>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+                <if test="orderProductId != null">
+                    AND order_product_id = #{orderProductId}
+                </if>
+                <if test="permit != null">
+                    AND permit = #{permit}
+                </if>
+                <if test="resourceType != null">
+                    AND resource_type = #{resourceType}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+
+    <select id="findByOrderId" resultType="java.util.Map">
+        SELECT id,`count`,notes,type,way,coordination_name as coordinationName,amount,coordination_bank as coordinationBank,logistics_no logisticsNo,
+         (case type
+         when 0 then '柜体'
+         when 1 then '门板'
+         when 2 then '五金'
+         ELSE '未知' END
+          ) typeName ,
+        (case way
+         when 0 then '自产'
+         when 1 then '外协'
+         when 2 then '特供实木'
+         ELSE '未知' END
+        ) wayName
+        from produce_order
+        where custom_order_id = #{orderId} and flag != 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+produce_order(id, custom_order_id, custom_order_no, no, creator, created, update_user, update_time, completion_time, count, notes, amount, coordination_name, coordination_account, coordination_bank, is_pay, type, way,state, planned_time, actual_time,branch_id,order_product_id,permit,resource_type,plan_created,plan_creator,flag,logistics_company_id,logistics_no,delivered,deliverer,deliver_status,is_shipped,input_status,has_deliver_count)
+       VALUES(#{id}, #{customOrderId}, #{customOrderNo}, #{no}, #{creator}, #{created}, #{updateUser}, #{updateTime}, #{completionTime}, #{count}, #{notes}, #{amount}, #{coordinationName}, #{coordinationAccount}, #{coordinationBank}, #{pay}, #{type}, #{way},#{state}, #{plannedTime}, #{actualTime},#{branchId},#{orderProductId},#{permit},#{resourceType},#{planCreated},#{planCreator},#{flag},#{logisticsCompanyId},#{logisticsNo},#{delivered},#{deliverer},#{deliverStatus},#{shipped},#{inputStatus},#{hasDeliverCount})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE produce_order
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('updateUser')">
+                    update_user = #{updateUser},
+                </if>
+                <if test="_parameter.containsKey('updateTime')">
+                    update_time = #{updateTime},
+                </if>
+                <if test="_parameter.containsKey('completionTime')">
+                    completion_time = #{completionTime},
+                </if>
+                <if test="_parameter.containsKey('count') and count != null">
+                    count = #{count},
+                </if>
+                <if test="_parameter.containsKey('notes')">
+                    notes = #{notes},
+                </if>
+                <if test="_parameter.containsKey('no')">
+                    no = #{no},
+                </if>
+                <if test="_parameter.containsKey('amount')">
+                    amount = #{amount},
+                </if>
+                <if test="_parameter.containsKey('coordinationName')">
+                    coordination_name = #{coordinationName},
+                </if>
+                <if test="_parameter.containsKey('coordinationAccount')">
+                    coordination_account = #{coordinationAccount},
+                </if>
+                <if test="_parameter.containsKey('coordinationBank')">
+                    coordination_bank = #{coordinationBank},
+                </if>
+                <if test="_parameter.containsKey('pay') and pay != null">
+                    is_pay = #{pay},
+                </if>
+                <if test="_parameter.containsKey('type') and type != null">
+                    type = #{type},
+                </if>
+                <if test="_parameter.containsKey('way') and way != null">
+                    way = #{way},
+                </if>
+                <if test="_parameter.containsKey('state') and state != null">
+                    state = #{state},
+                </if>
+                <if test="_parameter.containsKey('plannedTime')">
+                    planned_time = #{plannedTime},
+                </if>
+                <if test="_parameter.containsKey('actualTime')">
+                    actual_time = #{actualTime},
+                </if>
+                <if test="_parameter.containsKey('orderProductId')">
+                    order_product_id = #{orderProductId},
+                </if>
+                <if test="_parameter.containsKey('permit')">
+                    permit = #{permit},
+                </if>
+                <if test="_parameter.containsKey('planCreated')">
+                    plan_created = #{planCreated},
+                </if>
+                <if test="_parameter.containsKey('planCreator')">
+                    plan_creator = #{planCreator},
+                </if>
+                <if test="_parameter.containsKey('flag')">
+                    flag = #{flag},
+                </if>
+                <if test="_parameter.containsKey('logisticsCompanyId')">
+                    logistics_company_id = #{logisticsCompanyId},
+                </if>
+                <if test="_parameter.containsKey('logisticsNo')">
+                    logistics_no = #{logisticsNo},
+                </if>
+                <if test="_parameter.containsKey('delivered')">
+                    delivered = #{delivered},
+                </if>
+                <if test="_parameter.containsKey('deliverer')">
+                    deliverer = #{deliverer},
+                </if>
+                <if test="_parameter.containsKey('deliverStatus')">
+                    deliver_status = #{deliverStatus},
+                </if>
+                <if test="_parameter.containsKey('shipped')">
+                    is_shipped = #{shipped},
+                </if>
+                <if test="_parameter.containsKey('inputStatus')">
+                    input_status = #{inputStatus},
+                </if>
+                <if test="_parameter.containsKey('hasDeliverCount')">
+                    has_deliver_count = #{hasDeliverCount}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   produce_order
+WHERE  id = #{id}
+</delete>
+
+    <select id="findOneById" resultMap="ProduceOrderDtoMap">
+        select distinct
+        <include refid="columnDtos"/>
+        ,b.value payName,bb.value typeName,bb.remark partMark
+        ,bbb.value wayName,bbbb.value stateName
+        ,bbbbb.value permitName,IFNULL(c.name,co.name) dealerName,c.id companyId
+        ,IFNULL(cc.name,aa.customer_name )customerName,uuuu.name merchandiserName
+        ,o.estimated_delivery_date estimatedDeliveryDate
+        ,pay.audited payTime
+        from produce_order p
+        left join user u on p.creator = u.id
+        left join user uu on p.update_user = uu.id
+        left join basecode b on b.code = p.is_pay
+        left join basecode bb on bb.code = p.type
+        left join basecode bbb on bbb.code = p.way
+        left join basecode bbbb on bbbb.code = p.state
+        left join basecode bbbbb on bbbbb.code = p.permit
+        left join custom_order o on o.id = p.custom_order_id
+        left join aftersale_apply aa on aa.id=p.custom_order_id
+        left join company c on c.id = o.company_id
+        left join company co on co.id = aa.company_id
+        left join company_customer cc on cc.id = o.customer_id
+        left join user uuuu on o.merchandiser = uuuu.id
+        left join payment pay on pay.custom_order_id = o.id
+        where p.id = #{id}
+        and (pay.funds = #{funds} or pay.funds is null)
+        and (b.type = 'produceOrderPay' or b.type is null)
+        and (bb.type = 'produceOrderType'or bb.type is null)
+        and (bbb.type = 'produceOrderWay' or bbb.type is null)
+        and (bbbb.type = 'produceOrderState' or bbbb.type is null)
+        and (bbbbb.type = 'produceOrderPermit' or bbbbb.type is null)
+        limit 1
+    </select>
+
+    <select id="findListByFilter" resultMap="ProduceOrderDtoMap">
+        select<include refid="columnDtos"/>,IFNULL(c.name,cc.name) dealerName,c.address as dealerAddress,o.estimated_delivery_date estimatedDeliveryDate
+        ,IFNULL(uuu.name,uuuuu.name) customerName
+        ,uuuu.name merchandiserName
+        ,b.value payName,bb.value typeName
+        ,bbb.value wayName,bbbb.value stateName
+        ,bbbbb.value permitName
+        from produce_order p
+        left join user u on p.creator = u.id
+        left join user uu on p.update_user = uu.id
+        left join custom_order o on o.id = p.custom_order_id
+        left join aftersale_apply a on a.id = p.custom_order_id
+        left join custom_order oo on oo.id = a.custom_order_id
+        left join company_customer uuuuu on oo.customer_id = uuuuu.id
+        left join company cc on a.company_id = cc.id
+        left join company c on o.company_id = c.id
+        left join company_customer uuu on o.customer_id = uuu.id
+        left join user uuuu on p.plan_creator = uuuu.id
+        left join basecode b on b.code = p.is_pay
+        left join basecode bb on bb.code = p.type
+        left join basecode bbb on bbb.code = p.way
+        left join basecode bbbb on bbbb.code = p.state
+        left join basecode bbbbb on bbbbb.code = p.permit
+        <where>
+            <trim prefixOverrides="AND">
+                and  (<![CDATA[ p.flag =0 ]]> or p.flag is null)
+                and (b.type = 'produceOrderPay' )
+                and (bb.type = 'produceOrderType')
+                and (bbb.type = 'produceOrderWay' )
+                and (bbbb.type = 'produceOrderState' )
+                and (bbbbb.type = 'produceOrderPermit')
+                <if test="no != null">
+                    AND p.no like '%${no}%'
+                </if>
+                <if test="orderId != null">
+                    AND p.custom_order_id = #{orderId}
+                </if>
+                <if test="orderNo != null">
+                    AND p.custom_order_no like '%${orderNo}%'
+                </if>
+                <if test="state!=null">
+                    AND p.state in
+                    <foreach collection="state" item="sta" open="(" close=")" separator=",">
+                        #{sta}
+                    </foreach>
+                </if>
+                <if test="way!=null">
+                    AND p.way in
+                    <foreach collection="way" item="w" open="(" close=")" separator=",">
+                        #{w}
+                    </foreach>
+                </if>
+                <if test="type!=null">
+                    AND p.type in
+                    <foreach collection="type" item="t" open="(" close=")" separator=",">
+                        #{t}
+                    </foreach>
+                </if>
+                <if test="outFactoryName != null">
+                    AND p.coordination_name=#{outFactoryName}
+                </if>
+                <if test="pay!=null">
+                    AND p.is_pay = #{pay}
+                </if>
+                <if test="payTime!=null">
+                 <![CDATA[ AND DATE_FORMAT(p.actual_time,'%Y-%m-%d') >= #{payTime}]]>
+                </if>
+                <if test="endPayTime!=null">
+                <![CDATA[  AND DATE_FORMAT(p.actual_time,'%Y-%m-%d') <= #{endPayTime}]]>
+                </if>
+                <if test="plannedTime==1">
+                    AND p.planned_time is null
+                </if>
+                <if test="plannedTime==2">
+                    AND p.planned_time is not null
+                </if>
+                <if test="branchId!=null">
+                    AND p.branch_id = #{branchId}
+                </if>
+                <if test="flag!=null">
+                    AND p.flag = #{flag}
+                </if>
+                <if test="actualTimeNow!=null">
+                    AND to_days(p.actual_time) = to_days(now())
+                </if>
+                <if test="plannedTimeNow!=null">
+                    AND to_days(p.planned_time) = to_days(now())
+                </if>
+                <if test="plannedTimeYes!=null">
+                    AND TO_DAYS( NOW( ) ) - TO_DAYS( p.planned_time) >= 1
+                </if>
+                <if test="completionTime!=null">
+                    AND to_days(p.completion_time) = to_days(now())
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="findListByIds" resultMap="ProduceOrderMap">
+        select
+        <include refid="columns"/>
+        from produce_order where id in
+        <foreach collection="list" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findByProductIdAndStockCount" resultType="integer">
+        select
+       count(*)
+        from produce_order where order_product_id=#{productId} and (flag =0 or flag is null) and state=2
+
+    </select>
+
+    <select id="findLogisticsNobyOrderId" resultType="string">
+        select group_concat( DISTINCT (po.logistics_no),lc.name) as logisticsInfo
+        from produce_order po
+        left join logistics_company lc on lc.id=po.logistics_company_id
+        where po.custom_order_id=#{OrderId} and po.logistics_no is not null
+		GROUP BY po.logistics_no
+    </select>
+    <select id="findOutProduceInfoByOrderId" resultType="string">
+        select group_concat( DISTINCT (po.coordination_name)) as coordinationName
+        from produce_order po
+        where po.custom_order_id=#{OrderId} and po.coordination_name is not null
+        GROUP BY po.coordination_name
+    </select>
+
+
+    <select id="findAllProduceNum" resultType="integer">
+
+     SELECT IFNULL(SUM(count),0) num from produce_order
+     <where>
+     <trim prefixOverrides="AND">
+        <if test="orderId != null">
+            AND custom_order_id=#{orderId}
+        </if>
+         <!--<if test="hasDeliver != null">-->
+             <!--AND deliver_status=#{hasDeliver}-->
+         <!--</if>-->
+     </trim>
+     </where>
+    </select>
+
+    <select id="findProduceListByProductId" resultMap="ProduceOrderDtoMap">
+        select
+        p.*
+        ,b.value payName,bb.value typeName,bb.remark partMark
+        ,bbb.value wayName,bbbb.value stateName
+        ,bbbbb.value permitName,
+               lc.name logisticsCompany
+        from produce_order p
+        left join logistics_company lc on p.logistics_company_id =lc.id
+        left join user u on p.creator = u.id
+        left join user uu on p.update_user = uu.id
+        left join basecode b on b.code = p.is_pay and (b.type = 'produceOrderPay' or b.type is null)
+        left join basecode bb on bb.code = p.type and (bb.type = 'produceOrderType'or bb.type is null)
+        left join basecode bbb on bbb.code = p.way and (bbb.type = 'produceOrderWay' or bbb.type is null)
+        left join basecode bbbb on bbbb.code = p.state and (bbbb.type = 'produceOrderState' or bbbb.type is null)
+        left join basecode bbbbb on bbbbb.code = p.permit and (bbbbb.type = 'produceOrderPermit' or bbbbb.type is null)
+        <where>
+            <trim prefixOverrides="AND">
+
+                <if test="id != null">
+                    AND p.order_product_id = #{id} and (p.flag =0 or p.flag is null)
+                </if>
+                <if test="corporatePartnersName != null">
+                    AND p.coordination_name = #{corporatePartnersName}
+                </if>
+                <if test="resources != null ">
+                    AND p.count is not null
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="findListByProductIdAndType" resultMap="ProduceOrderDtoMap">
+        select
+        *
+        from produce_order
+where order_product_id=#{productId} and type=#{type} and (flag =0 or flag is null)
+
+    </select>
+    <select id="findListByProductIdAndState" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        count(*) countDeliver,SUM(count) countInStock
+        from produce_order
+        where order_product_id=#{productId} and <![CDATA[ state >=  #{state} ]]> and (flag =0 or flag is null)
+
+    </select>
+
+    <select id="findHasDeliverCountByProductId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        SUM(has_deliver_count) countInStock
+        from produce_order
+        where order_product_id=#{productId} and count is not null and (flag =0 or flag is null)
+
+    </select>
+    <select id="findHasInPutCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        SUM(count) countInStock
+        from produce_order
+        where order_product_id=#{productId} and count is not null and (flag =0 or flag is null)
+
+    </select>
+
+    <select id="findOneByTypeAndWayAndProductId" resultMap="ProduceOrderMap">
+        select
+        *
+        from produce_order
+        where order_product_id=#{orderProductId} and type=#{type} and way=#{way} and (flag =0 or flag is null)
+
+    </select>
+    <select id="findListByOrderId" resultMap="ProduceOrderDtoMap">
+        select
+        <include refid="columnDtos"/>
+        ,b.value payName,bb.value typeName
+        ,bbb.value wayName,bbbb.value stateName
+        ,bbbbb.value permitName
+        from produce_order p
+        left join user u on p.creator = u.id
+        left join user uu on p.update_user = uu.id
+        left join basecode b on b.code = p.is_pay
+        left join basecode bb on bb.code = p.type
+        left join basecode bbb on bbb.code = p.way
+        left join basecode bbbb on bbbb.code = p.state
+        left join basecode bbbbb on bbbbb.code = p.permit
+        <where>
+        <trim prefixOverrides="AND">
+        and  (p.flag =0 or p.flag is null)
+        and (b.type = 'produceOrderPay' or b.type is null)
+        and (bb.type = 'produceOrderType'or bb.type is null)
+        and (bbb.type = 'produceOrderWay' or bbb.type is null)
+        and (bbbb.type = 'produceOrderState' or bbbb.type is null)
+        and (bbbbb.type = 'produceOrderPermit' or bbbbb.type is null)
+            <if test="id != null">
+                AND p.custom_order_id = #{id}
+            </if>
+            <if test="way != null">
+                and p.way = #{way}
+            </if>
+        </trim>
+        </where>
+    </select>
+
+    <select id="findIncompleteListByOrderId" resultMap="ProduceOrderDtoMap">
+        select
+        <include refid="columnDtos"/>
+        ,b.value payName,bb.value typeName
+        ,bbb.value wayName,bbbb.value stateName
+        ,bbbbb.value permitName
+        from produce_order p
+        left join user u on p.creator = u.id
+        left join user uu on p.update_user = uu.id
+        left join basecode b on b.code = p.is_pay
+        left join basecode bb on bb.code = p.type
+        left join basecode bbb on bbb.code = p.way
+        left join basecode bbbb on bbbb.code = p.state
+        left join basecode bbbbb on bbbbb.code = p.permit
+        where p.custom_order_id = #{id} and (p.flag =0 or p.flag is null)
+        and (b.type = 'produceOrderPay' or b.type is null)
+        and (bb.type = 'produceOrderType'or bb.type is null)
+        and (bbb.type = 'produceOrderWay' or bbb.type is null)
+        and (bbbb.type = 'produceOrderState' or bbbb.type is null)
+        and (bbbbb.type = 'produceOrderPermit' or bbbbb.type is null)
+        and p.state in
+        <foreach collection="state" item="s" open="(" close=")" separator=",">
+            #{s}
+        </foreach>
+        and p.way in
+        <foreach collection="way" item="w" open="(" close=")" separator=",">
+            #{w}
+        </foreach>
+    </select>
+
+    <update id="updatePayByOrderIdAndWays">
+        update produce_order set is_pay = true where custom_order_id = #{orderId} and (flag =0 or flag is null) and way in
+        <foreach collection="ways" open="(" close=")" item="way" separator=",">
+            #{way}
+        </foreach>
+    </update>
+    <select id="findListByOrderIdAndTypesAndWays" resultMap="ProduceOrderMap">
+        select
+        <include refid="columns"/>
+        from produce_order where custom_order_id = #{orderId} and (flag =0 or flag is null)
+        <if test="types!=null and types.size >0">
+            and type in
+            <foreach collection="types" open="(" close=")" item="type" separator=",">
+                #{type}
+            </foreach>
+        </if>
+        <if test="ways!=null and ways.size >0">
+            and way in
+            <foreach collection="ways" open="(" close=")" item="way" separator=",">
+                #{way}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateMapContextByIds">
+        update produce_order
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('updateUser')">
+                    update_user = #{updateUser},
+                </if>
+                <if test="_parameter.containsKey('updateTime')">
+                    update_time = #{updateTime},
+                </if>
+                <if test="_parameter.containsKey('completionTime')">
+                    completion_time = #{completionTime},
+                </if>
+                <if test="_parameter.containsKey('count') and count != null">
+                    count = #{count},
+                </if>
+                <if test="_parameter.containsKey('notes')">
+                    notes = #{notes},
+                </if>
+                <if test="_parameter.containsKey('amount')">
+                    amount = #{amount},
+                </if>
+                <if test="_parameter.containsKey('coordinationName')">
+                    coordination_name = #{coordinationName},
+                </if>
+                <if test="_parameter.containsKey('coordinationAccount')">
+                    coordination_account = #{coordinationAccount},
+                </if>
+                <if test="_parameter.containsKey('coordinationBank')">
+                    coordination_bank = #{coordinationBank},
+                </if>
+                <if test="_parameter.containsKey('pay') and pay != null">
+                    is_pay = #{pay},
+                </if>
+                <if test="_parameter.containsKey('type') and type != null">
+                    type = #{type},
+                </if>
+                <if test="_parameter.containsKey('way') and way != null">
+                    way = #{way},
+                </if>
+                <if test="_parameter.containsKey('state') and state != null">
+                    state = #{state},
+                </if>
+                <if test="_parameter.containsKey('plannedTime')">
+                    planned_time = #{plannedTime},
+                </if>
+                <if test="_parameter.containsKey('actualTime')">
+                    actual_time = #{actualTime},
+                </if>
+                <if test="_parameter.containsKey('orderProductId')">
+                    order_product_id = #{orderProductId},
+                </if>
+                <if test="_parameter.containsKey('permit')">
+                    permit = #{permit},
+                </if>
+                <if test="_parameter.containsKey('flag')">
+                    flag = #{flag},
+                </if>
+                <if test="_parameter.containsKey('logisticsCompanyId')">
+                    logistics_company_id = #{logisticsCompanyId},
+                </if>
+                <if test="_parameter.containsKey('logisticsNo')">
+                    logistics_no = #{logisticsNo},
+                </if>
+                <if test="_parameter.containsKey('delivered')">
+                    delivered = #{delivered},
+                </if>
+                <if test="_parameter.containsKey('deliverer')">
+                    deliverer = #{deliverer},
+                </if>
+                <if test="_parameter.containsKey('deliverStatus')">
+                    deliver_status = #{deliverStatus}
+                </if>
+            </trim>
+        </set>
+        where id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updatePlanTimeByIds">
+        update produce_order set planned_time = #{planTime},state = #{state},actual_time = #{actualTime}
+        ,plan_created = #{planCreated},plan_creator = #{planCreator}
+        where id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteByOrderId">
+        delete from produce_order where custom_order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteByProductId">
+        delete from produce_order where order_product_id = #{pId}
+    </delete>
+
+    <select id="findListOrderIdByPId" resultType="string">
+        select distinct custom_order_id from produce_order where id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findCoordinationPrintInfo" resultMap="coordinationPrintTableDto">
+        select p.*,IFNULL(c.name,cc.name) dealerName,IFNULL(c.founder_name,cc.founder_name) leaderName
+        ,IFNULL(c.leader_tel,cc.leader_tel) leaderTel,IFNULL(customer.name,customer2.name) customerName,IFNULL(customer.phone,customer2.phone) customerTel
+        ,IFNULL(customer.community,customer2.community) community
+        from produce_order p
+        left join custom_order o on p.custom_order_id = o.id
+        left join aftersale_apply a on p.custom_order_id = a.id
+        left join company cc on cc.id = a.company_id
+        left join custom_order co on co.id = a.custom_order_id
+        left join company_customer customer2 on co.customer_id = customer2.id
+        left join company c on o.company_id = c.id
+        left join company_customer customer on o.customer_id = customer.company_id
+        where p.id = #{id}
+    </select>
+
+    <select id="findProduceOrderByProductId" resultMap="ProduceOrderDtoMap">
+        select   p.*,lc.name logisticsCompany,pp.order_parts_identify partMark,b.value typeName,bb.value wayName
+        from produce_order p
+        left join order_product op on op.id=p.order_product_id
+        left join logistics_company lc on lc.id=p.logistics_company_id
+        left join product_parts pp on pp.product_type=op.type and p.type=pp.parts_type and p.way=pp.produce_type
+        left join basecode b on b.code=p.type and b.type='produceOrderType'
+        left join basecode bb on bb.code=p.way and bb.type='produceOrderWay'
+        where  p.order_product_id=#{orderProductId} and (p.flag =0 or p.flag is null)
+    </select>
+
+    <select id="findCoordinationCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+            (select count(*)  from produce_order where  branch_id=#{branchId} and (flag =0 or flag is null) and way=1 and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(now(),'%Y-%m-%d'))as newNum,
+            (select count(*)  from produce_order where  branch_id=#{branchId} and (flag =0 or flag is null) and way=1 and is_pay=0 )as afterNum,
+            (select count(*)  from produce_order where  branch_id=#{branchId} and (flag =0 or flag is null) and way=1 and state=3)as endNum
+    </select>
+    <select id="countTopProduct" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+            (select  count(*) from order_product op left join custom_order co on op.custom_order_id = co.id where op.status='1' and co.branch_id=#{branchId}) as waitProduce,
+            (select  count(*) from order_product op left join custom_order co on op.custom_order_id = co.id where op.status='2' and co.branch_id=#{branchId}) as atProduce,
+            (select  count(*) from order_product op left join custom_order co on op.custom_order_id = co.id where <![CDATA[ op.status>'2' ]]>  and co.branch_id=#{branchId}) as endProduce,
+            (select  count(*) from order_product op left join custom_order co on op.custom_order_id = co.id where
+                      <![CDATA[ op.status='2' and co.branch_id=#{branchId}
+                       and  DATE_FORMAT(SUBDATE(op.plan_finish_time,interval 3 day), '%Y-%m-%d')<=DATE_FORMAT(now(), '%Y-%m-%d')
+                        and  DATE_FORMAT(op.plan_finish_time, '%Y-%m-%d') >DATE_FORMAT(now(), '%Y-%m-%d') ]]> ) as matureProduce,
+            (select  count(*) from order_product op left join custom_order co on op.custom_order_id = co.id where
+                      <![CDATA[  co.branch_id=#{branchId}
+                       and op.status=2 and  DATE_FORMAT(op.plan_order_finish_time, '%Y-%m-%d') < DATE_FORMAT(now(), '%Y-%m-%d')
+                          ]]> ) as lateProduce
+    </select>
+
+</mapper>

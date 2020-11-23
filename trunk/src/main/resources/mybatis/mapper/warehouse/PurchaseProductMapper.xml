@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.procurement.PurchaseProductDao">
+    <resultMap id="PurchaseProductMap" type="com.lwxf.industry4.webapp.domain.entity.procurement.PurchaseProduct">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="purchase_request_id" property="purchaseRequestId" jdbcType="CHAR" />
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operated" property="operated" jdbcType="TIMESTAMP" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="into_storage" property="intoStorage" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="PurchaseProductDtoMap" type="com.lwxf.industry4.webapp.domain.dto.procurement.PurchaseProductDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="purchase_request_id" property="purchaseRequestId" jdbcType="CHAR" />
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operated" property="operated" jdbcType="TIMESTAMP" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="operatorName" property="operatorName" />
+        <result column="productName" property="productName" />
+        <result column="productId" property="productId" />
+        <result column="into_storage" property="intoStorage" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="columns">
+        id, purchase_request_id, supplier_product_id, price, quantity, status, notes, operator, operated, storage_id,into_storage
+    </sql>
+
+    <select id="selectById" resultMap="PurchaseProductMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   purchase_product
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="PurchaseProductMap">
+        SELECT <include refid="columns" />
+        FROM   purchase_product
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="purchaseRequestId != null">
+                AND purchase_request_id = #{purchaseRequestId}
+            </if>
+            <if test="supplierProductId != null">
+                AND supplier_product_id = #{supplierProductId}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="operator != null">
+                AND operator = #{operator}
+            </if>
+            <if test="operated != null">
+                AND operated = #{operated}
+            </if>
+            <if test="storageId != null">
+                AND storage_id = #{storageId}
+            </if>
+            <if test="intoStorage != null">
+                AND into_storage = #{intoStorage}
+            </if>
+        </trim></where>
+
+    </select>
+    <select id="selectProductsByRequestId" resultMap="PurchaseProductDtoMap">
+        SELECT pp.*,u.name operatorName,sp.name productName
+        FROM   purchase_product pp
+          left join supplier_product sp on pp.supplier_product_id=sp.id
+        left join user u on pp.operator=u.id
+        WHERE  purchase_request_id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+            purchase_product(id, purchase_request_id, supplier_product_id, price, quantity, status, notes, operator, operated, storage_id,into_storage)
+        VALUES(#{id}, #{purchaseRequestId}, #{supplierProductId}, #{price}, #{quantity}, #{status}, #{notes}, #{operator}, #{operated}, #{storageId},#{intoStorage})
+    </insert>
+
+    <update id="updateByMapContext">
+        UPDATE purchase_product
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('purchaseRequestId') and purchaseRequestId != null">
+                purchase_request_id = #{purchaseRequestId},
+            </if>
+            <if test="_parameter.containsKey('supplierProductId')">
+                supplier_product_id = #{supplierProductId},
+            </if>
+            <if test="_parameter.containsKey('price') and price != null">
+                price = #{price},
+            </if>
+            <if test="_parameter.containsKey('quantity') and quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="_parameter.containsKey('status')">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('operator')">
+                operator = #{operator},
+            </if>
+            <if test="_parameter.containsKey('operated')">
+                operated = #{operated},
+            </if>
+            <if test="_parameter.containsKey('storageId')">
+                storage_id = #{storageId}
+            </if>
+            <if test="_parameter.containsKey('intoStorage')">
+                into_storage = #{intoStorage}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   purchase_product
+        WHERE  id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.BasecodeDao">
+    <resultMap id="BasecodeMap" type="com.lwxf.industry4.webapp.domain.entity.system.Basecode">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="value" property="value" jdbcType="VARCHAR" />
+        <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, name, type, code, value, order_num, remark, del_flag
+</sql>
+
+    <select id="selectById" resultMap="BasecodeMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   basecode
+WHERE  id = #{id} and del_flag = 0
+</select>
+
+    <select id="selectByFilter" resultMap="BasecodeMap">
+SELECT <include refid="columns" />
+FROM   basecode where del_flag = 0
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="code != null">
+    AND code = #{code}
+</if>
+<if test="value != null">
+    AND value = #{value}
+</if>
+<if test="orderNum != null">
+    AND order_num = #{orderNum}
+</if>
+<if test="remark != null">
+    AND remark = #{remark}
+</if>
+order by order_num asc
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+basecode(id, name, type, code, value, order_num, remark, del_flag)
+  VALUES(#{id}, #{name}, #{type}, #{code}, #{value}, #{orderNum}, #{remark}, #{delFlag})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE basecode
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('code') and code != null">
+    code = #{code},
+</if>
+    <if test="_parameter.containsKey('value') and value != null">
+    value = #{value},
+</if>
+    <if test="_parameter.containsKey('orderNum')">
+    order_num = #{orderNum},
+</if>
+    <if test="_parameter.containsKey('remark')">
+    remark = #{remark},
+</if>
+    <if test="_parameter.containsKey('delFlag')">
+    del_flag = #{delFlag}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <update id="deleteById" parameterType="String">
+        update   basecode
+        set del_flag = 1
+        WHERE  id = #{id}
+</update>
+
+    <select id="findAll" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode
+    </select>
+
+    <select id="findByTypeAndValue" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode where type = #{type} and value = #{value}
+    </select>
+    <select id="findByTypeAndCode" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode where type = #{type} and code = #{code}
+    </select>
+
+    <select id="findByType" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode where type = #{type}
+    </select>
+    <select id="findByTypeAndDelFlag" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode where type = #{type} and del_flag=#{delFlag}
+    </select>
+
+    <select id="findByTypeAndValueAndDelFlag" resultMap="BasecodeMap">
+        select <include refid="columns"/> from basecode where type = #{type} and value=#{value} and del_flag=#{delFlag}
+    </select>
+
+</mapper>

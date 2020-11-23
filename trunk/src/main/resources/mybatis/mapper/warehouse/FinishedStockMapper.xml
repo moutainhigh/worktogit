@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.warehouse.FinishedStockDao">
+    <resultMap id="FinishedStockMap" type="com.lwxf.industry4.webapp.domain.entity.warehouse.FinishedStock">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="packages" property="packages" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="way" property="way" jdbcType="TINYINT" />
+        <result column="flag" property="flag" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="FinishedStockDtoMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.FinishedStockDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="packages" property="packages" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="way" property="way" jdbcType="TINYINT" />
+        <result column="flag" property="flag" jdbcType="VARCHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="estimatedDeliveryDate" property="estimatedDeliveryDate"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="resource_type" property="resourceType" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="FinishedStockItemMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.FinishedStockItemDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="finished_stock_id" property="finishedStockId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="delivered" property="delivered" jdbcType="TIMESTAMP" />
+        <result column="deliverer" property="deliverer" jdbcType="CHAR" />
+        <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+        <result column="is_shipped" property="shipped" jdbcType="BIT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="is_in" property="in" jdbcType="BIT" />
+        <result column="location" property="location" jdbcType="CHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operated" property="operated" jdbcType="TIMESTAMP" />
+        <result column="operatorName" property="operatorName"/>
+        <result column="delivererName" property="delivererName"/>
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, storage_id, order_id, packages, status, notes, creator, created, order_no, way, flag,branch_id,resource_type
+</sql>
+    <sql id="columnFinishedDtoItems">
+        f.id, f.finished_stock_id, f.type, f.creator, f.created, f.delivered, f.deliverer, f.barcode, f.is_shipped, f.notes, f.is_in, f.location, f.operator, f.operated,f.delivererName,f.creatorName,u.name operatorName,f.branch_id
+    </sql>
+    <sql id="columnDtos">
+        f.id, f.storage_id, f.order_id, f.packages, f.status, f.notes, f.creator, f.created, f.order_no, f.way, f.flag,u.name creatorName,f.estimatedDeliveryDate,f.resource_type
+    </sql>
+    <sql id="columnFinishedItems">
+id, finished_stock_id, `type`, creator, created, delivered, deliverer, barcode, is_shipped, notes, is_in, location, operator, operated
+</sql>
+    <select id="selectById" resultMap="FinishedStockMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   finished_stock
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="FinishedStockDtoMap">
+SELECT <include refid="columnDtos" />
+FROM
+      (select f.*,o.estimated_delivery_date estimatedDeliveryDate from finished_stock f left join custom_order o on f.order_id = o.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                f.id = #{id}
+            </if>
+            <if test="storageId != null">
+                AND f.storage_id = #{storageId}
+            </if>
+            <if test="orderId != null">
+                AND f.order_id = #{orderId}
+            </if>
+            <if test="packages != null">
+                AND f.packages = #{packages}
+            </if>
+            <if test="status != null">
+                AND f.status = #{status}
+            </if>
+            <if test="notes != null">
+                AND f.notes = #{notes}
+            </if>
+            <if test="creator != null">
+                AND f.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND f.created = #{created}
+            </if>
+            <if test="orderNo != null">
+                AND f.order_no  like upper(CONCAT('%',#{orderNo},'%'))
+            </if>
+            <if test="way != null">
+                AND f.way = #{way}
+            </if>
+            <if test="flag != null">
+                AND f.flag = #{flag}
+            </if>
+            <if test="branchId != null">
+                AND f.branch_id = #{branchId}
+            </if>
+            <if test="resource_type != null">
+                AND f.resource_type = #{resourceType}
+            </if>
+        </trim></where>
+        )
+        f left join user u on f.creator = u.id
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+finished_stock(id, storage_id, order_id, packages, status, notes, creator, created, order_no, way, flag,branch_id,resource_type)
+        VALUES(#{id}, #{storageId}, #{orderId}, #{packages}, #{status}, #{notes}, #{creator}, #{created}, #{orderNo}, #{way}, #{flag},#{branchId},#{resourceType})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE finished_stock
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('packages') and packages != null">
+    packages = #{packages},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('way') and way != null">
+    way = #{way},
+</if>
+    <if test="_parameter.containsKey('flag')">
+    flag = #{flag}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   finished_stock
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByFinishedStockId" resultMap="FinishedStockItemMap">
+      select <include refid="columnFinishedDtoItems"/> from (select f.*,u.name delivererName from
+        (select f.*,u.name creatorName from finished_stock_item f left join user u on f.creator = u.id)
+        f left join user u on f.deliverer=u.id) f left join user u on f.creator = u.id where f.finished_stock_id=#{id}
+    </select>
+
+    <select id="findOneById" resultMap="FinishedStockDtoMap">
+        SELECT <include refid="columnDtos" />
+        FROM   (
+        select f.*,o.estimated_delivery_date estimatedDeliveryDate from finished_stock f left join custom_order o on f.order_id = o.id where f.id = #{id}
+        ) f left join user u on f.creator = u.id
+    </select>
+
+    <select id="findUnshippedListById" resultMap="FinishedStockItemMap">
+        select <include refid="columnFinishedItems"/> from finished_stock_item  where finished_stock_id = #{id} AND is_shipped = 1
+    </select>
+
+    <select id="findByOrderId" resultMap="FinishedStockMap">
+        select <include refid="columns"/> from finished_stock where order_id = #{orderId}
+    </select>
+
+    <select id="findListByStorageId" resultMap="FinishedStockMap">
+        select <include refid="columns"/> from finished_stock where storage_id = #{id}
+    </select>
+    <select id="findListByOrderId" resultMap="FinishedStockMap">
+        select <include refid="columns"/> from finished_stock where  order_id=#{orderId}
+    </select>
+    <select id="findMapByOrderId" resultType="java.util.Map">
+        select
+        fs.id,fs.packages, fs.notes, u.name as creatorName, fs.created
+        from finished_stock fs
+        left join user u on fs.creator = u.id
+        where fs.order_id #{orderId}
+        limit 1
+    </select>
+
+    <select id="findDispathcBillList" resultMap="FinishedStockDtoMap">
+        SELECT <include refid="columnDtos" />
+        FROM
+        (select f.*,o.estimated_delivery_date estimatedDeliveryDate from finished_stock f left join custom_order o on f.order_id = o.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                f.id = #{id}
+            </if>
+            <if test="storageId != null">
+                AND f.storage_id = #{storageId}
+            </if>
+            <if test="orderId != null">
+                AND f.order_id = #{orderId}
+            </if>
+            <if test="packages != null">
+                AND f.packages = #{packages}
+            </if>
+            <if test="status != null">
+                AND f.status = #{status}
+            </if>
+            <if test="notes != null">
+                AND f.notes = #{notes}
+            </if>
+            <if test="creator != null">
+                AND f.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND f.created = #{created}
+            </if>
+            <if test="orderNo != null">
+                AND f.order_no  like upper(CONCAT('%',#{orderNo},'%'))
+            </if>
+            <if test="way != null">
+                AND f.way = #{way}
+            </if>
+            <if test="flag != null">
+                AND f.flag = #{flag}
+            </if>
+            <if test="branchId != null">
+                AND f.branch_id = #{branchId}
+            </if>
+            <if test="resource_type != null">
+                AND f.resource_type = #{resourceType}
+            </if>
+        </trim></where>
+        )
+        f left join user u on f.creator = u.id
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from finished_stock where order_id = #{orderId}
+    </delete>
+
+    <select id="findWxFinishedList" resultMap="FinishedStockDtoMap">
+        SELECT fs.id ,fs.created,fs.notes,u.name creatorName
+        FROM   finished_stock fs
+        left join user u on fs.creator = u.id
+         where fs.order_id=#{orderId}
+
+    </select>
+
+    <select id="findCountByBranchId" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT (select count(*) from order_product  where custom_order_id in(SELECT id from custom_order where  branch_id=#{branchId} ) and status=3)as dayin,
+               (select count(*) from order_product where date_format(plan_delivery_verify_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and custom_order_id in(SELECT id from custom_order where  branch_id=#{branchId} ))as today,
+               (select count(*) from order_product where   custom_order_id in(SELECT id from custom_order where  branch_id=#{branchId} ) and status=2)as dairuKu,
+               (select count(*) from order_product where   part_stock='1' and  custom_order_id in(SELECT id from custom_order where  branch_id=#{branchId} ))as partStock
+
+    </select>
+</mapper>

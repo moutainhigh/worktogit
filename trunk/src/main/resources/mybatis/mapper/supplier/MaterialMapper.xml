@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.supplier.MaterialDao">
+    <resultMap id="MaterialMap" type="com.lwxf.industry4.webapp.domain.entity.supplier.Material">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="color" property="color" jdbcType="VARCHAR" />
+        <result column="material_level" property="materialLevel" jdbcType="INTEGER" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="material_size" property="materialSize" jdbcType="VARCHAR" />
+        <result column="material_status" property="materialStatus" jdbcType="INTEGER" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+        <result column="unit" property="unit" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="MaterialDtoMap" type="com.lwxf.industry4.webapp.domain.dto.supplier.MaterialDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="color" property="color" jdbcType="VARCHAR" />
+        <result column="material_level" property="materialLevel" jdbcType="INTEGER" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName" jdbcType="VARCHAR" />
+        <result column="material_size" property="materialSize" jdbcType="VARCHAR" />
+        <result column="material_status" property="materialStatus" jdbcType="INTEGER" />
+        <result column="price" property="price" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+        <result column="typeName" property="typeName"  />
+        <result column="unit" property="unit" jdbcType="INTEGER" />
+        <result column="unitType" property="unitType" />
+    </resultMap>
+    <resultMap id="SupplierMap" type="com.lwxf.industry4.webapp.domain.entity.supplier.Supplier">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="supplier_level" property="supplierLevel" jdbcType="TINYINT" />
+        <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+        <result column="end_sign_time" property="endSignTime" jdbcType="TIMESTAMP" />
+        <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="supplier_phone" property="supplierPhone" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="area" property="area" jdbcType="CHAR" />
+        <result column="lng" property="lng" jdbcType="FLOAT" />
+        <result column="lat" property="lat" jdbcType="FLOAT" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="supplier_stage" property="supplierStage" jdbcType="TINYINT" />
+        <result column="factory_contact" property="factoryContact" jdbcType="CHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+
+id, name, color, material_level, created, creator,branch_id,material_size,material_status,category_id,unit
+</sql>
+    <sql id="columnDtos">
+        m.id, m.name, m.color, m.material_level, m.created, m.creator,m.branch_id,m.material_size,m.material_status,m.category_id,m.unit
+    </sql>
+    <select id="selectById" resultMap="MaterialMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   material
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="MaterialMap">
+SELECT <include refid="columns" />
+FROM   material
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="color != null">
+    AND color = #{color}
+</if>
+<if test="materialLevel != null">
+    AND material_level = #{materialLevel}
+</if>
+    <if test="materialSize != null">
+        AND material_size = #{materialSize}
+    </if>
+    <if test="materialStatus != null">
+        AND material_status = #{materialStatus}
+    </if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+    <if test="categoryId != null">
+        AND category_id = #{categoryId}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+material(id, name, color, material_level, created, creator,branch_id,material_size,material_status,category_id,unit)
+  VALUES(#{id}, #{name}, #{color}, #{materialLevel}, #{created}, #{creator},#{branchId},#{materialSize},#{materialStatus},#{categoryId},#{unit})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE material
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('color')">
+    color = #{color},
+</if>
+    <if test="_parameter.containsKey('materialLevel')">
+    material_level = #{materialLevel},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('categoryId')">
+        category_id = #{categoryId},
+    </if>
+    <if test="_parameter.containsKey('branchId')">
+        branch_id = #{branchId},
+    </if>
+    <if test="_parameter.containsKey('materialSize')">
+        material_size = #{materialSize},
+    </if>
+    <if test="_parameter.containsKey('categoryId')">
+        category_id = #{categoryId},
+    </if>
+    <if test="_parameter.containsKey('unit')">
+        unit = #{unit}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   material
+WHERE  id = #{id}
+</delete>
+
+    <select id="findMaterialList" resultMap="MaterialDtoMap">
+        SELECT <include refid="columnDtos" />,u.name creatorName,b.value typeName,bb.value unitType
+        FROM   material m
+          left join user u on u.id=m.creator
+        left join basecode b on m.category_id=b.id
+        left join basecode bb on m.unit=bb.code and bb.type='unitType'
+        <where><trim prefixOverrides="AND">
+            <if test="name != null">
+                AND m.name = #{name}
+            </if>
+            <if test="color != null">
+                AND m.color = #{color}
+            </if>
+            <if test="materialLevel != null">
+                AND m.material_level = #{materialLevel}
+            </if>
+            <if test="created != null">
+                AND m.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND m.creator = #{creator}
+            </if>
+            <if test="branchId != null">
+            AND m.branch_id = #{branchId}
+            </if>
+            <if test="categoryId != null">
+                AND m.category_id = #{categoryId}
+            </if>
+            <if test="materialStatus != null">
+                AND m.material_status = #{materialStatus}
+            </if>
+            <if test="supplierId != null">
+                AND m.id in(select sp.material_id from supplier_product sp where sp.supplier_id=#{supplierId})
+            </if>
+        </trim></where>
+        ORDER BY m.material_status,m.created desc
+    </select>
+
+    <select id="findMaterialInfoById" resultMap="MaterialDtoMap">
+        SELECT <include refid="columnDtos" />,u.name as creatorName,b.value as typeName,bb.value unitType
+        FROM   material m
+        left join user u on u.id=m.creator
+        left join basecode b on m.category_id=b.id
+        left join basecode bb on m.unit=bb.code and bb.type='unitType'
+        where  m.id = #{materialId}
+    </select>
+    <select id="findByNameAndColorAndLvAndSize" resultMap="MaterialDtoMap">
+        SELECT <include refid="columnDtos" />
+        FROM   material m
+        where  m.name = #{name} and m.color=#{color} and m.material_level=#{materialLevel} and m.material_size=#{materialSize}
+    </select>
+
+    <select id="findSuppliersByMaterialId" resultMap="SupplierMap">
+        SELECT s.*
+        FROM   supplier s
+        left join supplier_product sp on s.id=sp.supplier_id
+        left join material m on m.id=sp.material_id
+        where  m.id = #{materialId}
+    </select>
+
+    <select id="findAllMaterials" resultMap="MaterialDtoMap">
+        SELECT m.*,u.name creatorName,sp.price,b.name typeName
+        FROM   material m
+          left join user u on u.id=m.creator
+        left join basecode b on m.category_id=b.id
+        left join supplier_product sp on m.id=sp.material_id
+        <where><trim prefixOverrides="AND">
+            <if test="supplierId != null">
+                sp.supplier_id = #{supplierId}
+            </if>
+        </trim></where>
+
+    </select>
+
+</mapper>

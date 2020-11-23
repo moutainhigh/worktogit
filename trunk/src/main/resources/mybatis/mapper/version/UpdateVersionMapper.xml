@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.version.UpdateVersionDao">
+    <resultMap id="UpdateVersionMap" type="com.lwxf.industry4.webapp.domain.entity.version.UpdateVersion">
+        <result column="version_id" property="versionId" jdbcType="INTEGER" />
+        <result column="version_no" property="versionNo" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sys_type" property="sysType" jdbcType="TINYINT" />
+        <result column="platform" property="platform" jdbcType="TINYINT" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="md5_value" property="md5Value" jdbcType="VARCHAR" />
+        <result column="update_state" property="updateState" jdbcType="TINYINT" />
+        <result column="file_size" property="fileSize" jdbcType="INTEGER" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+version_id, version_no, version, name, sys_type, platform, url, md5_value, update_state, file_size, description, create_user, create_time, update_user, update_time
+</sql>
+
+    <select id="findVersionNo" resultMap="UpdateVersionMap" >
+SELECT <include refid="columns" />
+FROM   update_version uv
+WHERE  uv.sys_type=#{sysType} and uv.platform=#{platform}
+</select>
+
+    <select id="selectByFilter" resultMap="UpdateVersionMap">
+SELECT <include refid="columns" />
+FROM   update_version
+<where><trim prefixOverrides="AND">
+<if test="versionId != null">
+    version_id = #{versionId}
+</if>
+<if test="versionNo != null">
+    AND version_no = #{versionNo}
+</if>
+<if test="version != null">
+    AND version = #{version}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="sysType != null">
+    AND sys_type = #{sysType}
+</if>
+<if test="platform != null">
+    AND platform = #{platform}
+</if>
+<if test="url != null">
+    AND url = #{url}
+</if>
+<if test="md5Value != null">
+    AND md5_value = #{md5Value}
+</if>
+<if test="updateState != null">
+    AND update_state = #{updateState}
+</if>
+<if test="fileSize != null">
+    AND file_size = #{fileSize}
+</if>
+<if test="description != null">
+    AND description = #{description}
+</if>
+<if test="createUser != null">
+    AND create_user = #{createUser}
+</if>
+<if test="createTime != null">
+    AND create_time = #{createTime}
+</if>
+<if test="updateUser != null">
+    AND update_user = #{updateUser}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+update_version(version_id, version_no, version, name, sys_type, platform, url, md5_value, update_state, file_size, description, create_user, create_time, update_user, update_time)
+        VALUES(#{versionId}, #{versionNo}, #{version}, #{name}, #{sysType}, #{platform}, #{url}, #{md5Value}, #{updateState}, #{fileSize}, #{description}, #{createUser}, #{createTime}, #{updateUser}, #{updateTime})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE update_version
+<set><trim suffixOverrides=",">
+    <if test="_parameter.containsKey('versionNo')">
+    version_no = #{versionNo},
+</if>
+    <if test="_parameter.containsKey('version')">
+    version = #{version},
+</if>
+    <if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('sysType')">
+    sys_type = #{sysType},
+</if>
+    <if test="_parameter.containsKey('platform')">
+    platform = #{platform},
+</if>
+    <if test="_parameter.containsKey('url')">
+    url = #{url},
+</if>
+    <if test="_parameter.containsKey('md5Value')">
+    md5_value = #{md5Value},
+</if>
+    <if test="_parameter.containsKey('updateState')">
+    update_state = #{updateState},
+</if>
+    <if test="_parameter.containsKey('fileSize')">
+    file_size = #{fileSize},
+</if>
+    <if test="_parameter.containsKey('description')">
+    description = #{description},
+</if>
+    <if test="_parameter.containsKey('createUser')">
+    create_user = #{createUser},
+</if>
+    <if test="_parameter.containsKey('createTime')">
+    create_time = #{createTime},
+</if>
+    <if test="_parameter.containsKey('updateUser')">
+    update_user = #{updateUser},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime}
+</if>
+</trim></set>
+WHERE  version_id = #{versionId}
+</update>
+
+<select id="findOneByTypeAndPlatform" resultMap="UpdateVersionMap">
+    select <include refid="columns"/> from update_version where sys_type = #{type} and platform = #{platform}
+</select>
+
+    <update id="updateByUpdateVersion">
+        update from update_version
+    </update>
+
+    <select id="findOneByVersionId" resultMap="UpdateVersionMap">
+        select <include refid="columns"/> from update_version where version_id = #{id}
+    </select>
+
+    <delete id="deleteByVersionId">
+        delete from update_version where version_id = #{id}
+    </delete>
+</mapper>

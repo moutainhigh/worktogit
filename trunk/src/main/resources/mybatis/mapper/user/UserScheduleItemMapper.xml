@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserScheduleItemDao">
+    <resultMap id="UserScheduleItemMap" type="com.lwxf.industry4.webapp.domain.entity.user.UserScheduleItem">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="user_schedule_id" property="userScheduleId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, type, notes, start_time, end_time, user_schedule_id,status
+</sql>
+
+    <select id="selectById" resultMap="UserScheduleItemMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   user_schedule_item
+WHERE  id = #{id}
+</select>
+    <select id="findUserScheduleItem" resultMap="UserScheduleItemMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_schedule_item
+        WHERE  user_schedule_id =#{userScheduleId}
+    </select>
+
+    <select id="selectByFilter" resultMap="UserScheduleItemMap">
+SELECT <include refid="columns" />
+FROM   user_schedule_item
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="startTime != null">
+    AND start_time = #{startTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="userScheduleId != null">
+    AND user_schedule_id = #{userScheduleId}
+</if>
+    <if test="status != null">
+        AND status = #{status}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+user_schedule_item(id, type, notes, start_time, end_time, user_schedule_id,status)
+            VALUES(#{id}, #{type}, #{notes}, #{startTime}, #{endTime}, #{userScheduleId},#{status})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE user_schedule_item
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+        status = #{status},
+    </if>
+    <if test="_parameter.containsKey('notes') and notes != null">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('startTime') and startTime != null">
+    start_time = #{startTime},
+</if>
+    <if test="_parameter.containsKey('endTime') and endTime != null">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('userScheduleId') and userScheduleId != null">
+    user_schedule_id = #{userScheduleId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_schedule_item
+WHERE  id = #{id}
+</delete>
+
+</mapper>

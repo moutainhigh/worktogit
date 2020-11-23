@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealer.DealerAccountDao">
+    <resultMap id="DealerAccountMap" type="com.lwxf.industry4.webapp.domain.entity.dealer.DealerAccount">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="nature" property="nature" jdbcType="TINYINT" />
+        <result column="balance" property="balance" jdbcType="DECIMAL" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, company_id, type, status, nature, balance
+</sql>
+
+    <select id="selectById" resultMap="DealerAccountMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dealer_account
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="DealerAccountMap">
+        SELECT <include refid="columns" />
+        FROM   dealer_account
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="nature != null">
+                AND nature = #{nature}
+            </if>
+            <if test="balance != null">
+                AND balance = #{balance}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+dealer_account(id, company_id, type, status, nature, balance,branch_id)
+        VALUES(#{id}, #{companyId}, #{type}, #{status}, #{nature}, #{balance},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE dealer_account
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('nature') and nature != null">
+                nature = #{nature},
+            </if>
+            <if test="_parameter.containsKey('balance') and balance != null">
+                balance = #{balance},
+            </if>
+            <if test="_parameter.containsKey('branchId') and branchId != null">
+                branch_id = #{branchId}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dealer_account
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByCompanIdAndNature" resultMap="DealerAccountMap">
+        select
+        <include refid="columns"/>
+        from  dealer_account
+        where company_id = #{companyId}
+        and nature = #{nature}
+    </select>
+
+    <select id="findByCompanIdAndNatureAndType" resultMap="DealerAccountMap">
+        select
+        <include refid="columns"/>
+        from  dealer_account
+        where company_id = #{companyId}
+        and nature = #{nature}
+        and type = #{type}
+    </select>
+
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.productattribute.ProductAttributeValueDao">
+    <resultMap id="ProductAttributeValueMap" type="com.lwxf.industry4.webapp.domain.entity.productattribute.ProductAttributeValue">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="product_attribute_key_id" property="productAttributeKeyId" jdbcType="CHAR" />
+        <result column="attribute_value" property="attributeValue" jdbcType="VARCHAR" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="BIT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="del_flag" property="delFlag" jdbcType="BIT" />
+        <result column="key_name" property="keyName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, branch_id, product_attribute_key_id, attribute_value, sort, status, creator, created, updator, updated, del_flag,key_name
+</sql>
+
+    <select id="selectById" resultMap="ProductAttributeValueMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_attribute_value
+WHERE  id = #{id}
+</select>
+
+    <select id="findByKeyId" resultMap="ProductAttributeValueMap">
+SELECT <include refid="columns" />
+FROM   product_attribute_value
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+<if test="productAttributeKeyId != null">
+    AND product_attribute_key_id = #{productAttributeKeyId}
+</if>
+<if test="attributeValue != null">
+    AND attribute_value = #{attributeValue}
+</if>
+<if test="sort != null">
+    AND sort = #{sort}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="updator != null">
+    AND updator = #{updator}
+</if>
+<if test="updated != null">
+    AND updated = #{updated}
+</if>
+<if test="delFlag != null">
+    AND del_flag = #{delFlag}
+</if>
+</trim></where>
+order by created desc
+</select>
+    <select id="findByKeyIdAndValue" resultMap="ProductAttributeValueMap">
+        SELECT <include refid="columns" />
+        FROM   product_attribute_value
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="productAttributeKeyId != null">
+                AND product_attribute_key_id = #{productAttributeKeyId}
+            </if>
+            <if test="attributeValue != null">
+                AND attribute_value = #{attributeValue}
+            </if>
+            <if test="sort != null">
+                AND sort = #{sort}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="updator != null">
+                AND updator = #{updator}
+            </if>
+            <if test="updated != null">
+                AND updated = #{updated}
+            </if>
+            <if test="delFlag != null">
+                AND del_flag = #{delFlag}
+            </if>
+        </trim></where>
+        order by sort asc
+    </select>
+    <select id="selectByFilter" resultMap="ProductAttributeValueMap">
+        SELECT <include refid="columns" />
+        FROM   product_attribute_value
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="productAttributeKeyId != null">
+                AND product_attribute_key_id = #{productAttributeKeyId}
+            </if>
+            <if test="attributeValue != null">
+                AND attribute_value = #{attributeValue}
+            </if>
+            <if test="sort != null">
+                AND sort = #{sort}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="updator != null">
+                AND updator = #{updator}
+            </if>
+            <if test="updated != null">
+                AND updated = #{updated}
+            </if>
+            <if test="delFlag != null">
+                AND del_flag = #{delFlag}
+            </if>
+        </trim></where>
+
+    </select>
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_attribute_value(id, branch_id, product_attribute_key_id, attribute_value, sort, status, creator, created, updator, updated, del_flag,key_name)
+                 VALUES(#{id}, #{branchId}, #{productAttributeKeyId}, #{attributeValue}, #{sort}, #{status}, #{creator}, #{created}, #{updator}, #{updated}, #{delFlag},#{keyName})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_attribute_value
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId},
+</if>
+    <if test="_parameter.containsKey('productAttributeKeyId')">
+    product_attribute_key_id = #{productAttributeKeyId},
+</if>
+    <if test="_parameter.containsKey('attributeValue')">
+    attribute_value = #{attributeValue},
+</if>
+    <if test="_parameter.containsKey('sort')">
+    sort = #{sort},
+</if>
+    <if test="_parameter.containsKey('status')">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('updator')">
+    updator = #{updator},
+</if>
+    <if test="_parameter.containsKey('updated')">
+    updated = #{updated},
+</if>
+    <if test="_parameter.containsKey('delFlag')">
+    del_flag = #{delFlag}
+</if>,
+    <if test="_parameter.containsKey('keyName')">
+        key_name = #{keyName}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_attribute_value
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.paymentStatement.PaymentStatementDao">
+    <select id="selectByfilter" resultType="java.lang.Double">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount from payment where type = 1
+            <if test="beginDate != null and endDate != ''">
+                <![CDATA[
+                and date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(created,'%Y-%m-%d') = date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,date_format(created,'MM-dd') as countDate from payment where type = 2
+            <if test="beginDate != null and endDate != ''">
+                <![CDATA[
+                and date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(created,'%Y-%m-%d') = date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount from payment where funds=11 and type=1
+            <if test="beginDate != null and endDate != ''">
+                <![CDATA[
+                and date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(created,'%Y-%m-%d') = date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>
+        </if>
+        <if test="countType != null and countType != '' and countType =='4'.toString()">
+            select
+            (select sum(amount) as amount from payment where funds=11 and type=1
+            <if test="beginDate != null and endDate != ''">
+                <![CDATA[
+                and date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(created,'%Y-%m-%d') = date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>
+            -
+            (select sum(amount) as amount from payment where funds=11 and type=1
+            <if test="beginDate != null and endDate != ''">
+                <![CDATA[
+                and  created >= #{beginDate} and created < #{endDate}
+                ]]>
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(created,'%Y-%m-%d') = date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>)
+        </if>
+    </select>
+
+
+    <select id="countPaymentByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='4'.toString()">
+            select
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1)))- (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1)))) as mon,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2)))-(select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2)))) as tues,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3)))-(select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3)))) as wed,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4)))- (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4)))) as thur,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5)))-(select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5)))) as fri,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6)))-(select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6)))) as sat,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7)))-(select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7)))) as sun
+        </if>
+    </select>
+
+    <select id="countPaymentByMonth" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+    <![CDATA[
+      select
+       (select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))  as point1,
+       (select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day)) as point2,
+       (select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day)) as point3,
+       (select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate())) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+      select
+       (select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))  as point1,
+       (select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day)) as point2,
+       (select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day)) as point3,
+       (select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate())) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            <![CDATA[
+        select
+               (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))  as point1,
+               (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day)) as point2,
+               (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day)) as point3,
+               (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate())) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='4'.toString()">
+            <![CDATA[
+        select
+       ((select IFNULL(sum(amount),0) from payment where type=1 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))-(select IFNULL(sum(amount),0) from payment where type=2 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day)))  as point1,
+       ((select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day))-(select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day))) as point2,
+       ((select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day))-(select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day))) as point3,
+       ((select IFNULL(sum(amount),0) from payment where type=1 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate()))-(select IFNULL(sum(amount),0) from payment where type=2 and  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate()))) as point4
+       ]]>
+        </if>
+    </select>
+
+    <select id="countPaymentByQuarter" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month1})  as month1,
+            (select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month2})  as month2,
+            (select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month3})  as month3
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where type=2 and month(created) =#{month1})  as month1,
+            (select IFNULL(sum(amount),0) from payment where type=2 and month(created) =#{month2})  as month2,
+            (select IFNULL(sum(amount),0) from payment where type=2 and month(created) =#{month3})  as month3
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created) =#{month1})  as month1,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created) =#{month2}) as month2,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created) =#{month3})  as month3
+        </if>
+        <if test="countType != null and countType != '' and countType =='4'.toString()">
+            select
+            ((select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month1})-(select IFNULL(sum(amount),0) from payment where type=1 and  month(created) =#{month1}))  as month1,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month2})-(select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month2}))  as month2,
+            ((select IFNULL(sum(amount),0) from payment where type=1 and month(created) =#{month3})-(select IFNULL(sum(amount),0) from payment where type=1  and month(created) =#{month3}))  as month3
+        </if>
+    </select>
+
+    <select id="countPaymentByYear" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+        <![CDATA[
+         select
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=1) as jan,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=2) as feb,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=3) as mar,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=4) as apr,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=5) as may,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=6) as jun,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=7) as jul,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=8) as aug,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=9) as sept,
+           (select IFNULL(sum(amount),0) from payment where type=1 and month(created)=10) as oct,
+           (select IFNULL(sum(amount),0) from payment where type=1 and  month(created)=11) as nov,
+           (select IFNULL(sum(amount),0) from payment where type=1 and month(created)=12) as dece
+             ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            <![CDATA[
+        select
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=1) as jan,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=2) as feb,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=3) as mar,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=4) as apr,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=5) as may,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=6) as jun,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=7) as jul,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=8) as aug,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=9) as sept,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=10) as oct,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=11) as nov,
+           (select IFNULL(sum(amount),0) from payment where type=2 and  month(created)=12) as dece
+             ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=1) as jan,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=2) as feb,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=3) as mar,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=4) as apr,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=5) as may,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=6) as jun,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=7) as jul,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=8) as aug,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=9) as sept,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=10) as oct,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=11) as nov,
+            (select IFNULL(sum(amount),0) from payment where funds=11 and type=1 and month(created)=12) as dece
+        </if>
+        <if test="countType != null and countType != '' and countType =='4'.toString()">
+            <![CDATA[
+        select
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=1)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=1)) as jan,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=2)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as feb,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=3)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as mar,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=4)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as apr,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=5)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as may,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=6)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as jun,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=7)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as jul,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=8)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as aug,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=9)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as sept,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=10)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as oct,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=11)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=2)) as nov,
+           ((select IFNULL(sum(amount),0) from payment where type=1 and month(created)=12)-(select IFNULL(sum(amount),0) from payment where type=2 and month(created)=12)) as dece
+             ]]>
+        </if>
+    </select>
+
+ <!--统计下测科目信息 -->
+    <select id="countFundsStatementByWeek" resultType="com.lwxf.industry4.webapp.domain.dto.statement.PaymentCountByFunds">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=1 and YEARWEEK(date_format(created,'%Y-%m-%d'),1) = YEARWEEK(now(),1) group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=2 and YEARWEEK(date_format(created,'%Y-%m-%d'),1) = YEARWEEK(now(),1) group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where funds in (11,12,13,14,15) and type=1 and YEARWEEK(date_format(created,'%Y-%m-%d'),1) = YEARWEEK(now(),1) group by funds
+        </if>
+    </select>
+    <select id="countFundsStatementByMonth" resultType="com.lwxf.industry4.webapp.domain.dto.statement.PaymentCountByFunds">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=1 and DATE_FORMAT(created, '%Y%m') = DATE_FORMAT(CURDATE() ,'%Y%m')  group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=2 and DATE_FORMAT(created, '%Y%m') = DATE_FORMAT(CURDATE() ,'%Y%m') group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where funds in (11,12,13,14,15) and type=1 and DATE_FORMAT(created, '%Y%m') = DATE_FORMAT(CURDATE() ,'%Y%m') group by funds
+        </if>
+    </select>
+    <select id="countFundsStatementByQuarter" resultType="com.lwxf.industry4.webapp.domain.dto.statement.PaymentCountByFunds">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=1 and QUARTER(created)=QUARTER(now()) group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=2 and QUARTER(created)=QUARTER(now()) group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where funds in (11,12,13,14,15) and type=1 and QUARTER(created)=QUARTER(now()) group by funds
+        </if>
+    </select>
+    <select id="countFundsStatementByYear" resultType="com.lwxf.industry4.webapp.domain.dto.statement.PaymentCountByFunds">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=1 and YEAR(created)=YEAR(NOW()) group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=2 and YEAR(created)=YEAR(NOW())  group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where funds in (11,12,13,14,15) and type=1 and YEAR(created)=YEAR(NOW()) group by funds
+        </if>
+    </select>
+    <select id="selectFundsStatementByFilter" resultType="com.lwxf.industry4.webapp.domain.dto.statement.PaymentCountByFunds">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=1
+            <if test="date != null and date != ''">
+                <![CDATA[
+                and  created == date_format(#{beginDate},'yyyy-MM-dd')
+                ]]>
+            </if>
+            group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where type=2
+            <if test="date != null and date != ''">
+                <![CDATA[
+                and  created == date_format(#{beginDate},'yyyy-MM-dd')
+                ]]>
+            </if>
+            group by funds
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(amount) as amount,funds,count(*) as count from payment where funds in (11,12,13,14,15) and type=1
+            <if test="date != null and date != ''">
+                <![CDATA[
+                and  created == date_format(#{beginDate},'yyyy-MM-dd')
+                ]]>
+            </if>
+            group by funds
+        </if>
+    </select>
+
+    <select id="selectTwoDaysContrast" resultType="com.lwxf.industry4.webapp.domain.dto.statement.FinanceReportOrderDto">
+        <foreach collection="dateList" item="item" index="index" separator="union all">
+            SELECT
+            DATE_FORMAT(#{item}, '%Y-%m-%d') reportDate,
+            (SELECT COUNT(*)
+            FROM custom_order co
+            LEFT JOIN payment p ON p.custom_order_id = co.id
+            WHERE <![CDATA[ co.status>1 and co.status != 8]]>
+            AND DATE_FORMAT(p.pay_time, '%Y-%m-%d') = DATE_FORMAT(#{item}, '%Y-%m-%d')
+            ) hasApproveOrderTotal,
+            (SELECT COALESCE(SUM(co2.factory_final_price),0)
+            FROM custom_order co2
+            LEFT JOIN payment p2 ON p2.custom_order_id = co2.id
+            WHERE <![CDATA[ co2.status>1 and co2.status != 8]]>
+            AND DATE_FORMAT(p2.pay_time, '%Y-%m-%d') = DATE_FORMAT(#{item}, '%Y-%m-%d')
+            ) hasApproveOrderMoneyTotal,
+            (SELECT COUNT(*)
+            FROM custom_order co3
+            WHERE <![CDATA[ co3.status=1 ]]>
+            AND DATE_FORMAT(co3.commit_time, '%Y-%m-%d') = DATE_FORMAT(#{item}, '%Y-%m-%d')
+            ) noApproveOrderTotal,
+            (SELECT COALESCE(SUM(co4.factory_final_price),0)
+            FROM custom_order co4
+            WHERE <![CDATA[ co4.status=1 ]]>
+            AND DATE_FORMAT(co4.commit_time, '%Y-%m-%d') = DATE_FORMAT(#{item}, '%Y-%m-%d')
+            ) noApproveOrderMoneyTotal
+        </foreach>
+    </select>
+
+    <select id="selectTwoMonthContrast" resultType="com.lwxf.industry4.webapp.domain.dto.statement.FinanceReportOrderDto">
+        <foreach collection="dateList" item="item" index="index" separator="union all">
+            SELECT
+            DATE_FORMAT(#{item}, '%Y-%m') reportDate,
+            (SELECT COUNT(*)
+            FROM custom_order co1
+            LEFT JOIN payment p ON p.custom_order_id = co1.id
+            WHERE <![CDATA[ co1.status>1 and co1.status != 8]]>
+            AND DATE_FORMAT(p.pay_time, '%Y%m') = DATE_FORMAT(#{item}, '%Y%m')
+            ) hasApproveOrderTotal,
+            (SELECT COALESCE(SUM(co2.factory_final_price),0)
+            FROM custom_order co2
+            LEFT JOIN payment p2 ON p2.custom_order_id = co2.id
+            WHERE <![CDATA[ co2.status>1 and co2.status != 8]]>
+            AND DATE_FORMAT(p2.pay_time, '%Y%m') = DATE_FORMAT(#{item}, '%Y%m')
+            ) hasApproveOrderMoneyTotal,
+            (SELECT COUNT(*)
+            FROM custom_order co3
+            WHERE <![CDATA[ co3.status=1 ]]>
+            AND DATE_FORMAT(co3.commit_time, '%Y%m') = DATE_FORMAT(#{item}, '%Y%m')
+            ) noApproveOrderTotal,
+            (SELECT COALESCE(SUM(co4.factory_final_price),0)
+            FROM custom_order co4
+            WHERE <![CDATA[ co4.status=1 ]]>
+            AND DATE_FORMAT(co4.commit_time, '%Y%m') = DATE_FORMAT(#{item}, '%Y%m')
+            ) noApproveOrderMoneyTotal
+        </foreach>
+    </select>
+</mapper>

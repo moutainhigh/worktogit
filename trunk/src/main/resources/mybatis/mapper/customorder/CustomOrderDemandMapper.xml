@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderDemandDao">
+    <resultMap id="CustomOrderDemandMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderDemand">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="design_scheme" property="designScheme" jdbcType="CHAR" />
+        <result column="product_series" property="productSeries" jdbcType="CHAR" />
+        <result column="product_model" property="productModel" jdbcType="VARCHAR" />
+        <result column="door_texture" property="doorTexture" jdbcType="VARCHAR" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="door_model" property="doorModel" jdbcType="VARCHAR" />
+        <result column="cabinet_texture" property="cabinetTexture" jdbcType="VARCHAR" />
+        <result column="cabinet_color" property="cabinetColor" jdbcType="VARCHAR" />
+        <result column="cabinet_series" property="cabinetSeries" jdbcType="VARCHAR" />
+        <result column="handle_style" property="handleStyle" jdbcType="VARCHAR" />
+        <result column="handle_color" property="handleColor" jdbcType="VARCHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="CustomOrderDemandMapDto" type="com.lwxf.industry4.webapp.domain.dto.customorder.CustomOrderDemandDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="design_scheme" property="designScheme" jdbcType="CHAR" />
+        <result column="product_series" property="productSeries" jdbcType="CHAR" />
+        <result column="product_model" property="productModel" jdbcType="VARCHAR" />
+        <result column="door_texture" property="doorTexture" jdbcType="VARCHAR" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="door_model" property="doorModel" jdbcType="VARCHAR" />
+        <result column="cabinet_texture" property="cabinetTexture" jdbcType="VARCHAR" />
+        <result column="cabinet_color" property="cabinetColor" jdbcType="VARCHAR" />
+        <result column="cabinet_series" property="cabinetSeries" jdbcType="VARCHAR" />
+        <result column="handle_style" property="handleStyle" jdbcType="VARCHAR" />
+        <result column="handle_color" property="handleColor" jdbcType="VARCHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+        <result property="creatorName" column="creatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, content, name, creator, created, custom_order_id, no, design_scheme, product_series, product_model, door_texture, door_color, door_model, cabinet_texture, cabinet_color, cabinet_series, handle_style, handle_color, order_product_id
+</sql>
+
+    <sql id="colunmDtos">
+d.*,u.name creatorName
+    </sql>
+
+    <select id="selectById" resultMap="CustomOrderDemandMap" parameterType="String">
+SELECT
+<include refid="columns"/>
+FROM   custom_order_demand
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByDemandId" resultMap="CustomOrderDemandMapDto" parameterType="String">
+SELECT
+cod.*, ds.name as designSchemeName,fps.name as productSeriesName,u.name creatorName
+FROM   custom_order_demand cod
+left join design_scheme ds on ds.id = cod.design_scheme
+left join finished_product_series fps on fps.id = cod.product_series
+left join user u on cod.creator = u.id
+WHERE  cod.id = #{id}
+order by cod.created desc
+</select>
+
+    <select id="selectByFilter" resultMap="CustomOrderDemandMap">
+        SELECT <include refid="columns" />
+        FROM   custom_order_demand
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="content != null">
+                AND content = #{content}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="customOrderId != null">
+                AND custom_order_id = #{customOrderId}
+            </if>
+            <if test="no != null">
+                AND no = #{no}
+            </if>
+            <if test="designScheme != null">
+                AND design_scheme = #{designScheme}
+            </if>
+            <if test="productSeries != null">
+                AND product_series = #{productSeries}
+            </if>
+            <if test="productModel != null">
+                AND product_model = #{productModel}
+            </if>
+            <if test="doorTexture != null">
+                AND door_texture = #{doorTexture}
+            </if>
+            <if test="doorColor != null">
+                AND door_color = #{doorColor}
+            </if>
+            <if test="doorModel != null">
+                AND door_model = #{doorModel}
+            </if>
+            <if test="cabinetTexture != null">
+                AND cabinet_texture = #{cabinetTexture}
+            </if>
+            <if test="cabinetColor != null">
+                AND cabinet_color = #{cabinetColor}
+            </if>
+            <if test="cabinetSeries != null">
+                AND cabinet_series = #{cabinetSeries}
+            </if>
+            <if test="handleStyle != null">
+                AND handle_style = #{handleStyle}
+            </if>
+            <if test="handleColor != null">
+                AND handle_color = #{handleColor}
+            </if>
+            <if test="orderProductId != null">
+                AND order_product_id = #{orderProductId}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <select id="findByorderId" resultMap="CustomOrderDemandMap">
+      select
+      id, content, created,no,name
+        from custom_order_demand
+        where custom_order_id = #{orderId}
+        order by created desc
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from
+        custom_order_demand
+        where custom_order_id = #{orderId}
+    </delete>
+
+
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+custom_order_demand(id, content, name, creator, created, custom_order_id, no, design_scheme, product_series, product_model, door_texture, door_color, door_model, cabinet_texture, cabinet_color, cabinet_series, handle_style, handle_color, order_product_id)
+             VALUES(#{id}, #{content}, #{name}, #{creator}, #{created}, #{customOrderId}, #{no}, #{designScheme}, #{productSeries}, #{productModel}, #{doorTexture}, #{doorColor}, #{doorModel}, #{cabinetTexture}, #{cabinetColor}, #{cabinetSeries}, #{handleStyle}, #{handleColor}, #{orderProductId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE custom_order_demand
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('content')">
+                content = #{content},
+            </if>
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('no') and no != null">
+                no = #{no},
+            </if>
+            <if test="_parameter.containsKey('designScheme')">
+                design_scheme = #{designScheme},
+            </if>
+            <if test="_parameter.containsKey('productSeries')">
+                product_series = #{productSeries},
+            </if>
+            <if test="_parameter.containsKey('productModel')">
+                product_model = #{productModel},
+            </if>
+            <if test="_parameter.containsKey('doorTexture')">
+                door_texture = #{doorTexture},
+            </if>
+            <if test="_parameter.containsKey('doorColor')">
+                door_color = #{doorColor},
+            </if>
+            <if test="_parameter.containsKey('doorModel')">
+                door_model = #{doorModel},
+            </if>
+            <if test="_parameter.containsKey('cabinetTexture')">
+                cabinet_texture = #{cabinetTexture},
+            </if>
+            <if test="_parameter.containsKey('cabinetColor')">
+                cabinet_color = #{cabinetColor},
+            </if>
+            <if test="_parameter.containsKey('cabinetSeries')">
+                cabinet_series = #{cabinetSeries},
+            </if>
+            <if test="_parameter.containsKey('handleStyle')">
+                handle_style = #{handleStyle},
+            </if>
+            <if test="_parameter.containsKey('handleColor')">
+                handle_color = #{handleColor}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   custom_order_demand
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByOrderId" resultMap="CustomOrderDemandMapDto">
+      select <include refid="colunmDtos"/> from custom_order_demand d left join user u on d.creator = u.id
+        where d.custom_order_id = #{id}
+    </select>
+
+    <select id="findByProductId" resultMap="CustomOrderDemandMap">
+        select <include refid="columns"/> from custom_order_demand where order_product_id = #{id}
+    </select>
+
+</mapper>

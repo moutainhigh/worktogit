@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeDailyRecordDao">
+    <resultMap id="EmployeeDailyRecordMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeDailyRecord">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="title" property="title" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="CHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="record_state" property="recordState" jdbcType="TINYINT" />
+        <result column="visible_state" property="visibleState" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="EmployeeDailyRecordDtoMap" type="com.lwxf.industry4.webapp.domain.dto.company.EmployeeDailyRecordDto">
+        <id column="employee_daily_record_id" property="employeeDailyRecordId"  />
+        <id column="emplyee_avatar" property="emplyeeAvatar"  />
+        <id column="emplyee_name" property="emplyeeName" />
+        <id column="content" property="content"  />
+        <id column="date_time" property="dateTime" />
+        <id column="employee_id" property="employeeId" />
+        <id column="visible_state" property="visibleState" />
+    </resultMap>
+    <resultMap id="EmployeeDailyRecordDtosMap" type="com.lwxf.industry4.webapp.domain.dto.company.EmployeeDailyRecordDtos">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="title" property="title" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="CHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="record_state" property="recordState" jdbcType="TINYINT" />
+        <result column="visible_state" property="visibleState" jdbcType="TINYINT" />
+        <result column="updateUserName" property="updateUserName" jdbcType="VARCHAR" />
+        <result column="createUserName" property="createUserName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, title, content, create_user, create_time, update_user, update_time, record_state, visible_state
+</sql>
+    <sql id="columnDtos">
+e.id, e.title, e.content, e.create_user, e.create_time, e.update_user, e.update_time, e.record_state, e.visible_state,u.name createUserName,uu.name updateUserName
+</sql>
+
+    <select id="selectById" resultMap="EmployeeDailyRecordMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_daily_record
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeDailyRecordMap">
+SELECT <include refid="columns" />
+FROM   employee_daily_record
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="title != null">
+    AND title = #{title}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="createUser != null">
+    AND create_user = #{createUser}
+</if>
+<if test="createTime != null">
+    AND create_time = #{createTime}
+</if>
+<if test="updateUser != null">
+    AND update_user = #{updateUser}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="recordState != null">
+    AND record_state = #{recordState}
+</if>
+<if test="visibleState != null">
+    AND visible_state = #{visibleState}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_daily_record(id, title, content, create_user, create_time, update_user, update_time, record_state, visible_state)
+               VALUES(#{id}, #{title}, #{content}, #{createUser}, #{createTime}, #{updateUser}, #{updateTime}, #{recordState}, #{visibleState})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_daily_record
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('title')">
+    title = #{title},
+</if>
+    <if test="_parameter.containsKey('content')">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('createUser')">
+    create_user = #{createUser},
+</if>
+    <if test="_parameter.containsKey('createTime')">
+    create_time = #{createTime},
+</if>
+    <if test="_parameter.containsKey('updateUser')">
+    update_user = #{updateUser},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime},
+</if>
+    <if test="_parameter.containsKey('recordState')">
+    record_state = #{recordState},
+</if>
+    <if test="_parameter.containsKey('visibleState')">
+    visible_state = #{visibleState}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_daily_record
+WHERE  id = #{id}
+</delete>
+
+    <select id="employeeDailyRecordList" resultMap="EmployeeDailyRecordDtoMap">
+        SELECT edr.id employee_daily_record_id, u.name emplyee_name,u.avatar emplyee_avatar, edr.content,edr.create_time date_time,edr.create_user employee_id,edr.visible_state
+        FROM   employee_daily_record edr
+             left join user u on u.id=edr.create_user
+        <where><trim prefixOverrides="AND">
+            <if test="startTime!=null">
+                DATE_FORMAT(edr.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime!=null">
+                and DATE_FORMAT(edr.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d')
+            </if>
+            <if test="startTime == null and endTime == null">
+                AND to_days(edr.create_time) = to_days(now())
+            </if>
+            <if test="deptEmployeeIds != null">
+            and (edr.create_user in
+                <foreach item="userId" collection="deptEmployeeIds"
+                         open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+             or edr.visible_state=1)
+            </if>
+            <if test="emplyeeName != null">
+                AND edr.create_user in (select id from user where name like '%${emplyeeName}%')
+            </if>
+            <if test="deptId != null">
+                AND edr.create_user in ( select ce.user_id from company_employee ce left join dept_member dm on dm.employee_id=ce.id where dm.dept_id=#{deptId}  )
+            </if>
+        </trim></where>
+      group by edr.create_time order by edr.create_time desc
+    </select>
+    <select id="findListByFilter" resultMap="EmployeeDailyRecordDtosMap">
+      select distinct <include refid="columnDtos"/> from employee_daily_record e
+        left join user u on e.create_user = u.id
+        left join user uu on e.update_user = uu.id
+        left join company_employee c on u.id = c.user_id
+        left join dept_member member on c.id = member.employee_id
+        <where>
+            <trim suffixOverrides="or">
+             <if test="all==null">
+                 e.visible_state = 1
+                 or
+             </if>
+            <trim prefixOverrides="AND">
+            <if test="id != null">
+                e.id = #{id}
+            </if>
+            <if test="title != null">
+                AND e.title like CONCAT('%',#{title},'%')
+            </if>
+            <if test="content != null">
+                AND e.content like CONCAT('%',#{content},'%')
+            </if>
+            <if test="createUser != null">
+                AND e.create_user = #{createUser}
+            </if>
+            <if test="createTime != null">
+                AND e.create_time = #{createTime}
+            </if>
+            <if test="updateUser != null">
+                AND e.update_user = #{updateUser}
+            </if>
+            <if test="updateTime != null">
+                AND e.update_time = #{updateTime}
+            </if>
+            <if test="recordState != null">
+                AND e.record_state = #{recordState}
+            </if>
+            <if test="visibleState != null">
+                AND e.visible_state = #{visibleState}
+            </if>
+            <if test="createUserName != null">
+                AND u.name like CONCAT('%',#{createUserName},'%')
+            </if>
+            <if test="deptMembers != null and deptMembers.size > 0">
+                AND member.dept_id in
+                <foreach collection="deptMembers" open="(" close=")" item="dept" separator=",">
+                    #{dept.deptId}
+                </foreach>
+            </if>
+        </trim>
+            </trim>
+        </where>
+    </select>
+    <select id="findDtoById" resultMap="EmployeeDailyRecordDtoMap">
+        SELECT edr.id employee_daily_record_id, u.name emplyee_name,u.avatar emplyee_avatar, edr.content,edr.create_time date_time,edr.create_user employee_id
+        FROM   employee_daily_record edr
+        left join user u on u.id=edr.create_user
+        where edr.id=#{employeeDailyRecordId}
+    </select>
+
+</mapper>

@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.OrderProductDao">
+    <resultMap id="OrderProductMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.OrderProduct">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="series" property="series" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="stock_count" property="stockCount" jdbcType="TINYINT" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="body_material" property="bodyMaterial" jdbcType="TINYINT" />
+        <result column="body_color" property="bodyColor" jdbcType="VARCHAR" />
+        <result column="body_tec" property="bodyTec" jdbcType="TINYINT" />
+        <result column="door" property="door" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="DATE" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="after_apply_id" property="afterApplyId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="install" property="install" jdbcType="VARCHAR" />
+        <result column="stock_input" property="stockInput" jdbcType="DATE" />
+        <result column="stock_input_creator" property="stockInputCreator" jdbcType="CHAR" />
+        <result column="delivery_time" property="deliveryTime" jdbcType="DATE" />
+        <result column="delivery_creator" property="deliveryCreator" jdbcType="CHAR" />
+        <result column="plan_finish_time" property="planFinishTime" jdbcType="DATE" />
+        <result column="plan_order_finish_time" property="planOrderFinishTime" jdbcType="DATE" />
+        <result column="plan_delivery_verify_time" property="planDeliveryVerifyTime" jdbcType="DATE" />
+        <result column="logistics_company_id" property="logisticsCompanyId"  jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo"  jdbcType="CHAR"/>
+        <result column="old_no" property="oldNo" jdbcType="VARCHAR"/>
+        <result column="is_change" property="change" jdbcType="TINYINT"/>
+        <result column="packge_notes" property="packgeNotes" jdbcType="VARCHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="part_stock" property="partStock" jdbcType="INTEGER"/>
+        <result column="has_deliver_count" property="hasDeliverCount"/>
+        <result column="aftersale_num" property="aftersaleNum"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+        <result column="delay_reason" property="delayReason" jdbcType="VARCHAR"/>
+        <result column="delay_reason_remark" property="delayReasonRemark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="OrderProductDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customorder.OrderProductDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="series" property="series" jdbcType="TINYINT" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="body_color" property="bodyColor" jdbcType="VARCHAR" />
+        <result column="body_tec" property="bodyTec" jdbcType="TINYINT" />
+        <result column="door" property="door" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="DATE" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="placeOrderName" property="placeOrderName"/>
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="seriesName" property="seriesName"/>
+        <result column="typeName" property="typeName"/>
+        <result column="deliveryCreatorName" property="deliveryCreatorName"/>
+        <result column="stockInputCreatorName" property="stockInputCreatorName"/>
+        <result column="after_apply_id" property="afterApplyId" jdbcType="CHAR" />
+        <result column="install" property="install" jdbcType="VARCHAR" />
+        <result column="stock_input" property="stockInput"/>
+        <result column="stock_input_creator" property="stockInputCreator"/>
+        <result column="status" property="status"/>
+        <result column="delivery_time" property="deliveryTime"/>
+        <result column="delivery_creator" property="deliveryCreator"/>
+        <result column="plan_finish_time" property="planFinishTime"/>
+        <result column="plan_order_finish_time" property="planOrderFinishTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="commit_time" property="commitTime"/>
+        <result column="companyName" property="companyName"/>
+        <result column="dealerAddress" property="dealerAddress"/>
+        <result column="dealerCityId" property="dealerCityId"/>
+        <result column="address" property="address"/>
+        <result column="dealerTel" property="dealerTel"/>
+        <result column="stock_count" property="stockCount"/>
+        <result column="logisticsCompanyName" property="logisticsCompanyName"/>
+        <result column="logistics_company_id" property="logisticsCompanyId"  jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo"  jdbcType="CHAR"/>
+        <result column="start_produce_time" property="startProduceTime"/>
+        <result column="plan_delivery_verify_time" property="planDeliveryVerifyTime"/>
+        <result column="customerName" property="customerName"/>
+        <result column="old_no" property="oldNo" jdbcType="VARCHAR"/>
+        <result column="is_change" property="change" jdbcType="TINYINT"/>
+        <result column="baseLogisticsCompanyName" property="baseLogisticsCompanyName"/>
+        <result column="baseLogisticsCompanyName" property="baseLogisticsCompanyName"/>
+        <result column="baseLogisticsCompanyTel" property="baseLogisticsCompanyTel"/>
+        <result column="consigneeName" property="consigneeName"/>
+        <result column="consigneeTel" property="consigneeTel"/>
+        <result column="packge_notes" property="packgeNotes" jdbcType="VARCHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="part_stock" property="partStock" jdbcType="INTEGER"/>
+        <result column="productStatus" property="productStatus" jdbcType="INTEGER"/>
+        <result column="receiverName" property="receiverName"/>
+        <result column="companyId" property="companyId"/>
+        <result column="deliver_sure" property="deliverSure"/>
+        <result column="has_deliver_count" property="hasDeliverCount"/>
+        <result column="bodyTecName" property="bodyTecName"/>
+        <result column="onCredit" property="onCredit"/>
+        <result column="orderNo" property="orderNo"/>
+        <result column="aftersale_num" property="aftersaleNum"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+        <result column="delay_reason" property="delayReason" jdbcType="VARCHAR"/>
+        <result column="delay_reason_remark" property="delayReasonRemark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="columns">
+        id, custom_order_id, type, series, door_color, body_color, door, notes, created, creator, update_time,
+        update_user, price, install, stock_input, stock_input_creator, stock_input_creator, delivery_time,
+        delivery_creator, plan_finish_time, plan_order_finish_time, pay_time, status, logistics_company_id,
+        logistics_no, start_produce_time, stock_count, plan_delivery_verify_time, body_material, body_tec,
+        old_no, is_change, packge_notes, flag, part_stock, has_deliver_count, aftersale_num, finish_time,
+        delay_reason, delay_reason_remark
+    </sql>
+
+    <sql id="columnDtos">
+        o.id, o.custom_order_id, o.type, o.series, o.door_color,o.body_color, o.door, o.notes, o.created, o.creator,
+        o.update_time, o.update_user, u.name creatorName, uu.name updateUserName, o.install, o.price, b.value typeName,
+        bb.value seriesName, o.no, o.status, o.body_material, o.body_tec, finish_time, delay_reason, delay_reason_remark
+    </sql>
+
+    <select id="selectById" resultMap="OrderProductMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   order_product
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="OrderProductMap">
+SELECT <include refid="columns" />
+FROM   order_product
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="customOrderId != null">
+    AND custom_order_id = #{customOrderId}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="no != null">
+    AND no = #{no}
+</if>
+<if test="series != null">
+    AND series = #{series}
+</if>
+    <if test="bodyMaterial != null">
+    AND body_material = #{bodyMaterial}
+</if>
+ <if test="bodyTec != null">
+    AND body_tec = #{bodyTec}
+</if>
+<if test="doorColor != null">
+    AND door_color = #{doorColor}
+</if>
+<if test="body_color != null">
+    AND body_color = #{bodyColor}
+</if>
+<if test="door != null">
+    AND door = #{door}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="updateUser != null">
+    AND update_user = #{updateUser}
+</if>
+    <if test="status != null">
+    AND status = #{status}
+</if>
+    <if test="startProduceTime != null">
+        AND start_produce_time = #{startProduceTime}
+    </if>
+    <if test="logisticsCompanyId != null">
+        AND logistics_company_id = #{logisticsCompanyId}
+    </if>
+    <if test="logisticsNo != null">
+        AND logistics_no = #{logisticsNo}
+    </if>
+    <if test="partStock != null">
+        AND part_stock = #{partStock}
+    </if>
+<if test="beginStockInputTime!=null and stock_input!=''">
+    <![CDATA[   and DATE_FORMAT(stock_input, '%Y-%m-%d')>=  DATE_FORMAT(#{beginStockInputTime}, '%Y-%m-%d')   ]]>
+</if>
+<if test="endStockInputTime!=null and endStockInputTime!=''">
+    <![CDATA[  and DATE_FORMAT(stock_input, '%Y-%m-%d') <= DATE_FORMAT(#{endStockInputTime}, '%Y-%m-%d')    ]]>
+</if>
+    <if test="beginDeliveryTime!=null and beginDeliveryTime!=''">
+        <![CDATA[   and DATE_FORMAT(delivery_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDeliveryTime}, '%Y-%m-%d')   ]]>
+    </if>
+    <if test="endDeliveryTime!=null and endDeliveryTime!=''">
+        <![CDATA[  and DATE_FORMAT(delivery_time, '%Y-%m-%d') <= DATE_FORMAT(#{endDeliveryTime}, '%Y-%m-%d')    ]]>
+    </if>
+    <if test="beginPlanFinishTime!=null and beginPlanFinishTime!=''">
+        <![CDATA[   and DATE_FORMAT(plan_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanFinishTime}, '%Y-%m-%d')   ]]>
+    </if>
+    <if test="endPlanFinishTime!=null and endPlanFinishTime!=''">
+        <![CDATA[  and DATE_FORMAT(plan_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanFinishTime}, '%Y-%m-%d')    ]]>
+    </if>
+    <if test="beginPlanOrderFinishTime!=null and beginPlanOrderFinishTime!=''">
+        <![CDATA[   and DATE_FORMAT(plan_order_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanOrderFinishTime}, '%Y-%m-%d')   ]]>
+    </if>
+    <if test="endPlanOrderFinishTime!=null and endPlanOrderFinishTime!=''">
+        <![CDATA[  and DATE_FORMAT(plan_order_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanOrderFinishTime}, '%Y-%m-%d')    ]]>
+    </if>
+    <if test="beginPayTime!=null and beginPayTime!=''">
+        <![CDATA[   and DATE_FORMAT(pay_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPayTime}, '%Y-%m-%d')   ]]>
+    </if>
+    <if test="endPayTime!=null and endPayTime!=''">
+        <![CDATA[  and DATE_FORMAT(pay_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPayTime}, '%Y-%m-%d')    ]]>
+    </if>
+</trim></where>
+
+</select>
+
+
+    <select id="selectDtoByFilter" resultMap="OrderProductDtoMap">
+        SELECT o.*,
+               coc.name customerName,
+        u.name creatorName,uuu.name receiverName,
+        uu.name placeOrderName,
+        b.value typeName,
+        bb.value seriesName,
+        uInput.name stockInputCreatorName,
+        uDelivery.name deliveryCreatorName,
+        c.name companyName,co.address ,
+               c.address dealerAddress,c.leader_tel dealerTel,c.city_area_id dealerCityId,
+        lc.name logisticsCompanyName,
+               lc1.name baseLogisticsCompanyName,lc1.id baseLogisticsCompanyId,lc1.tel baseLogisticsCompanyTel,
+               co.consignee_tel consigneeTel, co.no orderNo,
+               co.consignee_name consigneeName,co.commit_time,
+               c.id companyId,c.deliver_sure,pa.status onCredit,pa.audited
+        FROM   order_product o
+        left join logistics_company lc on o.logistics_company_id=lc.id
+        left join user u on o.creator = u.id
+        left join custom_order co on co.id = o.custom_order_id
+          left join payment pa on pa.custom_order_id=co.id and pa.funds=31
+          left join company_customer coc on coc.id=co.customer_id
+        left join company c on c.id = co.company_id
+        left join dealer_logistics dl on c.id=dl.company_id and dl.checked = 1
+        left join logistics_company lc1 on dl.logistics_company_id=lc1.id
+        left join user uu on co.place_order = uu.id
+        left join user uuu on co.receiver = uuu.id
+        left join user uInput on uInput.id = o.stock_input_creator
+        left join user uDelivery on uDelivery.id = o.delivery_creator
+        left join basecode b on b.code = o.type and b.type = 'orderProductType'
+        left join basecode bb on bb.code = o.series and bb.type = 'orderProductSeries'
+        <where><trim prefixOverrides="AND">
+             co.status <![CDATA[ !=0 ]]> and <![CDATA[ co.status <7 ]]> and <![CDATA[ co.order_product_type != 2 ]]>
+             and <![CDATA[ o.status != 6 ]]> and co.branch_id =#{branchId}
+            <if test="id != null">
+              and  o.id = #{id}
+            </if>
+            <if test="produceType != null">
+                and o.id in(SELECT order_product_id from produce_order where type = #{produceType} and count is null)
+            </if>
+            <if test="customOrderId != null">
+                AND o.custom_order_id = #{customOrderId}
+            </if>
+            <if test="resources != null and resources != '' and resources=='0'.toString">
+                AND o.status <![CDATA[ >= ]]>2
+            </if>
+            <if test="resources != null and resources != '' and resources=='1'.toString">
+                AND (o.status <![CDATA[ >= ]]>3 or (o.status='2' and o.part_stock='1'))
+            </if>
+            <if test="resources != null and resources != '' and resources=='2'.toString">
+                AND ((o.status <![CDATA[ >= ]]>3 and o.status <![CDATA[ < ]]>5 )or (o.status='2' and o.part_stock='1'))
+            </if>
+            <if test="resources != null and resources != '' and resources=='3'.toString">
+                AND ((o.status <![CDATA[ >= ]]>3 and o.status <![CDATA[ < ]]>5  )or (o.status='2' and o.part_stock='1'))
+            </if>
+            <if test="planInfo != null">
+                AND o.id in (SELECT order_product_id from dispatch_bill_plan_item dbpi where dbpi.dispatch_bill_plan_id in (SELECT id from dispatch_bill_plan  where status=0))
+            </if>
+            <if test="type != null">
+                AND o.type = #{type}
+            </if>
+            <if test="companyName != null">
+                AND c.name like '%${companyName}%'
+            </if>
+            <if test="customAddress != null">
+                AND co.address like '%${customAddress}%'
+            </if>
+            <if test="dealerAddress != null">
+                AND c.address like '%${dealerAddress}%'
+            </if>
+            <if test="status != null">
+                AND o.status = #{status}
+            </if>
+            <if test="no != null">
+                AND o.no  like upper('%${no}%')
+            </if>
+            <if test="series != null">
+                AND o.series = #{series}
+            </if>
+            <if test="doorColor != null">
+                AND o.door_color = #{doorColor}
+            </if>
+            <if test="body_color != null">
+                AND o.body_color = #{bodyColor}
+            </if>
+            <if test="door != null">
+                AND o.door = #{door}
+            </if>
+            <if test="notes != null">
+                AND o.notes = #{notes}
+            </if>
+            <if test="flag != null">
+                AND o.flag = #{flag}
+            </if>
+            <if test="created != null">
+                AND o.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND o.creator = #{creator}
+            </if>
+            <if test="updateTime != null">
+                AND o.update_time = #{updateTime}
+            </if>
+            <if test="updateUser != null">
+                AND o.update_user = #{updateUser}
+            </if>
+            <if test="logisticsCompanyId != null">
+                AND o.logistics_company_id = #{logisticsCompanyId}
+            </if>
+            <if test="logisticsNo != null">
+                AND o.logistics_no = #{logisticsNo}
+            </if>
+            <if test="finishedTop != null and finishedTop=='1'.toString()">
+                AND o.status=3
+            </if>
+            <if test="finishedTop != null and finishedTop=='2'.toString()">
+                AND date_format(o.plan_delivery_verify_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
+            </if>
+            <if test="finishedTop != null and finishedTop=='3'.toString()">
+                AND o.status = 2 or o.status=7
+            </if>
+            <if test="finishedTop != null and finishedTop=='4'.toString()">
+                AND o.part_stock = 1
+            </if>
+            <if test="beginStockInputTime!=null and stock_input!=''">
+                <![CDATA[   and DATE_FORMAT(o.stock_input, '%Y-%m-%d')>=  DATE_FORMAT(#{beginStockInputTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endStockInputTime!=null and endStockInputTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.stock_input, '%Y-%m-%d') <= DATE_FORMAT(#{endStockInputTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginDeliveryTime!=null and beginDeliveryTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.delivery_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDeliveryTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endDeliveryTime!=null and endDeliveryTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.delivery_time, '%Y-%m-%d') <= DATE_FORMAT(#{endDeliveryTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPlanFinishTime!=null and beginPlanFinishTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.plan_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanFinishTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPlanFinishTime!=null and endPlanFinishTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.plan_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanFinishTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPlanOrderFinishTime!=null and beginPlanOrderFinishTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.plan_order_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanOrderFinishTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPlanOrderFinishTime!=null and endPlanOrderFinishTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.plan_order_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanOrderFinishTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPayTime!=null and beginPayTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.pay_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPayTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPayTime!=null and endPayTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.pay_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPayTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </trim></where>
+        order by audited desc
+    </select>
+
+    <select id="countProductsByStatus" resultType="integer">
+        select count(*) from order_product p
+         left join custom_order co on co.id = p.custom_order_id
+         where p.status = #{status} and co.branch_id=#{branchId}
+    </select>
+
+    <select id="findByOrderId" resultType="java.util.Map">
+        select
+        id,door_color doorColor,body_color bodyColor,door,notes,
+        (case type
+        when 0 then '橱柜(J)'
+        when 1 then '衣柜(B)'
+        when 2 then '成品家具(J)'
+        when 3 then '电器(J)'
+        when 4 then '五金(J)'
+        when 5 then '样块(Y)'
+        ELSE '未知' END
+        ) type,
+        (case series
+        when 0 then '定制实木'
+        when 1 then '特供实木'
+        when 2 then '美克'
+        when 3 then '康奈 '
+        when 4 then '慧娜'
+        when 5 then '模压'
+        ELSE '未知' END
+        ) series
+        from order_product
+        where custom_order_id = #{orderId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+        order_product(id,no, custom_order_id, type, series, door_color,body_color, door, notes, created, creator, update_time, update_user,price,after_apply_id,install,stock_input,stock_input_creator,delivery_time,delivery_creator,plan_finish_time,plan_order_finish_time,pay_time,status,start_produce_time,logistics_no,logistics_company_id,body_material,body_tec,old_no,is_change,packge_notes,flag,part_stock,has_deliver_count,aftersale_num)
+        VALUES(#{id},#{no}, #{customOrderId}, #{type}, #{series}, #{doorColor},#{bodyColor}, #{door}, #{notes}, #{created}, #{creator}, #{updateTime}, #{updateUser},#{price},#{afterApplyId},#{install},#{stockInput},#{stockInputCreator},#{deliveryTime},#{deliveryCreator},#{planFinishTime},#{planOrderFinishTime},#{payTime},#{status},#{startProduceTime},#{logisticsNo},#{logisticsCompanyId},#{bodyMaterial},#{bodyTec},#{oldNo},#{change},#{packgeNotes},#{flag},#{partStock},#{hasDeliverCount},#{aftersaleNum})
+    </insert>
+
+    <update id="cancelOrderProduct">
+        UPDATE order_product
+        <set><trim suffixOverrides=",">
+         status = #{status}, start_produce_time = #{startProduceTime},plan_finish_time = #{planFinishTime}
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+    <update id="updateByMapContext">
+        UPDATE order_product
+        <set><trim suffixOverrides=",">
+        <if test="_parameter.containsKey('type') and type != null">
+            type = #{type},
+        </if>
+        <if test="_parameter.containsKey('series')">
+            series = #{series},
+        </if>
+        <if test="_parameter.containsKey('no') and no != null">
+            no = #{no},
+        </if>
+        <if test="_parameter.containsKey('doorColor')">
+            door_color = #{doorColor},
+        </if>
+        <if test="_parameter.containsKey('bodyColor')">
+            body_color = #{bodyColor},
+        </if>
+        <if test="_parameter.containsKey('bodyMaterial')">
+            body_material = #{bodyMaterial},
+        </if>
+        <if test="_parameter.containsKey('bodyTec') and bodyTec != ''">
+            body_tec = #{bodyTec},
+        </if>
+        <if test="_parameter.containsKey('door')">
+            door = #{door},
+        </if>
+        <if test="_parameter.containsKey('stockCount')">
+            stock_count = #{stockCount},
+        </if>
+        <if test="_parameter.containsKey('notes')">
+            notes = #{notes},
+        </if>
+        <if test="_parameter.containsKey('logisticsCompanyId')">
+            logistics_company_id = #{logisticsCompanyId},
+        </if>
+        <if test="_parameter.containsKey('logisticsNo')">
+            logistics_no = #{logisticsNo},
+        </if>
+        <if test="_parameter.containsKey('updateTime')">
+            update_time = #{updateTime},
+        </if>
+        <if test="_parameter.containsKey('updateUser')">
+            update_user = #{updateUser},
+        </if>
+        <if test="_parameter.containsKey('afterApplyId')">
+            after_apply_id = #{afterApplyId},
+        </if>
+        <if test="_parameter.containsKey('price')">
+            price = #{price},
+        </if>
+        <if test="_parameter.containsKey('status')">
+            status = #{status},
+        </if>
+        <if test="_parameter.containsKey('install')">
+            install = #{install},
+        </if>
+        <if test="_parameter.containsKey('stockInput')">
+            stock_input = #{stockInput},
+        </if>
+        <if test="_parameter.containsKey('stockInputCreator')">
+            stock_input_creator = #{stockInputCreator},
+        </if>
+        <if test="_parameter.containsKey('deliveryTime')">
+            delivery_time = #{deliveryTime},
+        </if>
+        <if test="_parameter.containsKey('startProduceTime')">
+            start_produce_time = #{startProduceTime},
+        </if>
+        <if test="_parameter.containsKey('deliveryCreator')">
+            delivery_creator = #{deliveryCreator},
+        </if>
+        <if test="_parameter.containsKey('planFinishTime')">
+            plan_finish_time = #{planFinishTime},
+        </if>
+        <if test="_parameter.containsKey('planOrderFinishTime')">
+            plan_order_finish_time = #{planOrderFinishTime},
+        </if>
+        <if test="_parameter.containsKey('planDeliveryVerifyTime')">
+            plan_delivery_verify_time = #{planDeliveryVerifyTime},
+        </if>
+        <if test="_parameter.containsKey('payTime')">
+            pay_time = #{payTime},
+        </if>
+        <if test="_parameter.containsKey('oldNo')">
+            old_no = #{oldNo},
+        </if>
+        <if test="_parameter.containsKey('change')">
+            is_change = #{change},
+        </if>
+        <if test="_parameter.containsKey('packgeNotes')">
+            packge_notes = #{packgeNotes},
+        </if>
+        <if test="_parameter.containsKey('flag')">
+            flag = #{flag},
+        </if>
+        <if test="_parameter.containsKey('partStock')">
+            part_stock = #{partStock},
+        </if>
+        <if test="_parameter.containsKey('hasDeliverCount')">
+            has_deliver_count = #{hasDeliverCount},
+        </if>
+        <if test="_parameter.containsKey('aftersaleNum')">
+            aftersale_num = #{aftersaleNum},
+        </if>
+        <if test="_parameter.containsKey('finishTime')">
+            finish_time = #{finishTime},
+        </if>
+        <if test="_parameter.containsKey('delayReason')">
+            delay_reason = #{delayReason},
+        </if>
+        <if test="_parameter.containsKey('delayReasonRemark')">
+            delay_reason_remark = #{delayReasonRemark}
+        </if>
+        </trim></set>
+        WHERE id = #{id}
+    </update>
+    <update id="updateByMap">
+        UPDATE order_product
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('series')">
+                series = #{series},
+            </if>
+            <if test="_parameter.containsKey('no') and no != null">
+                no = #{no},
+            </if>
+            <if test="_parameter.containsKey('doorColor')">
+                door_color = #{doorColor},
+            </if>
+            <if test="_parameter.containsKey('bodyColor')">
+                body_color = #{bodyColor},
+            </if>
+            <if test="_parameter.containsKey('bodyMaterial')">
+                body_material = #{bodyMaterial},
+            </if>
+            <if test="_parameter.containsKey('bodyTec') and bodyTec !=''">
+                body_tec = #{bodyTec},
+            </if>
+            <if test="_parameter.containsKey('door')">
+                door = #{door},
+            </if>
+            <if test="_parameter.containsKey('stockCount')">
+                stock_count = #{stockCount},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('logisticsCompanyId')">
+                logistics_company_id = #{logisticsCompanyId},
+            </if>
+            <if test="_parameter.containsKey('logisticsNo')">
+                logistics_no = #{logisticsNo},
+            </if>
+            <if test="_parameter.containsKey('updateTime')">
+                update_time = #{updateTime},
+            </if>
+            <if test="_parameter.containsKey('updateUser')">
+                update_user = #{updateUser},
+            </if>
+            <if test="_parameter.containsKey('afterApplyId')">
+                after_apply_id = #{afterApplyId},
+            </if>
+            <if test="_parameter.containsKey('price')">
+                price = #{price},
+            </if>
+            <if test="_parameter.containsKey('status')">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('install')">
+                install = #{install},
+            </if>
+            <if test="_parameter.containsKey('stockInput')">
+                stock_input = #{stockInput},
+            </if>
+            <if test="_parameter.containsKey('stockInputCreator')">
+                stock_input_creator = #{stockInputCreator},
+            </if>
+            <if test="_parameter.containsKey('deliveryTime')">
+                delivery_time = #{deliveryTime},
+            </if>
+            <if test="_parameter.containsKey('startProduceTime')">
+                start_produce_time = #{startProduceTime},
+            </if>
+            <if test="_parameter.containsKey('deliveryCreator')">
+                delivery_creator = #{deliveryCreator},
+            </if>
+            <if test="_parameter.containsKey('planFinishTime')">
+                plan_finish_time = #{planFinishTime},
+            </if>
+            <if test="_parameter.containsKey('planOrderFinishTime')">
+                plan_order_finish_time = #{planOrderFinishTime},
+            </if>
+            <if test="_parameter.containsKey('planDeliveryVerifyTime')">
+                plan_delivery_verify_time = #{planDeliveryVerifyTime},
+            </if>
+            <if test="_parameter.containsKey('payTime')">
+                pay_time = #{payTime},
+            </if>
+            <if test="_parameter.containsKey('oldNo')">
+                old_no = #{oldNo},
+            </if>
+            <if test="_parameter.containsKey('change')">
+                is_change = #{change},
+            </if>
+            <if test="_parameter.containsKey('packgeNotes')">
+                packge_notes = #{packgeNotes},
+            </if>
+            <if test="_parameter.containsKey('flag')">
+                flag = #{flag},
+            </if>
+            <if test="_parameter.containsKey('partStock')">
+                part_stock = #{partStock},
+            </if>
+            <if test="_parameter.containsKey('hasDeliverCount')">
+                has_deliver_count = #{hasDeliverCount},
+            </if>
+            <if test="_parameter.containsKey('aftersaleNum')">
+                aftersale_num = #{aftersaleNum},
+            </if>
+            <if test="_parameter.containsKey('finishTime')">
+                finish_time = #{finishTime},
+            </if>
+            <if test="_parameter.containsKey('delayReason')">
+                delay_reason = #{delayReason},
+            </if>
+            <if test="_parameter.containsKey('delayReasonRemark')">
+                delay_reason_remark = #{delayReasonRemark}
+            </if>
+        </trim></set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   order_product
+        WHERE  id = #{id}
+    </delete>
+    <select id="findOneById" resultMap="OrderProductDtoMap">
+      select o.*,uuu.name receiverName,b.value typeName,bb.value seriesName,co.no orderNo,pa.status onCredit,co.company_id companyId
+        from order_product o
+          left join custom_order co on co.id=o.custom_order_id
+          left join payment pa on pa.custom_order_id=co.id and pa.funds=31
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+        left join user uuu on co.receiver=uuu.id
+        left join basecode b on b.code = o.type and b.type = 'orderProductType'
+        left join basecode bb on bb.code = o.series and bb.type = 'orderProductSeries'
+        where o.id = #{id}
+    </select>
+
+    <select id="findListByOrderId" resultMap="OrderProductDtoMap" >
+        select o.*,uuu.name stockInputCreatorName,uuuu.name deliveryCreatorName,u.name creatorName,uu.name updateUserName,b.value typeName,bb.value seriesName,lc.name logisticsCompanyName,o.status productStatus,bbb.value bodyTecName,uuuuu.name placeOrderName
+        from order_product o
+          left join logistics_company lc on o.logistics_company_id=lc.id
+          left join custom_order co on co.id=o.custom_order_id
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+          left join user uuu on o.stock_input_creator=uuu.id
+          left join user uuuu on o.delivery_creator=uuuu.id
+          left join user uuuuu on uuuuu.id=co.place_order
+        left join basecode b on b.code = o.type  and b.type = 'orderProductType'
+        left join basecode bb on o.series= bb.code and bb.type = 'orderProductSeries'
+        left join basecode bbb on bbb.code=o.body_tec and bbb.type='orderProductTec'
+        where o.custom_order_id = #{id}
+    </select>
+    <select id="findCountNumByCreatedAndType" resultType="java.lang.Integer">
+        select  count(id) from
+        order_product
+        <where><trim prefixOverrides="and">
+            <if test="beginTime!=null">
+                and created &gt;= #{beginTime}
+            </if>
+            <if test="endTime!=null">
+                and (created &lt;= #{endTime} or created like '%${endTime}%')
+            </if>
+            <if test="created!=null">
+                and created like '%${created}%'
+            </if>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+            <if test="series!=null">
+                and series = #{series}
+            </if>
+        </trim></where>
+    </select>
+
+
+    <select id="findProductMoneyByType" resultType="double">
+        select  IFNULL(SUM(price),0) price from
+        order_product
+        where type=#{type}
+        and custom_order_id in (select id from custom_order
+        where company_id=#{companyId}  and <![CDATA[ status != 8]]>
+        and id in (select custom_order_id from payment where funds=31 and MONTH(audited)=MONTH(now()) )
+        )
+
+    </select>
+
+    <select id="findProductPriceTrendByTime" resultType="double">
+        select  IFNULL(SUM(price),0) price from
+        order_product
+        where type=#{type}
+        and custom_order_id in (select id from custom_order
+       where  <![CDATA[ status != 8]]>  AND company_id = #{companyId} and id in
+                (select custom_order_id from payment
+                where
+            <trim prefixOverrides="AND">
+            funds=31
+                <if test="timeType == null" >
+                    and <![CDATA[ DATE_FORMAT(audited,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d')]]>
+                </if>
+                <if test="timeType != null and timeType=='1'.toString()" >
+                    and <![CDATA[ DATE_FORMAT(audited,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d')]]>
+                </if>
+                <if test="timeType != null and timeType=='2'.toString()" >
+                    and <![CDATA[ DATE_FORMAT(audited,'%Y-%m')=DATE_FORMAT(#{date},'%Y-%m')]]>
+                </if>
+            </trim>
+                )
+        )
+
+    </select>
+    <select id="findCountPriceByOrderId" resultType="decimal">
+        select IFNULL(sum(price),0) from order_product where custom_order_id = #{id}
+    </select>
+
+    <select id="findCountPriceByCreatedAndStatus" resultType="java.math.BigDecimal">
+        select sum(op.price)
+        from order_product op
+        right join custom_order co on op.custom_order_id = co.id
+        <where><trim prefixOverrides="and">
+            <if test="beginTime!=null">
+                and op.created &gt;= #{beginTime}
+            </if>
+            <if test="endTime!=null">
+                and (op.created &lt;= #{endTime} or op.created like '%${endTime}%')
+            </if>
+            <if test="created!=null">
+                and op.created like '%${created}%'
+            </if>
+            <if test="type!=null">
+                and op.type = #{type}
+            </if>
+            <if test="series!=null">
+                and op.series = #{series}
+            </if>
+            <if test="status!=null">
+                and co.status &gt;= #{status}
+            </if>
+        </trim></where>
+
+
+
+    </select>
+    <select id="findCountNumByCreatedAndStatus" resultType="java.lang.Integer">
+        select count(op.id)
+        from order_product op
+        right join custom_order co on op.custom_order_id = co.id
+        <where><trim prefixOverrides="and">
+            <if test="beginTime!=null">
+                and op.created &gt;= #{beginTime}
+            </if>
+            <if test="endTime!=null">
+                and (op.created &lt;= #{endTime} or op.created like '%${endTime}%')
+            </if>
+            <if test="created!=null">
+                and op.created like '%${created}%'
+            </if>
+            <if test="type!=null">
+                and op.type = #{type}
+            </if>
+            <if test="series!=null">
+                and op.series = #{series}
+            </if>
+            <if test="status!=null">
+                and co.status &gt;= #{status}
+            </if>
+        </trim></where>
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from order_product where custom_order_id = #{orderId}
+    </delete>
+
+    <select id="findProductsByOrderId" resultMap="OrderProductDtoMap">
+        select <include refid="columnDtos"/>
+        from order_product o
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+        left join basecode b on b.code = o.type
+        left join basecode bb on bb.code = o.series
+        where (o.custom_order_id=#{id} or o.after_apply_id = #{id}) and b.type = 'orderProductType' and bb.type = 'orderProductSeries'
+    </select>
+    <select id="findListByOrderIdAndStatus" resultMap="OrderProductDtoMap">
+        select o.*,uuu.name stockInputCreatorName,uuuu.name deliveryCreatorName,u.name creatorName,uu.name updateUserName,b.value typeName,bb.value seriesName,lc.name logisticsCompanyName,o.status productStatus
+        from order_product o
+                 left join logistics_company lc on o.logistics_company_id=lc.id
+                 left join user u on o.creator = u.id
+                 left join user uu on o.update_user = uu.id
+                 left join user uuu on o.stock_input_creator=uuu.id
+                 left join user uuuu on o.delivery_creator=uuuu.id
+                 left join basecode b on b.code = o.type  and b.type = 'orderProductType'
+                 left join basecode bb on o.series= bb.code and bb.type = 'orderProductSeries'
+        where o.custom_order_id = #{orderId} and o.status=#{status}
+    </select>
+    <select id="countPartStock" resultType="com.lwxf.mybatis.utils.MapContext">
+        select count(po.id) count ,b.value as type
+        from produce_order po
+        left join basecode b on  b.code=po.type  and b.type='produceOrderType'
+        where po.branch_id=#{branchId} and po.count is null and po.order_product_id in(select id from order_product where status='2')
+        group by po.type
+    </select>
+
+
+    <select id="findProductNumGroupByType" resultType="com.lwxf.mybatis.utils.MapContext">
+        select count(op.id) count ,bo.value typeName
+        from order_product op
+        left join custom_order co on op.custom_order_id=co.id and co.id in(select  custom_order_id from payment where funds=31 and audited is not null)
+        left join basecode bo on op.type=bo.code and bo.type='orderProductType'
+        where
+        <trim prefixOverrides="and">
+        <if test="branchId != null">
+            AND co.branch_id=#{branchId}
+        </if>
+        <if test="companyId != null">
+            AND co.company_id=#{companyId}
+        </if>
+        </trim>
+        group by op.type
+    </select>
+
+    <select id="findListByAftersaleId" resultMap="OrderProductDtoMap">
+        select <include refid="columnDtos"/>
+        from order_product o
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+        left join basecode b on b.code = o.type
+        left join basecode bb on bb.code = o.series
+        where o.after_apply_id=#{id} and b.type = 'orderProductType' and bb.type = 'orderProductSeries'
+    </select>
+    <select id="findListByPaginateFilter" resultMap="OrderProductDtoMap">
+        SELECT o.*,
+               coc.name customerName,
+        u.name creatorName,
+        uu.name updateUserName,
+        uuu.name placeOrderName,
+        b.value typeName,
+        bb.value seriesName,
+        uInput.name stockInputCreatorName,
+        uDelivery.name deliveryCreatorName,
+        IFNULL(c.name,cc.name) companyName,
+               c.address dealerAddress,
+               co.no orderNo
+        FROM   order_product o
+        left join custom_order co on o.custom_order_id=co.id
+        left join company_customer coc on coc.id=co.customer_id
+        left join aftersale_apply aa on o.after_apply_id=aa.id
+        left join company c on co.company_id=c.id
+        left join company cc on aa.company_id=cc.id
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+        left join user uInput on uInput.id = o.stock_input_creator
+        left join user uuu on co.place_order=uuu.id
+        left join user uDelivery on uDelivery.id = o.delivery_creator
+        left join basecode b on b.code = o.type and b.type = 'orderProductType'
+        left join basecode bb on bb.code = o.series and bb.type = 'orderProductSeries'
+        <where><trim prefixOverrides="AND">
+            <![CDATA[ co.status != 0 and co.status != 8 and o.status  >=  1 and o.status  <= 7 and  o.status !=6 ]]>
+         and co.branch_id=#{branchId}
+            <if test="status != null">
+                AND o.status = #{status}
+            </if>
+            <if test="productNo != null">
+                AND o.no like upper(concat('%',#{productNo},'%')) and  o.id in (SELECT order_product_id from produce_order where coordination_name=#{corporatePartnersName})
+            </if>
+            <if test="no != null">
+                AND o.no like upper(concat('%',#{no},'%'))
+            </if>
+            <if test="outFactoryName != null">
+                AND o.id in (SELECT order_product_id from produce_order where coordination_name=#{outFactoryName} )
+            </if>
+            <if test="placeOrder != null">
+                AND co.place_order=#{placeOrder}
+            </if>
+            <if test="companyName != null">
+                AND c.name like '%${companyName}%' or cc.name like '%${companyName}%'
+            </if>
+            <if test="customerAddress != null">
+                AND co.address like '%${customerAddress}%'
+            </if>
+            <if test="customerName != null">
+                AND co.customer_id in (select id from company_customer where name like '%${customerName}%')
+            </if>
+            <if test="dealerAddress != null">
+                AND c.address like '%${dealerAddress}%'
+            </if>
+            <if test="series != null">
+                AND o.series = #{series}
+            </if>
+            <if test="doorColor != null">
+                AND o.door_color = #{doorColor}
+            </if>
+            <if test="body_color != null">
+                AND o.body_color = #{bodyColor}
+            </if>
+            <if test="door != null">
+                AND o.door = #{door}
+            </if>
+            <if test="notes != null">
+                AND o.notes = #{notes}
+            </if>
+            <if test="created != null">
+                AND o.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND o.creator = #{creator}
+            </if>
+            <if test="updateTime != null">
+                AND o.update_time = #{updateTime}
+            </if>
+            <if test="updateUser != null">
+                AND o.update_user = #{updateUser}
+            </if>
+            <if test="corporatePartnersName != null">
+                and  o.id in (SELECT order_product_id from produce_order where coordination_name=#{corporatePartnersName})
+            </if>
+            <if test="produceStatus != null">
+                and  o.id in (SELECT order_product_id from produce_order where coordination_name=#{corporatePartnersName} and state=#{produceStatus})
+            </if>
+            <if test="beginStockInputTime!=null and stock_input!=''">
+                <![CDATA[   and DATE_FORMAT(o.stock_input, '%Y-%m-%d')>=  DATE_FORMAT(#{beginStockInputTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endStockInputTime!=null and endStockInputTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.stock_input, '%Y-%m-%d') <= DATE_FORMAT(#{endStockInputTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginDeliveryTime!=null and beginDeliveryTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.delivery_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDeliveryTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endDeliveryTime!=null and endDeliveryTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.delivery_time, '%Y-%m-%d') <= DATE_FORMAT(#{endDeliveryTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPlanFinishTime!=null and beginPlanFinishTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.plan_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanFinishTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPlanFinishTime!=null and endPlanFinishTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.plan_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanFinishTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPlanOrderFinishTime!=null and beginPlanOrderFinishTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.plan_order_finish_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPlanOrderFinishTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPlanOrderFinishTime!=null and endPlanOrderFinishTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.plan_order_finish_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPlanOrderFinishTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="beginPayTime!=null and beginPayTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.pay_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginPayTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endPayTime!=null and endPayTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.pay_time, '%Y-%m-%d') <= DATE_FORMAT(#{endPayTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="startProduceTime!=null and startProduceTime!=''">
+                <![CDATA[   and DATE_FORMAT(o.start_produce_time, '%Y-%m-%d')>=  DATE_FORMAT(#{startProduceTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endProduceTime!=null and endProduceTime!=''">
+                <![CDATA[  and DATE_FORMAT(o.start_produce_time, '%Y-%m-%d') <= DATE_FORMAT(#{endProduceTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="topNum!=null and topNum==0">
+                and o.status=1
+            </if>
+            <if test="topNum!=null and topNum==1">
+                and o.status=2
+            </if>
+            <if test="topNum!=null and topNum==2">
+                <![CDATA[  and o.status=2 and  DATE_FORMAT(SUBDATE(o.plan_finish_time,interval 3 day), '%Y-%m-%d')<=DATE_FORMAT(now(), '%Y-%m-%d')and  DATE_FORMAT(o.plan_finish_time, '%Y-%m-%d') >DATE_FORMAT(now(), '%Y-%m-%d')    ]]>
+            </if>
+            <if test="topNum!=null and topNum==3">
+                <![CDATA[ and o.status<5  and  DATE_FORMAT(o.plan_order_finish_time, '%Y-%m-%d') < DATE_FORMAT(now(), '%Y-%m-%d') ]]>
+
+            </if>
+
+        </trim></where>
+       order by o.pay_time desc
+    </select>
+
+    <!-- 统计各个部件未入库的数量-->
+    <select id="countInputPart" resultType="com.lwxf.mybatis.utils.MapContext">
+       select (select count(*) from produce_order where state=1 and count is null and type=0) as guiti,
+        (select count(*) from produce_order where state=1 and count is null and type=1) as menban,
+        (select count(*) from produce_order where state=1 and count is null and type=2) as wujin
+    </select>
+
+
+</mapper>
+

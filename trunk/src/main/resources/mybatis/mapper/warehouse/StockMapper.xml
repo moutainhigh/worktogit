@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.warehouse.StockDao">
+    <resultMap id="StockMap" type="com.lwxf.industry4.webapp.domain.entity.warehouse.Stock">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="shelf" property="shelf" jdbcType="CHAR" />
+        <result column="column" property="column" jdbcType="TINYINT" />
+        <result column="tier" property="tier" jdbcType="TINYINT" />
+        <result column="pre_output" property="preOutput" jdbcType="INTEGER" />
+        <result column="location" property="location" />
+    </resultMap>
+    <resultMap id="StockDtoMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.StockDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="shelf" property="shelf" jdbcType="CHAR" />
+        <result column="column" property="column" jdbcType="TINYINT" />
+        <result column="tier" property="tier" jdbcType="TINYINT" />
+        <result column="storageName" property="storageName"/>
+        <result column="operatorName" property="operatorName"/>
+        <result column="productName" property="productName"/>
+        <result column="pre_output" property="preOutput" jdbcType="INTEGER" />
+        <result column="location" property="location" />
+        <result column="unit" property="unit" />
+        <result column="materialSize" property="materialSize" />
+        <result column="unitType" property="unitType" />
+        <result column="color" property="color" />
+    </resultMap>
+    <sql id="columns">
+id, storage_id, material_id, price, operator, operate_time, quantity, shelf, `column`, tier, pre_output,location
+</sql>
+    <sql id="columnDtos">
+s.id, s.storage_id, s.material_id, s.price, s.operator, s.operate_time,  s.quantity, s.shelf, s.column, s.tier,s.storageName,s.operatorName,p.name productName,s.pre_output,s.location
+</sql>
+    <select id="selectById" resultMap="StockMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   stock
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="StockMap">
+        SELECT <include refid="columns" />
+        FROM   stock
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="storageId != null">
+                AND storage_id = #{storageId}
+            </if>
+            <if test="materialId != null">
+                AND material_id = #{materialId}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="operator != null">
+                AND operator = #{operator}
+            </if>
+            <if test="operateTime != null">
+                AND operate_time = #{operateTime}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="shelf != null">
+                AND shelf = #{shelf}
+            </if>
+            <if test="column != null">
+                AND `column` = #{column}
+            </if>
+            <if test="tier != null">
+                AND tier = #{tier}
+            </if>
+            <if test="preOutput != null">
+                AND pre_output = #{preOutput}
+            </if>
+            <if test="location != null">
+                AND location = #{location}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+ stock(id, storage_id, material_id, price, operator, operate_time, quantity, shelf, `column`, tier, pre_output,location,branch_id)
+VALUES(#{id}, #{storageId}, #{materialId}, #{price}, #{operator}, #{operateTime}, #{quantity}, #{shelf}, #{column}, #{tier}, #{preOutput},#{location},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE stock
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('price') and price != null">
+                price = #{price},
+            </if>
+            <if test="_parameter.containsKey('quantity') and quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="_parameter.containsKey('shelf') and shelf != null">
+                shelf = #{shelf},
+            </if>
+            <if test="_parameter.containsKey('column') and column != null">
+                `column` = #{column},
+            </if>
+            <if test="_parameter.containsKey('tier') and tier != null">
+                tier = #{tier},
+            </if>
+            <if test="_parameter.containsKey('preOutput') and preOutput != null">
+                pre_output = #{preOutput},
+            </if>
+            <if test="_parameter.containsKey('location') and location != null">
+                location = #{location}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   stock
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByFilter" resultMap="StockDtoMap">
+
+        select s.* ,u.name operatorName ,st.name storageName,m.name productName,m.material_size materialSize
+        ,b.value unitType,m.unit,m.color
+        from stock s
+        left join material m on m.id=s.material_id
+        left join storage st on st.id=s.storage_id
+        left join user u on u.id = s.operator
+        left join basecode b on b.code=m.unit and b.type='unitType'
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                s.id = #{id}
+            </if>
+            <if test="storageId != null">
+                AND s.storage_id = #{storageId}
+            </if>
+            <if test="materialId != null">
+                AND s.material_id = #{materialId}
+            </if>
+            <if test="price != null">
+                AND s.price = #{price}
+            </if>
+            <if test="operator != null">
+                AND s.operator = #{operator}
+            </if>
+            <if test="operateTime != null">
+                AND s.operate_time = #{operateTime}
+            </if>
+            <if test="quantity != null">
+                AND s.quantity = #{quantity}
+            </if>
+            <if test="shelf != null">
+                AND s.shelf = #{shelf}
+            </if>
+            <if test="column != null">
+                AND s.column = #{column}
+            </if>
+            <if test="tier != null">
+                AND s.tier = #{tier}
+            </if>
+            <if test="preOutput != null">
+                AND s.pre_output = #{preOutput}
+            </if>
+            <if test="location != null">
+                AND s.location = #{location}
+            </if>
+            <if test="branchId != null">
+                AND s.branch_id = #{branchId}
+            </if>
+            <if test="name!=null">
+                AND m.name like CONCAT("%",#{name},"%")
+            </if>
+        </trim></where>
+    </select>
+
+
+    <select id="findOneByStorageIdAndProductId" resultMap="StockMap">
+        select <include refid="columns"/> from stock where material_id = #{productId} and storage_id =#{storageId}
+    </select>
+
+    <select id="findOneById" resultMap="StockDtoMap">
+        select
+        <include refid="columnDtos"/> from
+        product p RIGHT JOIN
+        (SELECT s.*,u.name operatorName FROM user u RIGHT JOIN
+        (SELECT s.*,st.name storageName FROM stock s RIGHT join storage st on s.storage_id = st.id
+        where s.id =#{id}) s ON u.id = s.operator
+        ) s ON p.id = s.product_id
+    </select>
+
+    <delete id="deleteByIdAndStockId">
+        delete from stock where id = #{stockId} and storage_id = #{id}
+    </delete>
+
+</mapper>

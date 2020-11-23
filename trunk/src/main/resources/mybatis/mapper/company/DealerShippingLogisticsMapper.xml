@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.DealerShippingLogisticsDao">
+    <resultMap id="DealerShippingLogisticsMap" type="com.lwxf.industry4.webapp.domain.entity.company.DealerShippingLogistics">
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" />
+    </resultMap>
+    <sql id="columns">
+company_id, logistics_company_id,branch_id
+</sql>
+
+    <select id="selectById" resultMap="DealerShippingLogisticsMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   dealer_shipping_logistics
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByCompanyIdAndLogisticsCompanyId" resultMap="DealerShippingLogisticsMap">
+SELECT <include refid="columns" />
+FROM   dealer_shipping_logistics
+WHERE  company_id = #{companyId}
+   AND logistics_company_id = #{logisticsCompanyId}
+</select>
+
+    <select id="selectByFilter" resultMap="DealerShippingLogisticsMap">
+SELECT <include refid="columns" />
+FROM   dealer_shipping_logistics
+<where><trim prefixOverrides="AND">
+<if test="companyId != null">
+    company_id = #{companyId}
+</if>
+<if test="logisticsCompanyId != null">
+    AND logistics_company_id = #{logisticsCompanyId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dealer_shipping_logistics(company_id, logistics_company_id,branch_id)
+                   VALUES(#{companyId}, #{logisticsCompanyId},#{branchId})
+</insert>
+
+    <update id="updateByMapContext" />
+    <delete id="deleteById" parameterType="Long">
+DELETE FROM   dealer_shipping_logistics
+WHERE  id = #{id}
+</delete>
+
+    <select id="findOneByCompanyId" resultMap="DealerShippingLogisticsMap">
+        select <include refid="columns"/> from dealer_shipping_logistics where company_id = #{companyId}
+    </select>
+
+    <update id="updateByCompanyId">
+        update dealer_shipping_logistics set logistics_company_id = #{logisticsCompanyId} where company_id = #{companyId}
+    </update>
+
+</mapper>

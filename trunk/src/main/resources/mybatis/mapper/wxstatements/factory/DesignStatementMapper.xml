@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.factory.designStatement.DesignStatementDao">
+    <select id="findDesignStatementByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order_design where   date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as mon,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as tues,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as wed,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as thur,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as fri,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sat,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d')  <=  (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sun
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order_design where date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as mon,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as tues,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as wed,
+            (select count(*) from custom_order_design where date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as thur,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as fri,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sat,
+            (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))
+              and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sun
+            ]]>
+        </if>
+    </select>
+
+    <select id="findDesignStatementByMonth"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d')
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))  as point1,
+       (select count(*) from custom_order_design where    date_format(end_time,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')
+       and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point2,
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')
+      and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point3,
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')
+      and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d')
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point1,
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point2,
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point3,
+       (select count(*) from custom_order_design where  date_format(end_time,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(end_time,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as point4
+       ]]>
+        </if>
+    </select>
+
+    <select id="findDesignStatementByQuarter"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and  month(end_time)=#{firstMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as month1,
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and  month(end_time)=#{secondMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as month2,
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and  month(end_time)=#{thirdMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and  month(end_time)=#{firstMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as month1,
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and  month(end_time)=#{secondMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as month2,
+            (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and   month(end_time)=#{thirdMonth}
+            and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as month3
+            ]]>
+        </if>
+    </select>
+
+    <select id="findDesignStatementByYear"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=1
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as jan,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=2
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId}))as feb,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=3
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as mar,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=4
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as apr,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=5
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as may,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=6
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as jun,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=7
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as jul,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=8
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as aug,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=9
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sept,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=10
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as oct,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=11
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as nov,
+        (select count(*) from custom_order_design where  YEAR(created)=YEAR(NOW()) and month(created)=12
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=1
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as jan,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=2
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as feb,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=3
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as mar,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=4
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as apr,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=5
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as may,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=6
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as jun,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=7
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as jul,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=8
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as aug,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=9
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as sept,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=10
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as oct,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=11
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as nov,
+        (select count(*) from custom_order_design where  YEAR(end_time)=YEAR(NOW()) and month(end_time)=12
+         and custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})) as dece
+        ]]>
+        </if>
+    </select>
+    <select id="findDesignStatements" resultType="com.lwxf.industry4.webapp.domain.dto.aftersale.DateNum">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*)  from custom_order_design
+            where
+               custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})
+            <if test="dateType != null and dateType != ''and dateType =='0'.toString()">
+                and  date_format(created,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='1'.toString()">
+                and  date_format(created,'%Y-%m') = date_format(#{date},'%Y-%m')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='2'.toString()">
+                and date_format(created,'%Y') = date_format(#{date},'%Y')
+            </if>
+              ) as count
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            select
+            (select count(*)  from custom_order_design
+            where
+             custom_order_id in (SELECT id from custom_order where branch_id=#{branchId})
+            <if test="dateType != null and dateType != ''and dateType =='0'.toString()">
+                and  date_format(created,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='1'.toString()">
+                and date_format(created,'%Y-%m') = date_format(#{date},'%Y-%m')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='2'.toString()">
+                and date_format(created,'%Y') = date_format(#{date},'%Y')
+            </if>
+            ) as count
+
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductDoorDao">
+    <resultMap id="ProductDoorMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductDoor">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="thickness" property="thickness" jdbcType="VARCHAR" />
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, notes, thickness, product_category_id
+</sql>
+
+    <select id="selectById" resultMap="ProductDoorMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_door
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProductDoorMap">
+SELECT <include refid="columns" />
+FROM   product_door
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="thickness != null">
+    AND thickness = #{thickness}
+</if>
+<if test="productCategoryId != null">
+    AND product_category_id = #{productCategoryId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_door(id, name, notes, thickness, product_category_id)
+      VALUES(#{id}, #{name}, #{notes}, #{thickness}, #{productCategoryId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_door
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('thickness')">
+    thickness = #{thickness},
+</if>
+    <if test="_parameter.containsKey('productCategoryId') and productCategoryId != null">
+    product_category_id = #{productCategoryId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_door
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="selectByCategoryId" resultMap="ProductDoorMap">
+
+        select
+        <include refid="columns"/>
+        from product_door
+        where product_category_id = #{categoryId}
+    </select>
+
+
+    <select id="findAll" resultMap="ProductDoorMap">
+        select
+        <include refid="columns"/>
+        from product_door
+    </select>
+
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserBasisDao">
+    <resultMap id="UserBasisMap" type="com.lwxf.industry4.webapp.domain.entity.user.UserBasis">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="political_outlook" property="politicalOutlook" jdbcType="TINYINT" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="work_unit" property="workUnit" jdbcType="VARCHAR" />
+        <result column="work" property="work" jdbcType="VARCHAR" />
+        <result column="income" property="income" jdbcType="TINYINT" />
+        <result column="education" property="education" jdbcType="TINYINT" />
+        <result column="nation" property="nation" jdbcType="VARCHAR" />
+        <result column="identity_number" property="identityNumber" jdbcType="VARCHAR" />
+        <result column="qq_number" property="qqNumber" jdbcType="VARCHAR" />
+        <result column="wechat_number" property="wechatNumber" jdbcType="VARCHAR" />
+        <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, user_id, political_outlook, address, work_unit, work, income, education, nation, identity_number, qq_number, wechat_number, contact_number
+</sql>
+
+    <select id="selectById" resultMap="UserBasisMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_basis
+        WHERE  id = #{id}
+    </select>
+    <select id="findByUserId" resultMap="UserBasisMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_basis
+        WHERE  user_id = #{userId}
+    </select>
+
+    <select id="selectByFilter" resultMap="UserBasisMap">
+        SELECT <include refid="columns" />
+        FROM   user_basis
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="politicalOutlook != null">
+                AND political_outlook = #{politicalOutlook}
+            </if>
+            <if test="address != null">
+                AND address = #{address}
+            </if>
+            <if test="workUnit != null">
+                AND work_unit = #{workUnit}
+            </if>
+            <if test="work != null">
+                AND work = #{work}
+            </if>
+            <if test="income != null">
+                AND income = #{income}
+            </if>
+            <if test="education != null">
+                AND education = #{education}
+            </if>
+            <if test="nation != null">
+                AND nation = #{nation}
+            </if>
+            <if test="identityNumber != null">
+                AND identity_number = #{identityNumber}
+            </if>
+            <if test="qqNumber != null">
+                AND qq_number = #{qqNumber}
+            </if>
+            <if test="wechatNumber != null">
+                AND wechat_number = #{wechatNumber}
+            </if>
+            <if test="contactNumber != null">
+                AND contact_number = #{contactNumber}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+user_basis(id, user_id, political_outlook, address, work_unit, work, income, education, nation, identity_number, qq_number, wechat_number, contact_number)
+    VALUES(#{id}, #{userId}, #{politicalOutlook}, #{address}, #{workUnit}, #{work}, #{income}, #{education}, #{nation}, #{identityNumber}, #{qqNumber}, #{wechatNumber}, #{contactNumber})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE user_basis
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('politicalOutlook')">
+                political_outlook = #{politicalOutlook},
+            </if>
+            <if test="_parameter.containsKey('address')">
+                address = #{address},
+            </if>
+            <if test="_parameter.containsKey('workUnit')">
+                work_unit = #{workUnit},
+            </if>
+            <if test="_parameter.containsKey('work')">
+                work = #{work},
+            </if>
+            <if test="_parameter.containsKey('income')">
+                income = #{income},
+            </if>
+            <if test="_parameter.containsKey('education')">
+                education = #{education},
+            </if>
+            <if test="_parameter.containsKey('nation')">
+                nation = #{nation},
+            </if>
+            <if test="_parameter.containsKey('identityNumber')">
+                identity_number = #{identityNumber},
+            </if>
+            <if test="_parameter.containsKey('qqNumber')">
+                qq_number = #{qqNumber},
+            </if>
+            <if test="_parameter.containsKey('wechatNumber')">
+                wechat_number = #{wechatNumber},
+            </if>
+            <if test="_parameter.containsKey('contactNumber')">
+                contact_number = #{contactNumber}
+            </if>
+        </trim></set>
+        WHERE  user_id = #{userId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_basis
+WHERE  id = #{id}
+</delete>
+
+</mapper>

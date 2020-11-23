@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderProcessDao">
+    <resultMap id="CustomOrderProcessMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderProcess">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+
+    <resultMap id="CustomOrderProcessDto" type="com.lwxf.industry4.webapp.domain.dto.customorder.CustomOrderProcessDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+id, type, begin_time, end_time, operator, order_id, status
+</sql>
+
+    <select id="selectById" resultMap="CustomOrderProcessMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   custom_order_process
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CustomOrderProcessMap">
+SELECT <include refid="columns" />
+FROM   custom_order_process
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="beginTime != null">
+    AND begin_time = #{beginTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="operator != null">
+    AND operator = #{operator}
+</if>
+<if test="orderId != null">
+    AND order_id = #{orderId}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+custom_order_process(id, type, begin_time, end_time, operator, order_id, status)
+              VALUES(#{id}, #{type}, #{beginTime}, #{endTime}, #{operator}, #{orderId}, #{status})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE custom_order_process
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('beginTime')">
+    begin_time = #{beginTime},
+</if>
+    <if test="_parameter.containsKey('endTime')">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('operator') and operator != null">
+    operator = #{operator},
+</if>
+    <if test="_parameter.containsKey('orderId') and orderId != null">
+    order_id = #{orderId},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   custom_order_process
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByOrderId" resultMap="CustomOrderProcessDto">
+        select
+        cop.id, cop.type, cop.begin_time as created, u.name as creator, cop.status
+        from custom_order_process cop
+        left join user u on u.id = cop.operator
+        WHERE  order_id = #{orderId}
+        order by begin_time desc
+    </select>
+    <select id="findTimeByOrderId" resultType="java.lang.String">
+        select min(actual_date) as disTime
+        from dispatch_bill
+        where order_id = #{orderId}
+        limit 1
+    </select>
+
+    <update id="updateStatusByOrderIdAndType">
+        update custom_order_process set status = 1 ,
+        end_time = #{endTime} where order_id = #{id} and type = #{type}
+    </update>
+
+    <select id="findProcessPlan" resultType="java.util.Map">
+        select * from custom_order_process
+        where type = #{type}
+        and status = #{status}
+    </select>
+
+
+</mapper>

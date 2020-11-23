@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.assemble.DispatchListFilesDao">
+    <resultMap id="DispatchListFilesMap" type="com.lwxf.industry4.webapp.domain.entity.assemble.DispatchListFiles">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="full_path" property="fullPath" jdbcType="VARCHAR" />
+        <result column="mime" property="mime" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="original_mime" property="originalMime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="dispatch_list_id" property="dispatchListId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, path, full_path, mime, name, original_mime, status, creator, created, dispatch_list_id
+</sql>
+
+    <select id="selectById" resultMap="DispatchListFilesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dispatch_list_files
+WHERE  id = #{id}
+</select>
+    <select id="findFilesMessage" resultMap="DispatchListFilesMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dispatch_list_files
+        WHERE  dispatch_list_id = #{dispatchListId}
+    </select>
+    <select id="selectByFilter" resultMap="DispatchListFilesMap">
+SELECT <include refid="columns" />
+FROM   dispatch_list_files
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="path != null">
+    AND path = #{path}
+</if>
+<if test="fullPath != null">
+    AND full_path = #{fullPath}
+</if>
+<if test="mime != null">
+    AND mime = #{mime}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="originalMime != null">
+    AND original_mime = #{originalMime}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="dispatchListId != null">
+    AND dispatch_list_id = #{dispatchListId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_list_files(id, path, full_path, mime, name, original_mime, status, creator, created, dispatch_list_id)
+             VALUES(#{id}, #{path}, #{fullPath}, #{mime}, #{name}, #{originalMime}, #{status}, #{creator}, #{created}, #{dispatchListId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dispatch_list_files
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('path') and path != null">
+    path = #{path},
+</if>
+    <if test="_parameter.containsKey('fullPath') and fullPath != null">
+    full_path = #{fullPath},
+</if>
+    <if test="_parameter.containsKey('mime') and mime != null">
+    mime = #{mime},
+</if>
+    <if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('originalMime') and originalMime != null">
+    original_mime = #{originalMime},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('dispatchListId') and dispatchListId != null">
+    dispatch_list_id = #{dispatchListId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_list_files
+WHERE  id = #{id}
+</delete>
+
+</mapper>

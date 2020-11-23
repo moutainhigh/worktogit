@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.design.DoorStateDao">
+    <resultMap id="DoorStateMap" type="com.lwxf.industry4.webapp.domain.entity.design.DoorState">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, notes
+</sql>
+
+    <select id="selectById" resultMap="DoorStateMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   door_state
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DoorStateMap">
+SELECT <include refid="columns" />
+FROM   door_state
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name like CONCAT('%',#{name},'%')
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+    <if test="branchId != null">
+        AND branch_id = #{branchId}
+    </if>
+
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+door_state(id, name, notes,branch_id)
+    VALUES(#{id}, #{name}, #{notes},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE door_state
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   door_state
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByName" resultMap="DoorStateMap">
+        select <include refid="columns"/> from door_state where name = #{name} and branch_id=#{branchId}
+    </select>
+</mapper>

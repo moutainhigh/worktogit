@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.SysMessageReciversDao">
+    <resultMap id="SysMessageReciversMap" type="com.lwxf.industry4.webapp.domain.entity.system.SysMessageRecivers">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="message_id" property="messageId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="is_read" property="read" jdbcType="INTEGER" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="SysMessageReciversDtoMap" type="com.lwxf.industry4.webapp.domain.dto.system.SysMessageReciversDto">
+        <result column="title" property="title" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, message_id, user_id, is_read, created
+</sql>
+
+    <select id="selectById" resultMap="SysMessageReciversMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   sys_message_recivers
+WHERE  id = #{id}
+</select>
+
+    <select id="selectMessageByUserId" resultMap="SysMessageReciversDtoMap" parameterType="String">
+        SELECT m.title,m.content,mr.*
+        FROM   sys_message_recivers mr
+        left join sys_messsage m on mr.message_id=m.id
+        WHERE  mr.user_id =#{userId}
+    </select>
+
+    <select id="selectByUserIdAndMessageId" resultMap="SysMessageReciversMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   sys_message_recivers
+        WHERE  user_id =#{userId} and message_id = #{messageId}
+    </select>
+
+
+    <select id="selectByFilter" resultMap="SysMessageReciversMap">
+SELECT <include refid="columns" />
+FROM   sys_message_recivers
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="messageId != null">
+    AND message_id = #{messageId}
+</if>
+<if test="userId != null">
+    AND user_id = #{userId}
+</if>
+<if test="read != null">
+    AND is_read = #{read}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+sys_message_recivers(id, message_id, user_id, is_read, created)
+              VALUES(#{id}, #{messageId}, #{userId}, #{read}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE sys_message_recivers
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('messageId')">
+    message_id = #{messageId},
+</if>
+    <if test="_parameter.containsKey('userId')">
+    user_id = #{userId},
+</if>
+    <if test="_parameter.containsKey('read')">
+    is_read = #{read},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   sys_message_recivers
+WHERE  id = #{id}
+</delete>
+
+</mapper>

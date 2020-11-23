@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.factory.order.CustomOrderStatementDao">
+
+    <select id="selectByfilter" resultType="integer">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select count(*) as count from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+            <if test="cityId != null and city != ''">
+              and  o.city_area_id = #{cityId}
+            </if>
+            <if test="created != null">
+                <![CDATA[
+                and  date_format(o.created,'%Y-%m-%d')=date_format(#{created},'%Y-%m-%d')
+                ]]>
+            </if>
+                <if test="beginDate != null and endDate != ''">
+                    <![CDATA[
+                and  date_format(o.created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(o.created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+            <if test="managerId != null and managerId != ''">
+             and  c.business_manager = #{managerId}
+            </if>
+            </trim>
+            </where>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select count(*) as count from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                  and  o.city_area_id = #{cityId}
+                </if>
+                <if test="created != null">
+                    <![CDATA[
+                and   date_format(o.created,'%Y-%m-%d')=date_format(#{created},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and  date_format(o.created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(o.created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+                and o.branch_id=#{branchId} and o.status>2
+            </trim>
+            </where>
+        </if>
+            <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(r.orderCount) as count from (
+            select count(*) as orderCount from custom_order o
+            left join company c on o.company_id = c.id
+            <where>
+              <trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                    and  o.city_area_id = #{cityId}
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and  date_format(o.created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(o.created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                  <if test="created != null">
+                      <![CDATA[
+                and  date_format(o.created,'%Y-%m-%d')=date_format(#{created},'%Y-%m-%d')
+                ]]>
+                  </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+                </trim>
+                </where>
+                and o.branch_id=#{branchId} and o.status>2 and estimated_delivery_date>o.created and delivery_date is null
+            union all
+            select count(*) as count from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                    and  o.city_area_id = #{cityId}
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and and  date_format(o.created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(o.created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="created != null">
+                    <![CDATA[
+                and   date_format(o.created,'%Y-%m-%d')=date_format(#{created},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+            </trim>
+            </where>
+            and o.branch_id=#{branchId} and o.status>2 and delivery_date>estimated_delivery_date and delivery_date is not null
+            ) r
+        </if>
+    </select>
+
+    <select id="selectMonthByfilter" resultType="java.util.HashMap">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select count(*) from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+            <if test="cityId != null and city != ''">
+             and  o.city_area_id = #{cityId}
+            </if>
+            <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                <![CDATA[
+                 and  o.created > date_format(#{beginDate},'%Y-%m-%d') and o.created < date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="managerId != null and managerId != ''">
+              and  c.business_manager = #{managerId}
+            </if>
+            </trim>
+            </where>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select count(*) from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                  and  o.city_area_id = #{cityId}
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and o.created > #{beginDate} and o.created < #{endDate}
+                ]]>
+                </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+                and o.branch_id=#{branchId} and o.status>2
+            </trim>
+            </where>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(r.orderCount) from (
+            select count(*) as orderCount from custom_order o
+            left join company c on o.company_id = c.id
+            <where>
+              <trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                    and  o.city_area_id = #{cityId}
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and o.created > #{beginDate} and o.created < #{endDate}
+                ]]>
+                </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+                </trim>
+                </where>
+                and o.branch_id=#{branchId} and o.status>2 and estimated_delivery_date>created and delivery_date is null
+            union all
+            select count(*) from custom_order o
+            left join company c on o.company_id = c.id
+            <where><trim prefixOverrides="AND">
+                <if test="cityId != null and city != ''">
+                    and  o.city_area_id = #{cityId}
+                </if>
+                <if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+                    <![CDATA[
+                  and o.created > #{beginDate} and o.created < #{endDate}
+                ]]>
+                </if>
+                <if test="managerId != null and managerId != ''">
+                    and  c.business_manager = #{managerId}
+                </if>
+            </trim>
+            </where>
+            and o.branch_id=#{branchId} and o.status>2 and delivery_date>estimated_delivery_date and delivery_date is not null
+            ) r
+        </if>
+    </select>
+
+
+
+    <select id="countOrderByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(r.mon) as mon,sum(r.tues) as tues,sum(r.wed) as wed,sum(r.thur) as thur,sum(r.fri) as fri,sum(r.sat) as sat,sum(r.sun) as sun  from (
+            select
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1)) and delivery_date is null) as mon,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2)) and delivery_date is null) as tues,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3)) and delivery_date is null) as wed,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4)) and delivery_date is null) as thur,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5)) and delivery_date is null) as fri,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6)) and delivery_date is null) as sat,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7)) and delivery_date is null) as sun
+            UNION ALL
+            select
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-1)) and delivery_date>estimated_delivery_date) as mon,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-2)) and delivery_date>estimated_delivery_date) as tues,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-3)) and delivery_date>estimated_delivery_date) as wed,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-4)) and delivery_date>estimated_delivery_date) as thur,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-5)) and delivery_date>estimated_delivery_date) as fri,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-6)) and delivery_date>estimated_delivery_date) as sat,
+            (select count(*) from custom_order where estimated_delivery_date > (select subdate(curdate(),date_format(curdate(),'%w')-7)) and delivery_date>estimated_delivery_date) as sun
+            ) r
+        </if>
+    </select>
+
+    <select id="countOrderByMonth" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+    <![CDATA[
+      select
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))  as point1,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day)) as point2,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day)) as point3,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate())) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day))  as point1,
+       (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day)) as point2,
+       (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day) and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day)) as point3,
+       (select count(*) from custom_order where status>2 and date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day) and date_format(created,'%Y-%m-%d') < last_day(curdate())) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            <![CDATA[
+
+select sum(r.point1) as point1,sum(r.point2) as point2,sum(r.point3) as point3,sum(r.point4) as point4  from (
+select
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day) and delivery_date is null)  as point1,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day) and delivery_date is null) as point2,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day) and delivery_date is null) as point3,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day)
+			 and date_format(created,'%Y-%m-%d') < last_day(curdate()) and delivery_date is null) as point4
+UNION ALL
+select
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >=  DATE_ADD(curdate(),interval -day(curdate())+1 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+7 day) and delivery_date>estimated_delivery_date)  as point1,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+8 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+14 day) and delivery_date>estimated_delivery_date) as point2,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+15 day)
+			 and date_format(created,'%Y-%m-%d') < DATE_ADD(curdate(),interval -day(curdate())+21 day) and delivery_date>estimated_delivery_date) as point3,
+       (select count(*) from custom_order where  date_format(created,'%Y-%m-%d') >= DATE_ADD(curdate(),interval -day(curdate())+22 day)
+			 and date_format(created,'%Y-%m-%d') < last_day(curdate()) and delivery_date>estimated_delivery_date) as point4
+ ) r
+       ]]>
+        </if>
+    </select>
+
+    <select id="countOrderByQuarter" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select
+            (select count(*) from custom_order where  month(created) = #{month1})  as month1,
+            (select count(*) from custom_order where  month(created) =#{month2})  as month2,
+            (select count(*) from custom_order where  month(created) =#{month3})  as month3
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select
+            (select count(*) from custom_order where status>2 and  month(created)=#{month1})  as month1,
+            (select count(*) from custom_order where status>2 and month(created)=#{month2})  as month2,
+            (select count(*) from custom_order where status>2 and month(created)=#{month3})  as month3
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            <![CDATA[
+            select sum(r.month1) as month1,sum(r.month2) as month2,sum(r.month3) as month3 from (
+                select
+                (select count(*) from custom_order where  month(created) = #{month1} and month(created)< estimated_delivery_date and delivery_date is null) as month1,
+                (select count(*) from custom_order where  month(created) = #{month2} and month(created)< estimated_delivery_date and delivery_date is null) as month2,
+                (select count(*) from custom_order where  month(created) = #{month3} and month(created)< estimated_delivery_date and delivery_date is null) as month3
+                UNION ALL
+                select
+                (select count(*) from custom_order where   delivery_date>estimated_delivery_date and delivery_date is not null ) as month1,
+                (select count(*) from custom_order where   delivery_date>estimated_delivery_date and delivery_date is not null) as month2,
+                (select count(*) from custom_order where   delivery_date>estimated_delivery_date and delivery_date is not null) as month3
+            ) r
+              ]]>
+        </if>
+    </select>
+
+    <select id="countOrderByYear" parameterType="String" resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+        <![CDATA[
+    select
+           (select count(*) from custom_order where  month(created)=1) as jan,
+           (select count(*) from custom_order where  month(created)=2) as feb,
+           (select count(*) from custom_order where  month(created)=3) as mar,
+           (select count(*) from custom_order where  month(created)=4) as apr,
+           (select count(*) from custom_order where  month(created)=5) as may,
+           (select count(*) from custom_order where  month(created)=6) as jun,
+           (select count(*) from custom_order where  month(created)=7) as jul,
+           (select count(*) from custom_order where  month(created)=8) as aug,
+           (select count(*) from custom_order where  month(created)=9) as sept,
+           (select count(*) from custom_order where  month(created)=10) as oct,
+           (select count(*) from custom_order where  month(created)=11) as nov,
+           (select count(*) from custom_order where  month(created)=12) as dece
+             ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            <![CDATA[
+    select
+           (select count(*) from custom_order where status>2 and  month(created)=1) as jan,
+           (select count(*) from custom_order where status>2 and  month(created)=2) as feb,
+           (select count(*) from custom_order where status>2 and  month(created)=3) as mar,
+           (select count(*) from custom_order where status>2 and  month(created)=4) as apr,
+           (select count(*) from custom_order where status>2 and  month(created)=5) as may,
+           (select count(*) from custom_order where status>2 and  month(created)=6) as jun,
+           (select count(*) from custom_order where status>2 and  month(created)=7) as jul,
+           (select count(*) from custom_order where status>2 and  month(created)=8) as aug,
+           (select count(*) from custom_order where status>2 and  month(created)=9) as sept,
+           (select count(*) from custom_order where status>2 and  month(created)=10) as oct,
+           (select count(*) from custom_order where status>2 and  month(created)=11) as nov,
+           (select count(*) from custom_order where status>2 and  month(created)=12) as dece
+             ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            <![CDATA[
+            select sum(r.jan) as jan,sum(r.feb) as feb,sum(r.mar) as mar,sum(r.apr) as apr,sum(r.may) as may,sum(r.jun) as jun,sum(r.jul) as jul,sum(r.aug) as aug,sum(r.sept) as sept,sum(r.oct) as oct,sum(r.nov) as nov,sum(r.dece) as dece from (
+            select
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=1 and delivery_date is null) as jan,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=2 and delivery_date is null) as feb,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=3 and delivery_date is null) as mar,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=4 and delivery_date is null) as apr,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=5 and delivery_date is null) as may,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=6 and delivery_date is null) as jun,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=7 and delivery_date is null) as jul,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=8 and delivery_date is null) as aug,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=9 and delivery_date is null) as sept,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=10 and delivery_date is null) as oct,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=11 and delivery_date is null) as nov,
+            (select count(*) from custom_order where   estimated_delivery_date<month(created)=12 and delivery_date is null) as 'dece'
+            union
+            select
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as jan,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as feb,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as mar,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as apr,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as may,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as jun,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as jul,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as aug,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as sept,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as oct,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as nov,
+            (select count(*) from custom_order where   delivery_date is not null and delivery_date>estimated_delivery_date) as 'dece'
+            ) r
+              ]]>
+        </if>
+    </select>
+
+    <select id="countSeries">
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select DISTINCT(custom_order_id),series from order_product  where series is not null
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select DISTINCT(op.custom_order_id),op.series from order_product op
+            left join custom_order co  on op.custom_order_id= co.id
+            where series is not null and co.status >2
+        </if>
+        <if test="countType != null and countType != '' and countType =='3'.toString()">
+            select sum(r.countOrders) from (
+            select DISTINCT(op.custom_order_id),series,count(*) as countOrders from  order_product op
+            left join custom_order co on op.custom_order_id = co.id
+            where
+            co.estimated_delivery_date>co.created and op.series is not null and co.delivery_date is null
+            union
+            select DISTINCT(op.custom_order_id),series,count(*) as countOrders from  order_product op
+            left join custom_order co on op.custom_order_id = co.id
+            where
+            co.delivery_date>co.estimated_delivery_date and
+            op.series is not null and co.delivery_date is not null
+            ) r
+        </if>
+    </select>
+
+
+    <select id="findCorporates" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+       select distinct coordination_name as coordinationName from produce_order where way='1' and custom_order_id in(select  id from custom_order where custom_order.branch_id=#{branchId})
+                                    and DATE_FORMAT(created,'%Y-%m-%d')>=DATE_FORMAT(#{startDateTime},'%Y-%m-%d')
+                                     and DATE_FORMAT(created,'%Y-%m-%d')<=DATE_FORMAT(#{endDateTime},'%Y-%m-%d')
+                                     and coordination_name is not null
+        ]]>
+    </select>
+    <select id="findCorporatesByBranchId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select name as coordinationName from corporate_partners where branch_id=#{currBranchId}
+    </select>
+    <select id="findByCorporateNameAndDate" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        SELECT count(id) as count,IFNULL(sum(amount),0 )as amount from produce_order   WHERE way='1' and  coordination_name=#{coordinationName} and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(#{created},'%Y-%m-%d')
+        ]]>
+    </select>
+
+    <select id="countSalemanAchievements" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        SELECT count(id) count ,IFNULL(sum(factory_final_price),0)countAmount
+        from custom_order
+        WHERE business_manager=#{businessManager}
+              and status>1
+              and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(#{created},'%Y-%m-%d')
+        ]]>
+    </select>
+
+    <select id="findAllOrderCountByBidAndType" resultType="integer">
+
+        SELECT count(id) count
+        from custom_order
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="type != null">
+                    AND type = #{type}
+                </if>
+                <if test="status != null">
+                    AND status = #{status}
+                </if>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+                <if test="timeType != null and timeType=='0'">
+                    AND day(created)=day(now())
+                </if>
+                <if test="timeType != null and timeType=='1'">
+                    AND week(created)=week(now())
+                </if>
+                <if test="timeType != null and timeType=='2'">
+                    AND month(created)=month(now())
+                </if>
+                <if test="timeType != null and timeType=='3'">
+                    AND quarter(created)=quarter(now())
+                </if>
+                <if test="timeType != null and timeType=='4'">
+                    AND year(created) = year(now())
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="selectOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        SELECT count(id) orderCount ,IFNULL(sum(factory_final_price),0)orderAmount
+        from custom_order
+        WHERE branch_id=#{branchId}
+          and type=0
+          and DATE_FORMAT(created,'%Y-%m')=DATE_FORMAT(#{date},'%Y-%m')
+        ]]>
+    </select>
+    <select id="selectProduceCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        SELECT IFNULL(sum(a.amount),0) produceAmount,count(a.orderId) produceCount  from
+            (SELECT sum(amount)amount,custom_order_id orderId  from produce_order where custom_order_id in (
+                SELECT id  from custom_order
+                WHERE branch_id=#{branchId}
+                  and type=0
+                  and is_coordination=1
+                  and DATE_FORMAT(created,'%Y-%m')=DATE_FORMAT(#{date},'%Y-%m')
+            )  GROUP BY custom_order_id )a
+        ]]>
+    </select>
+
+    <select id="selectAfterCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        SELECT count(id) afterCount
+        from custom_order
+        WHERE branch_id=#{branchId}
+          and type=1
+          and DATE_FORMAT(created,'%Y-%m')=DATE_FORMAT(#{date},'%Y-%m')
+        ]]>
+    </select>
+
+    <select id="findCountByBidAndType" resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        select a.*,b.*,c.*,d.* from
+                                   (SELECT count(id) chuguiCount
+                                    from custom_order
+                                    WHERE type=0
+                                      and branch_id=#{branchId}
+                                      and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+                                      and id in (select custom_order_id from order_product where type=0))a,
+                                   (SELECT count(id) yiguiCount
+                                    from custom_order
+                                    WHERE branch_id=#{branchId}
+                                      and type=0
+                                      and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+                                      and id in (select custom_order_id from order_product where type=1))b,
+                                   (SELECT count(id) wujinCount
+                                    from custom_order
+                                    WHERE branch_id=#{branchId}
+                                      and type=0
+                                      and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+                                      and id in (select custom_order_id from order_product where type=4))c,
+                                   (SELECT count(id) yangkuaiCount
+                                    from custom_order
+                                    WHERE branch_id=#{branchId}
+                                      and type=0
+                                      and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+                                      and id in (select custom_order_id from order_product where type=5))d
+        ]]>
+    </select>
+    <select id="selectOrderCountByDay" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT count(id) orderCount,IFNULL(sum(factory_final_price),0)orderAmount
+        from custom_order
+        <where><trim prefixOverrides="AND">
+            branch_id=#{branchId}
+            and type=0
+            and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d')
+            <if test="orderProductType != null">
+                AND order_product_type = #{orderProductType}
+            </if>
+        </trim>
+        </where>
+
+    </select>
+    <select id="findProductNumByBidAndTime" resultType="integer">
+        SELECT count(op.id) productNum
+        from order_product op
+             left join custom_order co on op.custom_order_id = co.id
+        <where><trim prefixOverrides="AND">
+            co.branch_id=#{branchId}
+            and co.type=0
+            and DATE_FORMAT(co.created,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d')
+        </trim>
+        </where>
+
+    </select>
+
+    <select id="findDealerByTime" resultType="com.lwxf.mybatis.utils.MapContext">
+        select c.id dealerId,c.name dealerName from company c
+        where c.id in(
+            SELECT company_id
+            from custom_order
+        <where><trim prefixOverrides="AND">
+            branch_id=#{branchId}
+            and type=0   and factory_final_price is not null
+            <if test="monthTime != null">
+                and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+            </if>
+        </trim>
+        </where>
+        )
+
+    </select>
+    <select id="findOrderCOuntByCidAndTime" resultMap="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderDao.CustomOrderMap">
+
+        SELECT *
+        from custom_order
+        <where><trim prefixOverrides="AND">
+            company_id=#{companyId}
+            and type=0   and factory_final_price is not null
+            <if test="monthTime != null">
+                and DATE_FORMAT(created,'%Y-%m')=#{monthTime}
+            </if>
+        </trim>
+        </where>
+
+    </select>
+
+    <select id="homeOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (select count(*) from custom_order where state=1 AND status = 9 <if test="branchId != null"> and branch_id = #{branchId}</if>) toReceive,
+        (select count(*) from custom_order where state=1 AND status = 0 <if test="branchId != null"> and branch_id = #{branchId}</if>) toQuoted,
+        (select count(*) from custom_order where state=1 AND status = 1 <if test="branchId != null"> and branch_id = #{branchId}</if>) toPaid,
+        (select count(*) from custom_order where state=1 AND status = 2 <if test="branchId != null"> and branch_id = #{branchId}</if>) toProduced,
+        (select count(*) from custom_order
+            <where>
+                <trim prefixOverrides="AND">
+                    and <![CDATA[ status>1 and status<8 ]]> and delivery_date is null and <![CDATA[ DATE_FORMAT(estimated_delivery_date,'%Y-%m-%d')<DATE_FORMAT(now(),'%Y-%m-%d')]]>
+                    <if test="branchId != null">
+                        AND branch_id = #{branchId}
+                    </if>
+                </trim>
+            </where>
+        ) delayOrder
+    </select>
+
+    <select id="myOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (select count(*) from custom_order where state=1 and <![CDATA[ status>1 and status<8 ]]> <if test="branchId != null">AND branch_id = #{branchId}</if>) totalCount,
+        (select ifnull(sum(factory_final_price), 0) from custom_order where state=1 and <![CDATA[ status>1 and status<8 ]]> <if test="branchId != null">AND branch_id = #{branchId}</if>) totalMoney,
+        (select count(*) from custom_order where state=1 AND status = 0 <if test="branchId != null"> and branch_id = #{branchId}</if>) toQuoted,
+        (select count(*) from custom_order where state=1 AND status = 2 <if test="branchId != null"> and branch_id = #{branchId}</if>) toProduced,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state=1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and  (receiver=#{userId} or place_order=#{userId})
+                </if>
+            </trim>
+        </where>) myOrderCount,
+        (select IFNULL(SUM(factory_final_price),0) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state=1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and  (receiver=#{userId} or place_order=#{userId})
+                </if>
+            </trim>
+        </where>) myOrderMoney
+    </select>
+
+    <select id="placeOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and place_order=#{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) myOrderCount,
+        (select IFNULL(SUM(factory_final_price),0) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and place_order=#{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) myOrderMoney,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND status = 0
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and place_order=#{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) toQuoted,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND status = 2
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and place_order=#{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) toProduced
+    </select>
+
+    <select id="merchandiserOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and merchandiser = #{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) myOrderCount,
+        (select IFNULL(SUM(factory_final_price),0) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND <![CDATA[ status>1 and status<8 ]]>
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and merchandiser = #{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) myOrderMoney,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND status = 0
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and merchandiser = #{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) toQuoted,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="and">
+                state = 1 AND status = 2
+                <if test="_parameter.containsKey('userId') and userId != null">
+                    and merchandiser = #{userId}
+                </if>
+                <if test="branchId != null">
+                    and branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>) toProduced
+    </select>
+
+    <select id="findOrderProductTypeCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select  count(*) count
+        from  custom_order
+        <where>
+            <trim prefixOverrides="AND">
+                state = 1 and <![CDATA[ status>1 and status <8]]>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+                <if test="type != null">
+                    AND order_product_type=#{type}
+                </if>
+                <if test="isCoordination != null">
+                    AND is_coordination = #{isCoordination}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="dispatchOrderCountByDay" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (
+        select count(*) from dispatch_bill_plan_item   where dispatch_bill_plan_id in(select id from dispatch_bill_plan where  date_format(plan_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and branch_id=#{branchId} ) and status=1
+        ) completedToday,
+        (
+        select name from dispatch_bill_plan where status = 0 and branch_id = #{branchId} limit 1
+        ) noCompletedPlan
+    </select>
+
+    <select id="findOrderProductStockCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT
+        (select count(*) from order_product
+            where status=3 and custom_order_id in(SELECT id from custom_order where  branch_id=#{branchId} )
+        ) printCount,
+        (select count(*) from produce_order
+            where type = 0 and branch_id=#{branchId} and count is null and order_product_id in(select id from order_product where status='2')
+        ) cabinetCount,
+        (select count(*) from produce_order
+            where type = 1 and branch_id=#{branchId} and count is null and order_product_id in(select id from order_product where status='2')
+        ) doorCount,
+        (select count(*) from produce_order
+            where type = 2 and branch_id=#{branchId} and count is null and order_product_id in(select id from order_product where status='2')
+        ) hardwareCount
+    </select>
+
+    <select id="findAfterOrderCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+        (SELECT count(*) from custom_order
+        WHERE branch_id=#{branchId} and type=1 and status = 1
+        ) toPayCount,
+        (SELECT count(*) from custom_order
+        WHERE branch_id=#{branchId} and type=1 and status = 2
+        ) toProduceCount,
+        (select count(*) from custom_order
+        <where>
+            <trim prefixOverrides="AND">
+                and type=1 and <![CDATA[ status>1 and status<8 ]]> and delivery_date is null and <![CDATA[ DATE_FORMAT(estimated_delivery_date,'%Y-%m-%d')<DATE_FORMAT(now(),'%Y-%m-%d')]]>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>
+        ) delayCount
+    </select>
+
+    <select id="findDealerOrderCountsByTime" resultType="map">
+        select a.*,b.*,c.*,d.* from
+        (SELECT count(*)nowMonthCount,ifnull(sum(factory_final_price),0)nowMonthAmount from custom_order
+        WHERE company_id=#{companyId} and type=#{type}
+        and date_format(created,'%Y-%m')=date_format(now(),'%Y-%m')
+        ) a,
+
+        (SELECT count(*)oldMonthCount,ifnull(sum(factory_final_price),0)oldMonthAmount from custom_order
+        WHERE company_id=#{companyId} and type=#{type}
+        and date_format(created,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+        ) b,
+
+        (SELECT count(*)nowWeekCount,ifnull(sum(factory_final_price),0)nowWeekAmount from custom_order
+        WHERE company_id=#{companyId} and type=#{type}
+        and YEARWEEK(date_format(created,'%Y-%m-%d')) = YEARWEEK(now())
+        ) c,
+
+        (SELECT count(*)oldWeekCount,ifnull(sum(factory_final_price),0)oldWeekAmount from custom_order
+        WHERE company_id=#{companyId} and type=#{type}
+        and YEARWEEK(date_format(created,'%Y-%m-%d')) = YEARWEEK(now())-1
+        ) d
+
+    </select>
+    <select id="selectDealerOrderCountByDay" resultType="map">
+        select count(*) orderNum,ifnull(sum(factory_final_price),0) orderAmount
+        from custom_order
+       <where>
+           <trim prefixOverrides="AND">
+               <![CDATA[ status != 8 ]]> and type=0
+               <if test="companyId != null">
+                   AND company_id = #{companyId}
+               </if>
+               <if test="timeType != null and timeType =='3'.toString()">
+                   AND date_format(created,'%Y-%m')=date_format(#{date},'%Y-%m')
+               </if>
+               <if test="timeType == null">
+                   AND date_format(created,'%Y-%m-%d')=date_format(#{date},'%Y-%m-%d')
+               </if>
+           </trim>
+
+       </where>
+
+
+    </select>
+</mapper>

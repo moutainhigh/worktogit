@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.warehouse.StorageOutputInDao">
+    <resultMap id="StorageOutputInMap" type="com.lwxf.industry4.webapp.domain.entity.warehouse.StorageOutputIn">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="flow" property="flow" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="res_id" property="resId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="StorageOutputInDtoMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.StorageOutputInDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="flow" property="flow" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="res_id" property="resId" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="storageName" property="storageName"/>
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="supplierName" property="supplierName"/>
+    </resultMap>
+    <sql id="columns">
+id, no, type, flow, creator, created, storage_id, notes, res_id, status,supplier_id
+</sql>
+    <sql id="columnsDto">
+s.id, s.no, s.type, s.flow, s.creator, s.created, s.storage_id, s.notes, s.res_id,s.storageName,u.name creatorName,s.status,s.supplier_id,s.supplierName
+    </sql>
+    <select id="selectById" resultMap="StorageOutputInMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   storage_output_in
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="StorageOutputInMap">
+        SELECT <include refid="columns" />
+        FROM   storage_output_in
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="no != null">
+                AND no = #{no}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="flow != null">
+                AND flow = #{flow}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="storageId != null">
+                AND storage_id = #{storageId}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="resId != null">
+                AND res_id = #{resId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="supplierId != null">
+                AND supplier_id = #{supplierId}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+storage_output_in(id, no, type, flow, creator, created, storage_id, notes, res_id, status,supplier_id,branch_id)
+           VALUES(#{id}, #{no}, #{type}, #{flow}, #{creator}, #{created}, #{storageId}, #{notes}, #{resId}, #{status}, #{supplierId},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE storage_output_in
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   storage_output_in
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByPaginateFilter" resultMap="StorageOutputInDtoMap">
+        select  s.*,su.supplier_name supplierName,u.name creatorName,sto.name storageName
+        from storage_output_in s
+        left join supplier su on s.supplier_id = su.id
+        left join storage sto on s.storage_id = sto.id
+        left join user u on u.id=s.creator
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                s.id = #{id}
+            </if>
+            <if test="no != null">
+                AND s.no like upper(CONCAT('%',#{no},'%'))
+            </if>
+            <if test="type != null">
+                AND s.type = #{type}
+            </if>
+            <if test="flow != null">
+                AND s.flow = #{flow}
+            </if>
+            <if test="creator != null">
+                AND s.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND s.created = #{created}
+            </if>
+            <if test="storageId != null">
+                AND s.storage_id = #{storageId}
+            </if>
+            <if test="notes != null">
+                AND s.notes = #{notes}
+            </if>
+            <if test="resId != null">
+                AND s.res_id = #{resId}
+            </if>
+            <if test="supplierId != null">
+                AND s.supplier_id = #{supplierId}
+            </if>
+            <if test="branchId != null">
+                AND s.branch_id = #{branchId}
+            </if>
+        </trim></where>
+    </select>
+
+    <select id="findOneByNo" resultMap="StorageOutputInMap">
+        select <include refid="columns"/> from storage_output_in   where no = #{no}  and branch_id=#{branchId}
+    </select>
+
+</mapper>

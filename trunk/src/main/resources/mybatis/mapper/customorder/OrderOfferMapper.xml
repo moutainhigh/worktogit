@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.OrderOfferDao">
+    <resultMap id="OrderOfferMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.OrderOffer">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="quoter" property="quoter" jdbcType="VARCHAR" />
+        <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+        <result column="design_fee" property="designFee" jdbcType="DECIMAL" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="discount_design_fee" property="discountDesignFee" jdbcType="DECIMAL" />
+        <result column="discount_price" property="discountPrice" jdbcType="DECIMAL" />
+        <result column="receipts_design_fee" property="receiptsDesignFee" jdbcType="DECIMAL" />
+        <result column="receipts_price" property="receiptsPrice" jdbcType="DECIMAL" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, quoter, auditor, design_fee, price, discount_design_fee, discount_price, receipts_design_fee, receipts_price, order_id
+</sql>
+
+    <select id="selectById" resultMap="OrderOfferMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   order_offer
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="OrderOfferMap">
+SELECT <include refid="columns" />
+FROM   order_offer
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="quoter != null">
+    AND quoter = #{quoter}
+</if>
+<if test="auditor != null">
+    AND auditor = #{auditor}
+</if>
+<if test="designFee != null">
+    AND design_fee = #{designFee}
+</if>
+<if test="price != null">
+    AND price = #{price}
+</if>
+<if test="discountDesignFee != null">
+    AND discount_design_fee = #{discountDesignFee}
+</if>
+<if test="discountPrice != null">
+    AND discount_price = #{discountPrice}
+</if>
+<if test="receiptsDesignFee != null">
+    AND receipts_design_fee = #{receiptsDesignFee}
+</if>
+<if test="receiptsPrice != null">
+    AND receipts_price = #{receiptsPrice}
+</if>
+<if test="orderId != null">
+    AND order_id = #{orderId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+order_offer(id, quoter, auditor, design_fee, price, discount_design_fee, discount_price, receipts_design_fee, receipts_price, order_id)
+     VALUES(#{id}, #{quoter}, #{auditor}, #{designFee}, #{price}, #{discountDesignFee}, #{discountPrice}, #{receiptsDesignFee}, #{receiptsPrice}, #{orderId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE order_offer
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('quoter')">
+    quoter = #{quoter},
+</if>
+    <if test="_parameter.containsKey('auditor')">
+    auditor = #{auditor},
+</if>
+    <if test="_parameter.containsKey('designFee')">
+    design_fee = #{designFee},
+</if>
+    <if test="_parameter.containsKey('price')">
+    price = #{price},
+</if>
+    <if test="_parameter.containsKey('discountDesignFee')">
+    discount_design_fee = #{discountDesignFee},
+</if>
+    <if test="_parameter.containsKey('discountPrice')">
+    discount_price = #{discountPrice},
+</if>
+    <if test="_parameter.containsKey('receiptsDesignFee')">
+    receipts_design_fee = #{receiptsDesignFee},
+</if>
+    <if test="_parameter.containsKey('receiptsPrice')">
+    receipts_price = #{receiptsPrice}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   order_offer
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByOrerId" resultMap="OrderOfferMap">
+        select <include refid="columns"/> from order_offer where order_id = #{orderId}
+    </select>
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dispatch.DispatchBillPlanItemDao">
+    <resultMap id="DispatchBillPlanItemMap" type="com.lwxf.industry4.webapp.domain.entity.dispatch.DispatchBillPlanItem">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dispatch_bill_plan_id" property="dispatchBillPlanId" jdbcType="CHAR" />
+        <result column="finished_stock_item_id" property="finishedStockItemId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="produce_id" property="produceId" jdbcType="CHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+        <result column="audit_opinion" property="auditOpinion"  />
+        <result column="produce_num" property="produceNum"  />
+        <result column="audit_result" property="auditResult"  />
+    </resultMap>
+    <sql id="columns">
+id, dispatch_bill_plan_id, finished_stock_item_id, status,produce_id,order_product_id,audit_opinion,produce_num,audit_result
+</sql>
+
+    <select id="selectById" resultMap="DispatchBillPlanItemMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dispatch_bill_plan_item
+WHERE  id = #{id}
+</select>
+    <select id="findByfinishedStockItemId" resultMap="DispatchBillPlanItemMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dispatch_bill_plan_item
+        WHERE  finished_stock_item_id = #{finishedStockItemId}
+    </select>
+
+    <select id="findBydbpIdAndStatus" resultMap="DispatchBillPlanItemMap">
+        SELECT <include refid="columns" />
+        FROM   dispatch_bill_plan_item
+        WHERE  dispatch_bill_plan_id = #{dispatchBillPlanId}
+              and status=#{status}
+    </select>
+    <select id="findListByDispatchBillPlanId" resultMap="DispatchBillPlanItemMap">
+        SELECT *
+        FROM   dispatch_bill_plan_item
+        <where><trim prefixOverrides="AND">
+            <if test="planId != null">
+              and  dispatch_bill_plan_id = #{planId}
+            </if>
+            <if test="orderProductId != null">
+              and  order_product_id = #{orderProductId}
+            </if>
+            <if test="productNo != null">
+                AND order_product_id in(select id from order_product where no like '%${productNo}%')
+            </if>
+            <if test="dealerName != null">
+                AND order_product_id in (select id from order_product where custom_order_id in (select id from custom_order where company_id in (select id from company where name like '%${dealerName}%')))
+            </if>
+            <if test="cutomerName != null">
+                AND order_product_id in (select id from order_product where custom_order_id in (select id from custom_order where customer_id in (select id from company_customer where name like '%${cutomerName}%')))
+            </if>
+            <if test="status != null">
+              and  status = #{status}
+            </if>
+        </trim></where>
+        order by order_product_id desc
+    </select>
+    <select id="selectByFilter" resultMap="DispatchBillPlanItemMap">
+SELECT <include refid="columns" />
+FROM   dispatch_bill_plan_item
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="dispatchBillPlanId != null">
+    AND dispatch_bill_plan_id = #{dispatchBillPlanId}
+</if>
+<if test="finishedStockItemId != null">
+    AND finished_stock_item_id = #{finishedStockItemId}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_bill_plan_item(id, dispatch_bill_plan_id, finished_stock_item_id, status,produce_id,order_product_id,audit_opinion,produce_num,audit_result)
+                 VALUES(#{id}, #{dispatchBillPlanId}, #{finishedStockItemId}, #{status},#{produceId},#{orderProductId},#{auditOpinion},#{produceNum},#{auditResult})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dispatch_bill_plan_item
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('dispatchBillPlanId') and dispatchBillPlanId != null">
+    dispatch_bill_plan_id = #{dispatchBillPlanId},
+</if>
+    <if test="_parameter.containsKey('finishedStockItemId') and finishedStockItemId != null">
+    finished_stock_item_id = #{finishedStockItemId},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+        status = #{status},
+</if>
+    <if test="_parameter.containsKey('produceId') and produceId != null">
+        produce_id = #{produceId},
+    </if>
+    <if test="_parameter.containsKey('auditOpinion') and auditOpinion != null">
+        audit_opinion = #{auditOpinion},
+    </if>
+    <if test="_parameter.containsKey('orderProductId') and orderProductId != null">
+        order_product_id = #{orderProductId},
+    </if>
+    <if test="_parameter.containsKey('produceNum') and produceNum != null">
+        produce_num = #{produceNum}
+    </if>
+    <if test="_parameter.containsKey('auditResult') and auditResult != null">
+        audit_result = #{auditResult}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_bill_plan_item
+WHERE  id = #{id}
+</delete>
+
+    <update id="updateStatusByFinishedItemId">
+        update dispatch_bill_plan_item set status = #{status} where finished_stock_item_id = #{finishedStockItemId}
+    </update>
+
+    <delete id="deleteByOrderId">
+        delete from dispatch_bill_plan_item where finished_stock_item_id in (select item.id from finished_stock_item item left join finished_stock f on item.finished_stock_id = f.id where f.order_id = #{orderId})
+    </delete>
+
+    <select id="findCountByBranchId" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT
+            (select count(*) from dispatch_bill_plan_item   where dispatch_bill_plan_id in(select id from dispatch_bill_plan where  date_format(created,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and branch_id=#{branchId} )) as plann,
+            (select count(*) from dispatch_bill_plan_item   where dispatch_bill_plan_id in(select id from dispatch_bill_plan where  date_format(created,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and branch_id=#{branchId} ) and status=1) as orver,
+            (select count(*) from dispatch_bill   where date_format(created,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and branch_id=#{branchId} ) as num
+
+    </select>
+
+    <select id="findDebtProductNumByPlanId" resultType="integer">
+        select count(distinct(order_product_id)) deptProductNum
+        from dispatch_bill_plan_item
+        where dispatch_bill_plan_id=#{planId}
+        and order_product_id in
+        (select id from order_product where custom_order_id in (select id from custom_order where customer_id in (select id from payment  where status=3)))
+    </select>
+
+</mapper>

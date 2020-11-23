@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserAttentionDao">
+    <resultMap id="UserAttentionMap" type="com.lwxf.industry4.webapp.domain.entity.user.UserAttention">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="resource_id" property="resourceId" jdbcType="CHAR" />
+        <result column="resource_type" property="resourceType" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+id, user_id, resource_id, resource_type, created
+</sql>
+
+    <select id="selectById" resultMap="UserAttentionMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   user_attention
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="UserAttentionMap">
+SELECT <include refid="columns" />
+FROM   user_attention
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="userId != null">
+    AND user_id = #{userId}
+</if>
+<if test="resourceId != null">
+    AND resource_id = #{resourceId}
+</if>
+<if test="resourceType != null">
+    AND resource_type = #{resourceType}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+user_attention(id, user_id, resource_id, resource_type, created)
+        VALUES(#{id}, #{userId}, #{resourceId}, #{resourceType}, #{created})
+</insert>
+
+    <update id="updateByMapContext" />
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_attention
+WHERE  id = #{id}
+</delete>
+
+    <select id="isExistByUserIdAndResourceId" resultType="java.lang.Boolean">
+        select count(*) from user_attention where user_id = #{userId} and resource_id = #{resourceId}
+    </select>
+    <select id="findByUserId" resultMap="UserAttentionMap">
+        select <include refid="columns"/> from user_attention where user_id = #{userId}
+    </select>
+    <delete id="deleteByUserIdAndResourceId">
+        delete from user_attention where user_id = #{userId} and resource_id = #{resourceId}
+    </delete>
+    <select id="isExistByUserIdAndResourceIds" resultType="java.util.Map">
+       select
+       <foreach collection="storeConfigs" item="storeConfig" separator="," index="index" >
+           IFNULL(
+           (
+           SELECT
+           count(*)
+           FROM
+           user_attention u
+           WHERE
+           u.user_id	= #{userId} and u.resource_id = #{storeConfig.companyId}
+           ),
+           0
+           ) AS #{storeConfig.companyId}
+       </foreach>
+    </select>
+
+
+    <select id="isExistByUserIdAndResIds" resultType="java.util.Map" parameterType="map">
+       select
+       <foreach collection="ssss" item="ssss" separator="," >
+           IFNULL(
+           (
+           SELECT
+           count(*)
+           FROM
+           user_attention u
+           WHERE
+           u.user_id = #{userId} and u.resource_id = #{ssss.${resId}}
+           ),
+           0
+           ) AS #{ssss.${resId}}
+       </foreach>
+    </select>
+
+    <select id="findCountByResIdAndType" resultType="java.lang.Integer">
+        select count(*) from user_attention where resource_id = #{resourceId} and resource_type = #{resourceType}
+    </select>
+</mapper>

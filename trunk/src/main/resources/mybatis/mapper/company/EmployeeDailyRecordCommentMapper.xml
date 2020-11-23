@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeDailyRecordCommentDao">
+    <resultMap id="EmployeeDailyRecordCommentMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeDailyRecordComment">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="comment_user" property="commentUser" jdbcType="CHAR" />
+        <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="daily_record_id" property="dailyRecordId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="EmployeeDailyRecordCommentDtosMap" type="com.lwxf.industry4.webapp.domain.dto.company.EmployeeDailyRecordCommentDtos">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="comment_user" property="commentUser" jdbcType="CHAR" />
+        <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="daily_record_id" property="dailyRecordId" jdbcType="CHAR" />
+        <result column="createUserName" property="createUserName"/>
+    </resultMap>
+    <resultMap id="EmployeeDailyRecordCommentDtoMap" type="com.lwxf.industry4.webapp.domain.dto.company.EmployeeDailyRecordCommentDto">
+        <result column="comment_user_name" property="commentUserName" />
+        <result column="comment_user_avatar" property="commentUserAvatar" />
+        <result column="comment_message" property="commentMessage" />
+        <result column="employee_daily_record_commentId" property="employeeDailyRecordCommentId" />
+    </resultMap>
+    <sql id="columns">
+id, comment_user, comment_content, create_time, update_time, daily_record_id
+</sql>
+    <sql id="columnDtos">
+e.id, e.comment_user, e.comment_content, e.create_time, e.update_time, e.daily_record_id,u.name createUserName
+</sql>
+
+    <select id="selectById" resultMap="EmployeeDailyRecordCommentMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_daily_record_comment
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeDailyRecordCommentMap">
+SELECT <include refid="columns" />
+FROM   employee_daily_record_comment
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="commentUser != null">
+    AND comment_user = #{commentUser}
+</if>
+<if test="commentContent != null">
+    AND comment_content = #{commentContent}
+</if>
+<if test="createTime != null">
+    AND create_time = #{createTime}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="dailyRecordId != null">
+    AND daily_record_id = #{dailyRecordId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_daily_record_comment(id, comment_user, comment_content, create_time, update_time, daily_record_id)
+                       VALUES(#{id}, #{commentUser}, #{commentContent}, #{createTime}, #{updateTime}, #{dailyRecordId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_daily_record_comment
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('commentUser')">
+    comment_user = #{commentUser},
+</if>
+    <if test="_parameter.containsKey('commentContent')">
+    comment_content = #{commentContent},
+</if>
+    <if test="_parameter.containsKey('createTime')">
+    create_time = #{createTime},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime},
+</if>
+    <if test="_parameter.containsKey('dailyRecordId')">
+    daily_record_id = #{dailyRecordId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_daily_record_comment
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByRecordId" resultMap="EmployeeDailyRecordCommentDtosMap">
+        select <include refid="columnDtos"/> from employee_daily_record_comment e left join user u on e.comment_user = u.id where daily_record_id = #{id}
+    </select>
+
+    <select id="findByemployeeDailyRecordId" resultMap="EmployeeDailyRecordCommentDtoMap">
+        SELECT edrc.comment_content comment_message,u.name comment_user_name,u.avatar comment_user_avatar,edrc.id employee_daily_record_commentId
+        FROM   employee_daily_record_comment edrc
+        left join user u on edrc.comment_user=u.id
+        WHERE  edrc.daily_record_id=#{employeeDailyRecordId}
+    </select>
+</mapper>

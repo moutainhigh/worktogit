@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.corporatePartners.CorporatePartnersDao">
+    <resultMap id="CorporatePartnersMap" type="com.lwxf.industry4.webapp.domain.entity.corporatePartners.CorporatePartners">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+        <result column="bank" property="bank" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
+        <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+        <result column="city_area" property="cityArea" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="CorporatePartnersDtoMap" type="com.lwxf.industry4.webapp.domain.dto.corporatePartners.CorporatePartnersDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+        <result column="bank" property="bank" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
+        <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+        <result column="city_area" property="cityArea" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="cityId" property="cityId"/>
+        <result column="provinceId" property="provinceId"/>
+        <result column="mergerName" property="mergerName"/>
+    </resultMap>
+    <sql id="columns">
+id, name, bank_account, bank, address, tel, contact_name, city_area, notes, created, creator, branch_id
+</sql>
+
+    <select id="selectById" resultMap="CorporatePartnersMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   corporate_partners
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CorporatePartnersMap">
+SELECT <include refid="columns" />
+FROM   corporate_partners
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="bankAccount != null">
+    AND bank_account = #{bankAccount}
+</if>
+<if test="bank != null">
+    AND bank = #{bank}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="tel != null">
+    AND tel = #{tel}
+</if>
+<if test="contactName != null">
+    AND contact_name = #{contactName}
+</if>
+<if test="cityArea != null">
+    AND city_area = #{cityArea}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+corporate_partners(id, name, bank_account, bank, address, tel, contact_name, city_area, notes, created, creator, branch_id)
+            VALUES(#{id}, #{name}, #{bankAccount}, #{bank}, #{address}, #{tel}, #{contactName}, #{cityArea}, #{notes}, #{created}, #{creator}, #{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE corporate_partners
+<set><trim suffixOverrides=",">
+<if test="name!=null">
+    name = #{name},
+</if>
+    <if test="bankAccount!=null">
+    bank_account = #{bankAccount},
+</if>
+    <if test="bank!=null">
+    bank = #{bank},
+</if>
+    <if test="address!=null">
+    address = #{address},
+</if>
+    <if test="tel!=null">
+    tel = #{tel},
+</if>
+    <if test="contactName!=null">
+    contact_name = #{contactName},
+</if>
+    <if test="cityArea!=null">
+    city_area = #{cityArea},
+</if>
+    <if test="notes!=null">
+    notes = #{notes},
+</if>
+    <if test="created!=null">
+    created = #{created},
+</if>
+    <if test="creator!=null">
+    creator = #{creator},
+</if>
+    <if test="branchId!=null">
+    branch_id = #{branchId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   corporate_partners
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByFilter" resultMap="CorporatePartnersDtoMap">
+        select c.*,city.merger_name mergerName,u.name creatorName,city1.parent_id provinceId,city1.id cityId
+        from corporate_partners c
+        left join city_area city on c.city_area = city.id
+        left join user u on c.creator = u.id
+        left join city_area city1 on city.parent_id = city1.id
+        <where>
+            <trim prefixOverrides="and">
+                <if test="name!=null">
+                  c.name like CONCAT('%',#{name},'%')
+                </if>
+                <if test="bankAccount!=null">
+                   AND c.bank_account like CONCAT('%',#{bankAccount},'%')
+                </if>
+                <if test="bank!=null">
+                   AND c.bank like CONCAT('%',#{bank},'%')
+                </if>
+                <if test="tel!=null">
+                   AND c.tel like CONCAT('%',#{tel},'%')
+                </if>
+                <if test="contactName!=null">
+                   AND c.contact_name like CONCAT('%',#{contactName},'%')
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="findCorporatePartnersInfo" resultMap="CorporatePartnersDtoMap">
+        select c.*,city.merger_name mergerName,u.name creatorName,city1.parent_id provinceId,city1.id cityId
+        from corporate_partners c
+        left join city_area city on c.city_area = city.id
+        left join user u on c.creator = u.id
+        left join city_area city1 on city.parent_id = city1.id
+        where c.id = #{id}
+    </select>
+    <select id="findCorporateInfoByName" resultMap="CorporatePartnersDtoMap">
+        select c.*,substring(city.merger_name,4) mergerName,u.name creatorName,city1.parent_id provinceId,city1.id cityId
+        from corporate_partners c
+                 left join city_area city on c.city_area = city.id
+                 left join user u on c.creator = u.id
+                 left join city_area city1 on city.parent_id = city1.id
+        where c.name = #{coordinationName}
+    </select>
+    <select id="findByTel" resultMap="CorporatePartnersMap">
+        select <include refid="columns" />
+        from corporate_partners
+
+        where tel = #{tel}
+    </select>
+
+</mapper>

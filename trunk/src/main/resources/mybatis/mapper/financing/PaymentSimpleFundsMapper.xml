@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.financing.PaymentSimpleFundsDao">
+    <resultMap id="PaymentSimpleFundsMap" type="com.lwxf.industry4.webapp.domain.entity.financing.PaymentSimpleFunds">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="payment_simple_id" property="paymentSimpleId" jdbcType="CHAR" />
+        <result column="funds_name" property="fundsName" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+    </resultMap>
+
+    <resultMap id="PaymentSimpleFundsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleFundsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="payment_simple_id" property="paymentSimpleId" jdbcType="CHAR" />
+        <result column="funds_name" property="fundsName" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName" jdbcType="CHAR"/>
+        <result column="operatorName" property="operatorName" jdbcType="CHAR"/>
+    </resultMap>
+    <sql id="columns">
+id, payment_simple_id, funds_name, code, amount, notes, created, creator, operator
+</sql>
+
+    <sql id="columnsDto">
+psf.id, psf.payment_simple_id, psf.funds_name, psf.code, psf.amount, psf.notes, psf.created, psf.creator,
+psf.operator, u.name as creatorName, uu.name as operatorName
+</sql>
+
+    <select id="selectDtoById" resultMap="PaymentSimpleFundsDtoMap" parameterType="string">
+        SELECT <include refid="columnsDto" />
+        FROM payment_simple_funds psf
+        LEFT JOIN user u
+        ON u.id = psf.creator
+        LEFT JOIN user uu
+        ON uu.id = psf.operator
+        WHERE psf.id = #{id}
+    </select>
+
+    <select id="selectById" resultMap="PaymentSimpleFundsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   payment_simple_funds
+WHERE  id = #{id}
+</select>
+
+    <select id="selectListByPid" resultMap="PaymentSimpleFundsMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   payment_simple_funds
+        WHERE  payment_simple_id = #{id}
+    </select>
+
+    <select id="selectDtoListByPid" resultMap="PaymentSimpleFundsDtoMap" parameterType="String">
+        SELECT <include refid="columnsDto" />
+        FROM payment_simple_funds psf
+        LEFT JOIN user u
+        ON u.id = psf.creator
+        LEFT JOIN user uu
+        ON uu.id = psf.operator
+        WHERE psf.payment_simple_id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="PaymentSimpleFundsMap">
+SELECT <include refid="columns" />
+FROM   payment_simple_funds
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="paymentSimpleId != null">
+    AND payment_simple_id = #{paymentSimpleId}
+</if>
+<if test="fundsName != null">
+    AND funds_name = #{fundsName}
+</if>
+<if test="code != null">
+    AND code = #{code}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="operator != null">
+    AND operator = #{operator}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+payment_simple_funds(id, payment_simple_id, funds_name, code, amount, notes, created, creator, operator)
+              VALUES(#{id}, #{paymentSimpleId}, #{fundsName}, #{code}, #{amount}, #{notes}, #{created}, #{creator}, #{operator})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE payment_simple_funds
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('paymentSimpleId') and paymentSimpleId != null">
+    payment_simple_id = #{paymentSimpleId},
+</if>
+    <if test="_parameter.containsKey('fundsName') and fundsName != null">
+    funds_name = #{fundsName},
+</if>
+    <if test="_parameter.containsKey('code')">
+    code = #{code},
+</if>
+    <if test="_parameter.containsKey('amount')">
+    amount = #{amount},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('operator')">
+    operator = #{operator}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   payment_simple_funds
+WHERE  id = #{id}
+</delete>
+
+    <delete id="deleteByPid" parameterType="String">
+        DELETE FROM   payment_simple_funds
+        WHERE  payment_simple_id = #{paymentSimpleId}
+    </delete>
+
+
+    <insert id="insertBatch" parameterType="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleFundsDto">
+        INSERT INTO
+payment_simple_funds(id, payment_simple_id, funds_name, code, amount, notes, created, creator, operator,dept_id) VALUES
+        <foreach collection="list" item="funds" separator=",">
+            (#{funds.id}, #{funds.paymentSimpleId}, #{funds.fundsName}, #{funds.code}, #{funds.amount}, #{funds.notes}, #{funds.created}, #{funds.creator}, #{funds.operator},#{funds.deptId})
+        </foreach>
+
+    </insert>
+    <select id="findFundsList" resultMap="PaymentSimpleFundsMap">
+        select a.* from (SELECT  funds_name,SUM(amount) sumAmount
+                         FROM   payment_simple_funds
+                         where payment_simple_id in(select id from payment_simple where branch_id=#{branchId} and type=#{type}
+                           and funds is not null group by funds))a where a.sumAmount>0
+    </select>
+    <select id="findCountByFundsNameAndDeptId" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT  IFNULL(SUM(amount),0 )sumAmount
+        FROM   payment_simple_funds
+        where dept_id=#{deptId}  and funds_name=#{fundsName}
+          and  payment_simple_id in (select id from payment_simple where type=#{type})
+    </select>
+
+    <select id="findListByPaymentId" resultType="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleFundsDto">
+        SELECT  psf.*,d.name deptName
+        FROM   payment_simple_funds psf
+        left join dept d on d.id=psf.dept_id
+        where   payment_simple_id =#{paymentId}
+    </select>
+</mapper>

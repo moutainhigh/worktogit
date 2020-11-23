@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeAssessmentDao">
+    <resultMap id="EmployeeAssessmentMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeAssessment">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dept_id" property="deptId" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="assessor" property="assessor" jdbcType="VARCHAR" />
+        <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
+        <result column="self_evaluation" property="selfEvaluation" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+    </resultMap>
+    <resultMap id="EmployeeAssessmentDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeAssessmentDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dept_id" property="deptId" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="assessor" property="assessor" jdbcType="VARCHAR" />
+        <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
+        <result column="self_evaluation" property="selfEvaluation" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+    </resultMap>
+    <sql id="columns">
+id, dept_id, company_employee_id, assessor, evaluate, self_evaluation, start_time, end_time
+</sql>
+
+    <select id="selectById" resultMap="EmployeeAssessmentMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_assessment
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeAssessmentMap">
+SELECT <include refid="columns" />
+FROM   employee_assessment
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="deptId != null">
+    AND dept_id = #{deptId}
+</if>
+<if test="companyEmployeeId != null">
+    AND company_employee_id = #{companyEmployeeId}
+</if>
+<if test="assessor != null">
+    AND assessor = #{assessor}
+</if>
+<if test="evaluate != null">
+    AND evaluate = #{evaluate}
+</if>
+<if test="selfEvaluation != null">
+    AND self_evaluation = #{selfEvaluation}
+</if>
+<if test="startTime != null">
+    AND start_time = #{startTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_assessment(id, dept_id, company_employee_id, assessor, evaluate, self_evaluation, start_time, end_time)
+             VALUES(#{id}, #{deptId}, #{companyEmployeeId}, #{assessor}, #{evaluate}, #{selfEvaluation}, #{startTime}, #{endTime})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_assessment
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('deptId') and deptId != null">
+    dept_id = #{deptId},
+</if>
+    <if test="_parameter.containsKey('assessor') and assessor != null">
+    assessor = #{assessor},
+</if>
+    <if test="_parameter.containsKey('evaluate') and evaluate != null">
+    evaluate = #{evaluate},
+</if>
+    <if test="_parameter.containsKey('selfEvaluation')">
+    self_evaluation = #{selfEvaluation},
+</if>
+    <if test="_parameter.containsKey('startTime') and startTime != null">
+    start_time = #{startTime},
+</if>
+    <if test="_parameter.containsKey('endTime') and endTime != null">
+    end_time = #{endTime}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_assessment
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByEid" resultMap="EmployeeAssessmentDtoMap">
+        select <include refid="columns"/> from employee_assessment where company_employee_id = #{eid}
+    </select>
+
+</mapper>

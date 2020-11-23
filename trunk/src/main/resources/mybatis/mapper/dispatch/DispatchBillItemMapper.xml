@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dispatch.DispatchBillItemDao">
+    <resultMap id="DispatchBillItemMap" type="com.lwxf.industry4.webapp.domain.entity.dispatch.DispatchBillItem">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dispatch_bill_id" property="dispatchBillId" jdbcType="CHAR" />
+        <result column="finished_stock_item_id" property="finishedStockItemId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="product_id" property="productId" jdbcType="CHAR" />
+        <result column="order_produce_id" property="orderProduceId" jdbcType="CHAR" />
+        <result column="deliver_num" property="deliverNum" />
+    </resultMap>
+
+    <resultMap id="DispatchBillItemDto" type="com.lwxf.industry4.webapp.domain.dto.dispatch.DispatchBillItemDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dispatch_bill_id" property="dispatchBillId" jdbcType="CHAR" />
+        <result column="finished_stock_item_id" property="finishedStockItemId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="barcode" property="barcode"/>
+        <result column="type" property="type"/>
+        <result column="dealerName" property="dealerName"/>
+        <result column="customerName" property="customerName"/>
+        <result column="product_id" property="productId" jdbcType="CHAR" />
+        <result column="order_produce_id" property="orderProduceId" jdbcType="CHAR" />
+    </resultMap>
+
+
+    <sql id="columns">
+id, dispatch_bill_id, finished_stock_item_id, status,product_id,order_produce_id,deliver_num
+</sql>
+
+    <select id="selectById" resultMap="DispatchBillItemMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dispatch_bill_item
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DispatchBillItemMap">
+SELECT <include refid="columns" />
+FROM   dispatch_bill_item
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="dispatchBillId != null">
+    AND dispatch_bill_id = #{dispatchBillId}
+</if>
+<if test="finishedStockItemId != null">
+    AND finished_stock_item_id = #{finishedStockItemId}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_bill_item(id, dispatch_bill_id, finished_stock_item_id, status,product_id,order_produce_id,deliver_num)
+            VALUES(#{id}, #{dispatchBillId}, #{finishedStockItemId}, #{status},#{productId},#{orderProduceId},#{deliverNum})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dispatch_bill_item
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('dispatchBillId') and dispatchBillId != null">
+    dispatch_bill_id = #{dispatchBillId},
+</if>
+    <if test="_parameter.containsKey('finishedStockItemId')">
+    finished_stock_item_id = #{finishedStockItemId},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status}
+</if>
+ <if test="_parameter.containsKey('productId') and productId != null">
+     product_id = #{productId}
+</if>
+    <if test="_parameter.containsKey('orderProduceId') and orderProduceId != null">
+        order_produce_id = #{orderProduceId}
+    </if>
+    <if test="_parameter.containsKey('deliverNum') and deliverNum != null">
+        deliver_num = #{deliverNum}
+    </if>
+
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_bill_item
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByOrderId" resultMap="DispatchBillItemMap">
+        select
+            item.*
+        from dispatch_bill db
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        left join user u on db.deliverer=u.id
+        left join dispatch_bill_item item on db.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+        where f.order_id = #{orderId}
+    </select>
+    <select id="findListByDispatchBillId" resultMap="DispatchBillItemMap">
+        select
+            *
+        from dispatch_bill_item dbi
+        where dbi.dispatch_bill_id = #{dispatchBillId}
+    </select>
+
+    <select id="findDispatchItemCountByOrderId" resultType="integer">
+        select count(*) from dispatch_bill_item where dispatch_bill_id = #{dispatchBillId}
+    </select>
+
+    <select id="findDispatchItemCountByDispatchIdAndType" resultType="integer">
+        select count(di.*) from dispatch_bill_item di left join finished_stock_item fsi on di.finished_stock_item_id = fsi.id
+        where di.dispatch_bill_id = #{dispatchBillId} and fsi.type=#{type}
+    </select>
+
+    <select id="findLogisticsByDispatchId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select u.name delivererName,db.deliverer_tel delivererTel,lc.name,db.notes,db.logistics_no logisticsNo,db.consignee consigneeName,db.actual_date actualDate,ca.merger_name mergerName,db.address,db.consignee_tel consigneeTel
+        from dispatch_bill db
+        left join user u on u.id=db.deliverer
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        left join city_area ca on db.city_area_id = ca.id
+        where db.id = #{dispatchBillId}
+    </select>
+    <select id="findByDispatchBillId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select fsi.type,count(dbi.id) count
+        from dispatch_bill_item dbi
+        left join dispatch_bill db on db.id=dbi.dispatch_bill_id
+        left join finished_stock_item fsi on dbi.finished_stock_item_id=fsi.id
+        where db.id = #{dispatchBillId}
+group by type
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from dispatch_bill_item where id in (SELECT a.id from (select
+            item.id
+        from dispatch_bill db
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        left join user u on db.deliverer=u.id
+        left join dispatch_bill_item item on db.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+        where f.order_id = #{orderId}) a)
+    </delete>
+
+    <select id="findListByDIdAndTypes" resultMap="DispatchBillItemDto">
+        select item.*,f.barcode
+        from dispatch_bill_item item
+        left join finished_stock_item f on item.finished_stock_item_id = f.id
+        where item.dispatch_bill_id = #{id}
+        and f.type in
+        <foreach collection="types" open="(" close=")" item="type" separator=",">
+            #{type}
+        </foreach>
+    </select>
+
+</mapper>

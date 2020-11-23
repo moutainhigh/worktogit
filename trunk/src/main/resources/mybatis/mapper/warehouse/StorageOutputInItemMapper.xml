@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.warehouse.StorageOutputInItemDao">
+    <resultMap id="StorageOutputInItemMap" type="com.lwxf.industry4.webapp.domain.entity.warehouse.StorageOutputInItem">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="output_in_id" property="outputInId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="shelf" property="shelf" jdbcType="CHAR" />
+        <result column="column" property="column" jdbcType="TINYINT" />
+        <result column="tier" property="tier" jdbcType="TINYINT" />
+        <result column="location" property="location"  />
+        <result column="supplier_id" property="supplierId"  />
+    </resultMap>
+    <resultMap id="StorageOutputInItemDtoMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.StorageOutputInItemDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="output_in_id" property="outputInId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="quantity" property="quantity" jdbcType="INTEGER" />
+        <result column="materialName" property="materialName"/>
+        <result column="shelf" property="shelf" jdbcType="CHAR" />
+        <result column="column" property="column" jdbcType="TINYINT" />
+        <result column="tier" property="tier" jdbcType="TINYINT" />
+        <result column="location" property="location"  />
+        <result column="supplier_id" property="supplierId"  />
+        <result column="supplierName" property="supplierName"  />
+        <result column="materialSize" property="materialSize"  />
+        <result column="unitType" property="unitType"  />
+        <result column="color" property="color"  />
+        <result column="created" property="created"  />
+        <result column="creatorName" property="creatorName"  />
+        <result column="no" property="no"  />
+        <result column="type" property="type"  />
+        <result column="statusName" property="statusName"  />
+        <result column="status" property="status"  />
+    </resultMap>
+    <sql id="columns">
+id, output_in_id, material_id, price, quantity, shelf, `column`, tier,location,supplier_id
+</sql>
+
+    <select id="selectById" resultMap="StorageOutputInItemMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   storage_output_in_item
+        WHERE  id = #{id}
+    </select>
+
+    <select id="findInAndOutListBypid" resultMap="StorageOutputInItemDtoMap">
+        SELECT so.*,soi.created,u.name creatorName,soi.no,su.supplier_name supplierName,soi.type,
+        (case soi.status
+        WHEN 0 THEN
+        '待确认'
+        WHEN 1 THEN
+        '已确认'
+        ELSE
+        '未知'
+        END
+        ) statusName,soi.status
+        FROM   storage_output_in_item so
+        left join storage_output_in soi on so.output_in_id=soi.id
+        left join user u on soi.creator=u.id
+        left join supplier su on su.id=so.supplier_id
+        <where><trim prefixOverrides="AND">
+            <if test="materialId != null">
+                AND so.material_id = #{materialId}
+            </if>
+        </trim></where>
+order by created desc
+    </select>
+    <select id="selectByFilter" resultMap="StorageOutputInItemMap">
+        SELECT <include refid="columns" />
+        FROM   storage_output_in_item
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="outputInId != null">
+                AND output_in_id = #{outputInId}
+            </if>
+            <if test="materialId != null">
+                AND material_id = #{materialId}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="quantity != null">
+                AND quantity = #{quantity}
+            </if>
+            <if test="shelf != null">
+                AND shelf = #{shelf}
+            </if>
+            <if test="column != null">
+                AND `column` = #{column}
+            </if>
+            <if test="tier != null">
+                AND tier = #{tier}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+storage_output_in_item(id, output_in_id, material_id, price, quantity, shelf, `column`, tier,location,supplier_id)
+                VALUES(#{id}, #{outputInId}, #{materialId}, #{price}, #{quantity}, #{shelf}, #{column}, #{tier},#{location},#{supplierId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE storage_output_in_item
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('location') and location != null">
+                location = #{location},
+            </if>
+            <if test="_parameter.containsKey('quantity') and quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="_parameter.containsKey('price') and price != null">
+                price = #{price},
+            </if>
+            <if test="_parameter.containsKey('shelf') and shelf != null">
+                shelf = #{shelf},
+            </if>
+            <if test="_parameter.containsKey('column') and column != null">
+                `column` = #{column},
+            </if>
+            <if test="_parameter.containsKey('tier') and tier != null">
+                tier = #{tier}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   storage_output_in_item
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByStorageOutputInId" resultMap="StorageOutputInItemDtoMap">
+        select s.*,m.name materialName,su.supplier_name supplierName,m.material_size materialSize,b.value unitType,m.color
+         from
+        storage_output_in_item s
+        left join material m on s.material_id=m.id
+        left join supplier su on su.id=s.supplier_id
+        left join basecode b on b.code=m.unit and b.type='unitType'
+    where s.output_in_id = #{id}
+
+    </select>
+</mapper>

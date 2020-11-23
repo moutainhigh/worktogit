@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.engineering.EngineeringOrderDao">
+    <resultMap id="EngineeringOrderMap" type="com.lwxf.industry4.webapp.domain.entity.engineering.EngineeringOrder">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="engineering_id" property="engineeringId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="OrderProductDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customorder.OrderProductDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="series" property="series" jdbcType="TINYINT" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="body_color" property="bodyColor" jdbcType="VARCHAR" />
+        <result column="body_tec" property="bodyTec" jdbcType="TINYINT" />
+        <result column="door" property="door" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="DATE" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="placeOrderName" property="placeOrderName"/>
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="seriesName" property="seriesName"/>
+        <result column="typeName" property="typeName"/>
+        <result column="deliveryCreatorName" property="deliveryCreatorName"/>
+        <result column="stockInputCreatorName" property="stockInputCreatorName"/>
+        <result column="after_apply_id" property="afterApplyId" jdbcType="CHAR" />
+        <result column="install" property="install" jdbcType="VARCHAR" />
+        <result column="stock_input" property="stockInput"/>
+        <result column="stock_input_creator" property="stockInputCreator"/>
+        <result column="status" property="status"/>
+        <result column="delivery_time" property="deliveryTime"/>
+        <result column="delivery_creator" property="deliveryCreator"/>
+        <result column="plan_finish_time" property="planFinishTime"/>
+        <result column="plan_order_finish_time" property="planOrderFinishTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="commit_time" property="commitTime"/>
+        <result column="companyName" property="companyName"/>
+        <result column="dealerAddress" property="dealerAddress"/>
+        <result column="address" property="address"/>
+        <result column="dealerTel" property="dealerTel"/>
+        <result column="stock_count" property="stockCount"/>
+        <result column="logisticsCompanyName" property="logisticsCompanyName"/>
+        <result column="logistics_company_id" property="logisticsCompanyId"  jdbcType="CHAR"/>
+        <result column="logistics_no" property="logisticsNo"  jdbcType="CHAR"/>
+        <result column="start_produce_time" property="startProduceTime"/>
+        <result column="plan_delivery_verify_time" property="planDeliveryVerifyTime"/>
+        <result column="customerName" property="customerName"/>
+        <result column="old_no" property="oldNo" jdbcType="VARCHAR"/>
+        <result column="is_change" property="change" jdbcType="TINYINT"/>
+        <result column="baseLogisticsCompanyName" property="baseLogisticsCompanyName"/>
+        <result column="baseLogisticsCompanyName" property="baseLogisticsCompanyName"/>
+        <result column="baseLogisticsCompanyTel" property="baseLogisticsCompanyTel"/>
+        <result column="consigneeName" property="consigneeName"/>
+        <result column="consigneeTel" property="consigneeTel"/>
+        <result column="packge_notes" property="packgeNotes" jdbcType="VARCHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+        <result column="part_stock" property="partStock" jdbcType="INTEGER"/>
+        <result column="productStatus" property="productStatus" jdbcType="INTEGER"/>
+        <result column="receiverName" property="receiverName"/>
+        <result column="companyId" property="companyId"/>
+        <result column="deliver_sure" property="deliverSure"/>
+        <result column="has_deliver_count" property="hasDeliverCount"/>
+        <result column="bodyTecName" property="bodyTecName"/>
+        <result column="onCredit" property="onCredit"/>
+        <result column="orderNo" property="orderNo"/>
+        <result column="aftersale_num" property="aftersaleNum"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+        <result column="delay_reason" property="delayReason" jdbcType="VARCHAR"/>
+        <result column="delay_reason_remark" property="delayReasonRemark" jdbcType="VARCHAR"/>
+        <result column="statusName" property="statusName"/>
+        <result column="orderPrice" property="orderPrice"/>
+        <result column="orderNotes" property="orderNotes"/>
+    </resultMap>
+
+    <sql id="columns">
+id, custom_order_id, engineering_id
+</sql>
+
+    <select id="selectById" resultMap="EngineeringOrderMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   engineering_order
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EngineeringOrderMap">
+SELECT <include refid="columns" />
+FROM   engineering_order
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="customOrderId != null">
+    AND custom_order_id = #{customOrderId}
+</if>
+<if test="engineeringId != null">
+    AND engineering_id = #{engineeringId}
+</if>
+</trim></where>
+
+</select>
+
+    <select id="findByEngineeringId" resultMap="EngineeringOrderMap">
+        SELECT <include refid="columns" />
+        FROM   engineering_order
+
+        where   engineering_id = #{engineeringId} and custom_order_id  not in (select id from custom_order where flag=1)
+
+    </select>
+
+    <select id="findListByEngineeringId" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT count(co.id) totalNum,IFNULL(sum(co.factory_final_price),0)totalAmount
+        from custom_order co
+        where co.id in (
+        select custom_order_id FROM   engineering_order
+       where  engineering_id = #{engineeringId}
+       )
+       and (co.flag=0 or co.flag is null)
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+engineering_order(id, custom_order_id, engineering_id)
+           VALUES(#{id}, #{customOrderId}, #{engineeringId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE engineering_order
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('customOrderId')">
+    custom_order_id = #{customOrderId},
+</if>
+    <if test="_parameter.containsKey('engineeringId')">
+    engineering_id = #{engineeringId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   engineering_order
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findProductByOrderId" resultMap="OrderProductDtoMap" >
+        select o.*,uuu.name stockInputCreatorName,uuuu.name deliveryCreatorName,u.name creatorName,uu.name updateUserName,
+        b.value typeName,bb.value seriesName,lc.name logisticsCompanyName,o.status productStatus,
+        bbb.value bodyTecName,uuuuu.name placeOrderName,bc.value statusName,co.factory_final_price orderPrice ,co.notes orderNotes
+        from order_product o
+          left join logistics_company lc on o.logistics_company_id=lc.id
+          left join custom_order co on co.id=o.custom_order_id
+        left join user u on o.creator = u.id
+        left join user uu on o.update_user = uu.id
+          left join user uuu on o.stock_input_creator=uuu.id
+          left join user uuuu on o.delivery_creator=uuuu.id
+          left join user uuuuu on uuuuu.id=co.place_order
+        left join basecode b on b.code = o.type  and b.type = 'orderProductType'
+        left join basecode bb on o.series= bb.code and bb.type = 'orderProductSeries'
+        left join basecode bbb on bbb.code=o.body_tec and bbb.type='orderProductTec'
+        left join basecode bc on bc.code=co.status and bc.type='orderStatus'
+        where o.custom_order_id = #{customOrderId}
+    </select>
+
+</mapper>

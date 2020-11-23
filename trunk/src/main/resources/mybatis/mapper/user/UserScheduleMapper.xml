@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserScheduleDao">
+    <resultMap id="UserScheduleMap" type="com.lwxf.industry4.webapp.domain.entity.user.UserSchedule">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="time" property="time" jdbcType="TIMESTAMP" />
+        <result column="size" property="size" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, time, size, user_id
+</sql>
+
+    <select id="selectById" resultMap="UserScheduleMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   user_schedule
+WHERE  id = #{id}
+</select>
+    <select id="findUserSchedule" resultMap="UserScheduleMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_schedule
+        WHERE  user_id=#{userId} and DATE_FORMAT(time,'%Y-%m')=#{time}
+    </select>
+    <select id="findScheduleByUidAndTime" resultMap="UserScheduleMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_schedule
+        WHERE  user_id=#{userId} and DATE_FORMAT(time,'%Y-%m-%d')=#{time}
+    </select>
+
+    <select id="selectByFilter" resultMap="UserScheduleMap">
+SELECT <include refid="columns" />
+FROM   user_schedule
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="time != null">
+    AND time = #{time}
+</if>
+<if test="size != null">
+    AND size = #{size}
+</if>
+<if test="userId != null">
+    AND user_id = #{userId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+user_schedule(id, time, size, user_id)
+       VALUES(#{id}, #{time}, #{size}, #{userId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE user_schedule
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('time') and time != null">
+    time = #{time},
+</if>
+    <if test="_parameter.containsKey('size')">
+    size = #{size},
+</if>
+    <if test="_parameter.containsKey('userId') and userId != null">
+    user_id = #{userId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_schedule
+WHERE  id = #{id}
+</delete>
+
+</mapper>

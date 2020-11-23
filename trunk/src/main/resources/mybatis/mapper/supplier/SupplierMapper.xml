@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.supplier.SupplierDao">
+    <resultMap id="SupplierMap" type="com.lwxf.industry4.webapp.domain.entity.supplier.Supplier">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="supplier_level" property="supplierLevel" jdbcType="TINYINT" />
+        <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+        <result column="end_sign_time" property="endSignTime" jdbcType="TIMESTAMP" />
+        <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="supplier_phone" property="supplierPhone" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="area" property="area" jdbcType="CHAR" />
+        <result column="lng" property="lng" jdbcType="FLOAT" />
+        <result column="lat" property="lat" jdbcType="FLOAT" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="supplier_stage" property="supplierStage" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="factory_contact" property="factoryContact" jdbcType="CHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="SupplierDto" type="com.lwxf.industry4.webapp.domain.dto.supplier.SupplierDtoFowWx">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="supplier_level" property="supplierLevel" jdbcType="TINYINT" />
+        <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+        <result column="end_sign_time" property="endSignTime" jdbcType="TIMESTAMP" />
+        <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="supplier_phone" property="supplierPhone" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="CHAR" />
+        <result column="area" property="area" jdbcType="CHAR" />
+        <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="supplier_stage" property="supplierStage" jdbcType="TINYINT" />
+        <result column="factory_contact" property="factoryContact" jdbcType="CHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="category_id" property="categoryId" jdbcType="CHAR" />
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, supplier_code, supplier_name, supplier_level, sign_time, end_sign_time, contacts, position,supplier_phone, created, creator, update_time, update_user, area, address, supplier_stage, factory_contact, remark, branch_id, category_id,lng,lat,status
+</sql>
+
+    <select id="selectById" resultMap="SupplierMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   supplier
+WHERE  id = #{id}
+</select>
+
+    <select id="selectDtoById" resultMap="SupplierDto" parameterType="String">
+        SELECT s.*,bc.value as category_name,city.merger_name as area_name
+        FROM   supplier s
+        left join basecode bc on s.category_id = bc.id
+        left join city_area city on s.area = city.id
+        WHERE  s.id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="SupplierMap">
+SELECT <include refid="columns" />
+FROM   supplier
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="supplierCode != null">
+    AND supplier_code = #{supplierCode}
+</if>
+<if test="supplierName != null">
+    AND supplier_name = #{supplierName}
+</if>
+<if test="supplierLevel != null">
+    AND supplier_level = #{supplierLevel}
+</if>
+<if test="signTime != null">
+    AND sign_time = #{signTime}
+</if>
+<if test="endSignTime != null">
+    AND end_sign_time = #{endSignTime}
+</if>
+<if test="contacts != null">
+    AND contacts = #{contacts}
+</if>
+<if test="position != null">
+    AND position = #{position}
+</if>
+<if test="supplierPhone != null">
+    AND supplier_phone = #{supplierPhone}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="updateUser != null">
+    AND update_user = #{updateUser}
+</if>
+<if test="area != null">
+    AND area = #{area}
+</if>
+<if test="lng != null">
+    AND c.lng = #{lng}
+</if>
+<if test="lat != null">
+    AND c.lat = #{lat}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="supplierStage != null">
+    AND supplier_stage = #{supplierStage}
+</if>
+    <if test="status != null">
+    AND status = #{status}
+</if>
+<if test="factoryContact != null">
+    AND factory_contact = #{factoryContact}
+</if>
+<if test="remark != null">
+    AND remark = #{remark}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+<if test="categoryId != null">
+    AND category_id = #{categoryId}
+</if>
+</trim></where>
+
+</select>
+
+
+    <select id="selectDtoByFilter" resultMap="SupplierDto">
+        SELECT s.*,bc.value as category_name,city.merger_name as area_name
+        FROM   supplier s
+        left join basecode bc on s.category_id = bc.id
+        left join city_area city on s.area = city.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                s.id = #{id}
+            </if>
+            <if test="supplierCode != null">
+                AND s.supplier_code = #{supplierCode}
+            </if>
+            <if test="supplierName != null">
+                AND s.supplier_name like '%${supplierName}%'
+            </if>
+            <if test="supplierLevel != null">
+                AND s.supplier_level = #{supplierLevel}
+            </if>
+            <if test="signTime != null">
+                AND s.sign_time = #{signTime}
+            </if>
+            <if test="endSignTime != null">
+                AND s.end_sign_time = #{endSignTime}
+            </if>
+            <if test="contacts != null">
+                AND s.contacts = #{contacts}
+            </if>
+            <if test="position != null">
+                AND s.position = #{position}
+            </if>
+            <if test="supplierPhone != null">
+                AND s.supplier_phone like '%${supplierPhone}%'
+            </if>
+            <if test="created != null">
+                AND s.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND s.creator = #{creator}
+            </if>
+            <if test="updateTime != null">
+                AND s.update_time = #{updateTime}
+            </if>
+            <if test="updateUser != null">
+                AND s.update_user = #{updateUser}
+            </if>
+            <if test="area != null">
+                AND s.area = #{area}
+            </if>
+            <if test="address != null">
+                AND s.address = #{address}
+            </if>
+            <if test="supplierStage != null">
+                AND s.supplier_stage = #{supplierStage}
+            </if>
+            <if test="status != null">
+                AND s.status = #{status}
+            </if>
+            <if test="factoryContact != null">
+                AND s.factory_contact = #{factoryContact}
+            </if>
+            <if test="remark != null">
+                AND s.remark = #{remark}
+            </if>
+            <if test="branchId != null">
+                AND s.branch_id = #{branchId}
+            </if>
+            <if test="categoryId != null">
+                AND s.category_id = #{categoryId}
+            </if>
+            <if test="keywords != null">
+                AND supplier_name like '%${keywords}%' or contacts like '%${keywords}%' or supplier_phone like '%${keywords}%'
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+supplier(id, supplier_code, supplier_name, supplier_level, sign_time, end_sign_time, contacts, position,supplier_phone, created, creator, update_time, update_user, area, address, supplier_stage, factory_contact, remark, branch_id, category_id,lng,lat,status)
+  VALUES(#{id}, #{supplierCode}, #{supplierName}, #{supplierLevel}, #{signTime}, #{endSignTime}, #{contacts},#{position}, #{supplierPhone}, #{created}, #{creator}, #{updateTime}, #{updateUser}, #{area}, #{address}, #{supplierStage}, #{factoryContact}, #{remark}, #{branchId}, #{categoryId},#{lng},#{lat},#{status})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE supplier
+<set><trim suffixOverrides=",">
+    <if test="_parameter.containsKey('supplierCode')">
+    supplier_code = #{supplierCode},
+</if>
+    <if test="_parameter.containsKey('supplierName')">
+    supplier_name = #{supplierName},
+</if>
+    <if test="_parameter.containsKey('supplierLevel')">
+    supplier_level = #{supplierLevel},
+</if>
+    <if test="_parameter.containsKey('signTime')">
+    sign_time = #{signTime},
+</if>
+    <if test="_parameter.containsKey('endSignTime')">
+    end_sign_time = #{endSignTime},
+</if>
+    <if test="_parameter.containsKey('contacts')">
+    contacts = #{contacts},
+</if>
+    <if test="_parameter.containsKey('position')">
+        position = #{position},
+    </if>
+    <if test="_parameter.containsKey('supplierPhone')">
+    supplier_phone = #{supplierPhone},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{creator},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{creator},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime},
+</if>
+    <if test="_parameter.containsKey('updateUser')">
+    update_user = #{updateUser},
+</if>
+    <if test="_parameter.containsKey('area')">
+    area = #{area},
+</if>
+    <if test="_parameter.containsKey('lng')">
+        lng = #{lng},
+    </if>
+    <if test="_parameter.containsKey('lat')">
+        lat = #{lat},
+    </if>
+    <if test="_parameter.containsKey('address')">
+    address = #{address},
+</if>
+    <if test="_parameter.containsKey('supplierStage')">
+    supplier_stage = #{supplierStage},
+</if>
+    <if test="_parameter.containsKey('status')">
+        status = #{status},
+</if>
+    <if test="_parameter.containsKey('factoryContact')">
+    factory_contact = #{factoryContact},
+</if>
+    <if test="_parameter.containsKey('remark')">
+    remark = #{remark},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId},
+</if>
+    <if test="_parameter.containsKey('categoryId')">
+    category_id = #{categoryId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+DELETE FROM   supplier
+WHERE  id = #{id}
+</delete>
+
+    <select id="countSupplierToday" resultType="com.lwxf.mybatis.utils.MapContext">
+         select
+        (select count(*) from supplier where supplier_stage=0  and branch_id=#{branchId}) as yixiang,
+        (select count(*) from supplier where supplier_stage=1  and branch_id=#{branchId}) as qianyue,
+        (select count(*) from supplier where branch_id=#{branchId}) as quanbu
+    </select>
+    <select id="findListByType" resultMap="SupplierMap">
+        select * from supplier where  category_id=#{categoryId} and  branch_id=#{branchId} group by created desc
+    </select>
+    <select id="findSupplierProducts" resultType="map">
+        select sp.*,m.name materialName,m.material_size,b.value TypeName,
+        bb.value unitType,s.supplier_name supplierName
+         from supplier_product sp
+        left join supplier s on sp.supplier_id=s.id
+        left join material m on sp.material_id=m.id
+        left join basecode b on b.id=m.category_id
+        left join basecode bb on bb.code=m.unit and bb.type='unitType'
+        <where><trim prefixOverrides="AND">
+        <if test="supplierId != null">
+          and   sp.supplier_id = #{supplierId}
+        </if>
+            <if test="prodId != null">
+             and   sp.material_id = #{prodId}
+            </if>
+            <if test="prodName != null">
+                and m.name like '%${prodName}%'
+            </if>
+              </trim>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.activity.ActivityJoinDao">
+    <resultMap id="ActivityJoinMap" type="com.lwxf.industry4.webapp.domain.entity.activity.ActivityJoin">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="activity_id" property="activityId" jdbcType="CHAR" />
+        <result column="activity_params_id" property="activityParamsId" jdbcType="CHAR" />
+        <result column="is_paid" property="paid" jdbcType="TINYINT" />
+        <result column="is_free" property="free" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="payment_id" property="paymentId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="ActivityJoinDtoMap" type="com.lwxf.industry4.webapp.domain.dto.activity.ActivityJoinDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="activity_id" property="activityId" jdbcType="CHAR" />
+        <result column="activity_params_id" property="activityParamsId" jdbcType="CHAR" />
+        <result column="is_paid" property="paid" jdbcType="TINYINT" />
+        <result column="is_free" property="free" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="payment_id" property="paymentId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="name" property="name" />
+        <result column="mobile" property="mobile" />
+        <result column="company_name" property="companyName" />
+        <result column="company_leader" property="companyLeader" />
+        <result column="company_leader_tel" property="companyLeaderTel" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, type, company_id, activity_id, activity_params_id, is_paid, is_free, creator, created, amount, payment_id,user_id
+</sql>
+
+    <select id="selectById" resultMap="ActivityJoinMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   activity_join
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ActivityJoinMap">
+SELECT <include refid="columns" />
+FROM   activity_join
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+<if test="activityId != null">
+    AND activity_id = #{activityId}
+</if>
+<if test="activityParamsId != null">
+    AND activity_params_id = #{activityParamsId}
+</if>
+<if test="paid != null">
+    AND is_paid = #{paid}
+</if>
+<if test="free != null">
+    AND is_free = #{free}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="paymentId != null">
+    AND payment_id = #{paymentId}
+</if>
+    <if test="userId != null">
+    AND user_id = #{userId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+activity_join(id, type, company_id, activity_id, activity_params_id, is_paid, is_free, creator, created, amount, payment_id,user_id)
+       VALUES(#{id}, #{type}, #{companyId}, #{activityId}, #{activityParamsId}, #{paid}, #{free}, #{creator}, #{created}, #{amount}, #{paymentId},#{userId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE activity_join
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('companyId') and companyId != null">
+    company_id = #{companyId},
+</if>
+    <if test="_parameter.containsKey('activityId') and activityId != null">
+    activity_id = #{activityId},
+</if>
+    <if test="_parameter.containsKey('activityParamsId') and activityParamsId != null">
+    activity_params_id = #{activityParamsId},
+</if>
+    <if test="_parameter.containsKey('paid')">
+    is_paid = #{paid},
+</if>
+    <if test="_parameter.containsKey('free') and free != null">
+    is_free = #{free},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('amount')">
+    amount = #{amount},
+</if>
+<if test="_parameter.containsKey('paymentId')">
+    payment_id = #{paymentId}
+</if>
+<if test="_parameter.containsKey('status')">
+    status = #{status}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   activity_join
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findOneByCidAndUidAndAIdAndType" resultMap="ActivityJoinMap">
+        select
+        <include refid="columns"/>
+        from activity_join
+        <where><trim prefixOverrides="and">
+            <if test="companyId!=null">
+                company_id = #{companyId}
+            </if>
+            <if test="userId!=null">
+                and user_id = #{userId}
+            </if>
+            <if test="activityId!=null">
+               and activity_id = #{activityId}
+            </if>
+            <if test="type!=null">
+               and type = #{type}
+            </if>
+        </trim>
+        </where>
+            limit 1
+    </select>
+
+    <select id="findListByCidAndUidAndAIdAndType" resultType="java.util.Map">
+        select
+        u.name,u.mobile,u.id
+        from activity_join aj
+        left join user u on u.id = aj.user_id
+        <where><trim prefixOverrides="and">
+            <if test="companyId!=null">
+                aj.company_id = #{companyId}
+            </if>
+            <if test="userId!=null">
+                and aj.user_id = #{userId}
+            </if>
+            <if test="activityId!=null">
+               and aj.activity_id = #{activityId}
+            </if>
+            <if test="type!=null">
+               and aj.type = #{type}
+            </if>
+        </trim>
+        </where>
+        order by aj.created asc
+    </select>
+
+
+    <select id="findListByActivityId" resultMap="ActivityJoinDtoMap">
+        select
+        u.name,aj.type,aj.company_id,aj.created,aj.activity_id,aj.activity_params_id,aj.is_paid,aj.is_free,aj.amount,u.mobile,u.id as user_id,aj.id,uu.name as company_leader,c.leader_tel as company_leader_tel,c.name as company_name,aj.status
+        from activity_join aj
+        left join user u on u.id = aj.user_id
+        left join company c on c.id = aj.company_id
+        left join user uu on uu.id = c.leader
+        <where><trim prefixOverrides="and">
+            <if test="activity_id!=null">
+               aj.activity_id = #{activity_id}
+            </if>
+             <if test="name!=null">
+                and u.name LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="mobile!=null">
+                and u.mobile = #{mobile}
+            </if>
+            <if test="companyName!=null">
+                and c.name LIKE CONCAT('%',#{companyName},'%')
+            </if>
+            <if test="type!=null">
+                and aj.type = #{type}
+            </if>
+            <if test="paid!=null">
+                and aj.is_paid = #{paid}
+            </if>
+            <if test="free!=null">
+                and aj.is_free = #{free}
+            </if>
+            <if test="branchId!=null">
+                and aj.branch_id = #{branchId}
+            </if>
+        </trim>
+        </where>
+
+        order by aj.created asc
+    </select>
+
+    <select id="hasJoiner" resultType="int">
+        select count(*) from activity_info where id = #{activityId}
+    </select>
+
+
+</mapper>

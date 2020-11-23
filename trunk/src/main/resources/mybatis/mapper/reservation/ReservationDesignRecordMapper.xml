@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.reservation.ReservationDesignRecordDao">
+    <resultMap id="ReservationDesignRecordMap" type="com.lwxf.industry4.webapp.domain.entity.reservation.ReservationDesignRecord">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="reservation_id" property="reservationId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="is_confirmed" property="confirmed" jdbcType="BIT" />
+        <result column="is_published" property="published" jdbcType="BIT" />
+    </resultMap>
+    <resultMap id="ReservationResDtoMapper" type="com.lwxf.industry4.webapp.domain.dto.reservation.ReservationDesDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="reservation_id" property="reservationId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="is_confirmed" property="confirmed" jdbcType="BIT" />
+        <result column="is_published" property="published" jdbcType="BIT" />
+    </resultMap>
+    <sql id="columns">
+id, name, content,reservation_id, created, creator, is_confirmed,is_published
+</sql>
+
+    <select id="selectById" resultMap="ReservationResDtoMapper" parameterType="String">
+SELECT <include refid="columns" />
+FROM   reservation_design_record
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ReservationDesignRecordMap">
+SELECT <include refid="columns" />
+FROM   reservation_design_record
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+    <if test="content != null">
+    AND content = #{content}
+</if>
+<if test="reservationId != null">
+    AND reservation_id = #{reservationId}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="confirmed != null">
+    AND is_confirmed = #{confirmed}
+</if>
+    <if test="confirmed != null">
+    AND is_published = #{published}
+</if>
+</trim></where>
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+reservation_design_record(id, name, reservation_id, created, creator, is_confirmed,is_published,content)
+                   VALUES(#{id}, #{name}, #{reservationId}, #{created}, #{creator}, #{confirmed},#{published},#{content})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE reservation_design_record
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('content')">
+        content = #{content},
+</if>
+    <if test="_parameter.containsKey('confirmed') and confirmed != null">
+    is_confirmed = #{confirmed}
+</if>
+    <if test="_parameter.containsKey('published') and published != null">
+    is_published = #{published}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   reservation_design_record
+WHERE  id = #{id}
+</delete>
+
+    <select id="selectByReservationId" resultMap="ReservationDesignRecordMap">
+
+        SELECT
+        <include refid="columns" />
+        FROM   reservation_design_record
+        WHERE  reservation_Id = #{reservationId}
+
+    </select>
+
+    <update id="removeConfirmedByReservationId">
+        update reservation_design_record set is_confirmed = false where reservation_id = #{reservationId}
+    </update>
+
+    <select id="selectPathByResDesId" resultType="string">
+        select path from reservation_design_file where design_record_id = #{designId} order by id asc
+    </select>
+</mapper>

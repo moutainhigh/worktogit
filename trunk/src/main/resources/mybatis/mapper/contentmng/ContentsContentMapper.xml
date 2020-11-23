@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.contentmng.ContentsContentDao">
+    <resultMap id="ContentsContentMap" type="com.lwxf.industry4.webapp.domain.entity.contentmng.ContentsContent">
+        <result column="contents_id" property="contentsId" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    </resultMap>
+    <sql id="columns">
+contents_id, content
+</sql>
+
+    <select id="selectById" resultMap="ContentsContentMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   contents_content
+WHERE  content_id = #{contentsId}
+</select>
+
+    <select id="selectByFilter" resultMap="ContentsContentMap">
+SELECT <include refid="columns" />
+FROM   contents_content
+<where><trim prefixOverrides="AND">
+<if test="contentsId != null">
+    contents_id = #{contentsId}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+contents_content(contents_id, content)
+          VALUES(#{contentsId}, #{content})
+</insert>
+
+    <update id="updateByMapContext">
+    UPDATE contents_content SET  content = #{content} WHERE  contents_id = #{contentsId}
+    </update>
+
+    <delete id="deleteByMapContext" parameterType="String">
+DELETE FROM   contents_content
+WHERE  contents_id = #{contentsId}
+</delete>
+
+</mapper>

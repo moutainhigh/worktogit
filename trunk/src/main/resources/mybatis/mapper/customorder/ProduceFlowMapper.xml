@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.ProduceFlowDao">
+    <resultMap id="ProduceFlowMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.ProduceFlow">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="node" property="node" jdbcType="TINYINT" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operation_time" property="operationTime" jdbcType="TIMESTAMP" />
+        <result column="produce_order_id" property="produceOrderId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="ProduceFlowDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customorder.ProduceFlowDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="node" property="node" jdbcType="TINYINT" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="operation_time" property="operationTime" jdbcType="TIMESTAMP" />
+        <result column="produce_order_id" property="produceOrderId" jdbcType="CHAR" />
+        <result column="operatorName" property="operatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, node, end_time, notes, operator, operation_time, produce_order_id
+</sql>
+
+    <sql id="columnDtos">
+        f.id, f.node, f.end_time, f.notes, f.operator, f.operation_time, f.produce_order_id,u.name operatorName
+    </sql>
+
+    <select id="selectById" resultMap="ProduceFlowMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   produce_flow
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProduceFlowMap">
+SELECT <include refid="columns" />
+FROM   produce_flow
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="node != null">
+    AND node = #{node}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="operator != null">
+    AND operator = #{operator}
+</if>
+<if test="operationTime != null">
+    AND operation_time = #{operationTime}
+</if>
+<if test="produceOrderId != null">
+    AND produce_order_id = #{produceOrderId}
+</if>
+</trim></where>
+
+</select>
+    <select id="findByProduceOrderId" resultType="java.util.Map">
+        select
+        pf.id,(case pf.node
+        when 0 then '备料'
+        when 1 then '下料'
+        when 2 then '封边'
+        when 3 then '打孔'
+        when 4 then '清洗'
+        when 5 then '试装'
+        when 6 then '包装'
+        else '未知' end
+        ) node,pf.end_time,pf.node as nodeNumber,
+        u.name as operatorName
+        from produce_flow pf
+        left join user u on u.id = pf.operator
+        where pf.produce_order_id = #{produceOrderId}
+        order by pf.node asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+produce_flow(id, node, end_time, notes, operator, operation_time, produce_order_id)
+      VALUES(#{id}, #{node}, #{endTime}, #{notes}, #{operator}, #{operationTime}, #{produceOrderId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE produce_flow
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('node') and node != null">
+    node = #{node},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   produce_flow
+WHERE  id = #{id}
+</delete>
+
+    <select id="findOneByProduceIdAndNode" resultMap="ProduceFlowMap">
+        select <include refid="columns"/> from produce_flow where produce_order_id = #{id} and node = #{node}
+    </select>
+
+    <select id="findListByProduceOrderId" resultMap="ProduceFlowDtoMap">
+        select <include refid="columnDtos"/> from produce_flow f left join user u on f.operator = u.id where f.produce_order_id = #{id}
+    </select>
+
+    <select id="findOneById" resultMap="ProduceFlowDtoMap">
+        select <include refid="columnDtos"/> from produce_flow f left join user u on f.operator = u.id where f.id = #{id}
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from produce_flow where id in (SELECT a.id from (select p.id from produce_flow p left join produce_order o on p.produce_order_id = o.id where o.custom_order_id = #{orderId}) a)
+    </delete>
+</mapper>

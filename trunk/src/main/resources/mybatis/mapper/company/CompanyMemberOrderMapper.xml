@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.CompanyMemberOrderDao">
+    <resultMap id="CompanyMemberOrderMap" type="com.lwxf.industry4.webapp.domain.entity.company.CompanyMemberOrder">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="custome_order_id" property="customeOrderId" jdbcType="CHAR" />
+        <result column="company_share_member_id" property="companyShareMemberId" jdbcType="CHAR" />
+        <result column="identity" property="identity" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, custome_order_id, company_share_member_id,identity
+</sql>
+
+    <select id="selectById" resultMap="CompanyMemberOrderMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   company_member_order
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CompanyMemberOrderMap">
+SELECT <include refid="columns" />
+FROM   company_member_order
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="customeOrderId != null">
+    AND custome_order_id = #{customeOrderId}
+</if>
+<if test="companyShareMemberId != null">
+    AND company_share_member_id = #{companyShareMemberId}
+</if>
+    <if test="identity != null">
+        AND identity = #{identity}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+company_member_order(id, custome_order_id, company_share_member_id,identity)
+              VALUES(#{id}, #{customeOrderId}, #{companyShareMemberId},#{identity})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE company_member_order
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('customeOrderId') and customeOrderId != null">
+    custome_order_id = #{customeOrderId},
+</if>
+    <if test="_parameter.containsKey('companyShareMemberId') and companyShareMemberId != null">
+    company_share_member_id = #{companyShareMemberId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   company_member_order
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByOrderIdAndType" resultMap="CompanyMemberOrderMap">
+        SELECT <include refid="columns" />
+        FROM   company_member_order
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="orderId != null">
+                AND custome_order_id = #{orderId}
+            </if>
+            <if test="companyShareMemberId != null">
+                AND company_share_member_id = #{companyShareMemberId}
+            </if>
+            <if test="identity != null">
+                AND identity = #{identity}
+            </if>
+        </trim></where>
+
+    </select>
+
+</mapper>

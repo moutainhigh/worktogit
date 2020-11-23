@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductColorDao">
+    <resultMap id="ProductColorMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductColor">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR"/>
+    </resultMap>
+    <resultMap id="ProductColorDtoMap" type="com.lwxf.industry4.webapp.domain.dto.product.ProductColorDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR"/>
+        <result column="productCategoryName" property="productCategoryName"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="columns">
+id, name, product_category_id,type
+</sql>
+    <sql id="columnsDto">
+      c.id, c.name, c.product_category_id,pc.name productCategoryName,c.type
+    </sql>
+    <select id="selectById" resultMap="ProductColorMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM product_color
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="ProductColorMap">
+        SELECT
+        <include refid="columns"/>
+        FROM product_color
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="name != null">
+                    AND name = #{name}
+                </if>
+                <if test="productCategoryId != null">
+                    AND product_category_id = #{productCategoryId}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_color(id, name, product_category_id,type)
+       VALUES(#{id}, #{name}, #{productCategoryId},#{type})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE product_color
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('name') and name != null">
+                    name = #{name},
+                </if>
+                <if test="_parameter.containsKey('type') and type != null">
+                    type = #{type}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_color
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="selectByCategoryId" resultMap="ProductColorMap">
+        select
+        <include refid="columns"/>
+        from product_color where product_category_id = #{id}
+    </select>
+
+    <select id="selectProductColorByFilter" resultMap="ProductColorDtoMap">
+        select
+        <include refid="columnsDto"/>
+        from product_color c left join product_category pc on c.product_category_id = pc.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="name != null">
+                    c.name like CONCAT('%',#{name},'%')
+                </if>
+                <if test="productCategoryId != null">
+                    AND c.product_category_id = #{productCategoryId}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="findAll" resultMap="ProductColorMap">
+        select
+        <include refid="columns"/>
+        from product_color
+    </select>
+
+    <select id="selectByCategoryIdAndNameAndId" resultType="java.lang.Boolean">
+        select count(*) from product_color where product_category_id = #{productCategoryId} and name = #{name}
+        <if test="id != null">
+            and id &lt;&gt; #{id}
+        </if>
+    </select>
+
+    <select id="isExistCidAndId" resultType="java.lang.Boolean">
+        select count(*) from product_color where product_category_id = #{cid} and id = #{id}
+    </select>
+
+    <select id="isExistNameAndNoIdAndCid" resultType="java.lang.Boolean">
+        select count(*) from product_color where name = #{name} AND product_category_id = #{cid} AND id &lt;&gt; #{id}
+    </select>
+
+    <select id="selectByType" resultMap="ProductColorMap">
+        select
+        <include refid="columns"/>
+        from product_color
+        where type = #{type}
+    </select>
+</mapper>

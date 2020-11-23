@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.activity.ActivityInfoDao">
+    <resultMap id="ActivityInfoMap" type="com.lwxf.industry4.webapp.domain.entity.activity.ActivityInfo">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="summary" property="summary" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+        <result column="link" property="link" jdbcType="VARCHAR" />
+        <result column="is_inner" property="inner" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="begin_time" property="beginTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="conditions" property="conditions" jdbcType="VARCHAR" />
+        <result column="regulation" property="regulation" jdbcType="VARCHAR" />
+        <result column="views" property="views" jdbcType="INTEGER" />
+        <result column="classify" property="classify" jdbcType="TINYINT" />
+        <result column="target" property="target" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="ActivityInfoDtoMap" type="com.lwxf.industry4.webapp.domain.dto.activity.ActivityInfoDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="summary" property="summary" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+        <result column="link" property="link" jdbcType="VARCHAR" />
+        <result column="is_inner" property="inner" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="begin_time" property="beginTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="conditions" property="conditions" jdbcType="VARCHAR" />
+        <result column="regulation" property="regulation" jdbcType="VARCHAR" />
+        <result column="views" property="views" jdbcType="INTEGER" />
+        <result column="classify" property="classify" jdbcType="TINYINT" />
+        <result column="target" property="target" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, no, type, name, cover, summary, content, link, is_inner, creator, created, begin_time, end_time, conditions, regulation, views, classify, target, status,company_id
+</sql>
+
+    <select id="selectById" resultMap="ActivityInfoMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   activity_info
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ActivityInfoMap">
+SELECT <include refid="columns" />
+FROM   activity_info
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="no != null">
+    AND no = #{no}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="cover != null">
+    AND cover = #{cover}
+</if>
+<if test="summary != null">
+    AND summary = #{summary}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="link != null">
+    AND link = #{link}
+</if>
+<if test="inner != null">
+    AND is_inner = #{inner}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="beginTime != null">
+    AND begin_time = #{beginTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="conditions != null">
+    AND conditions = #{conditions}
+</if>
+<if test="regulation != null">
+    AND regulation = #{regulation}
+</if>
+<if test="views != null">
+    AND views = #{views}
+</if>
+<if test="classify != null">
+    AND classify = #{classify}
+</if>
+<if test="target != null">
+    AND target = #{target}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+
+    <if test="branchId != null">
+        AND branch_id = #{branchId}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+activity_info(id, no, type, name, cover, summary, content, link, is_inner, creator, created, begin_time, end_time, conditions, regulation, views, classify, target, status,company_id,branch_id)
+       VALUES(#{id}, #{no}, #{type}, #{name}, #{cover}, #{summary}, #{content}, #{link}, #{inner}, #{creator}, #{created}, #{beginTime}, #{endTime}, #{conditions}, #{regulation}, #{views}, #{classify}, #{target}, #{status},#{companyId},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE activity_info
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('no') and no != null">
+    no = #{no},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('cover') and cover != null">
+    cover = #{cover},
+</if>
+    <if test="_parameter.containsKey('summary')">
+    summary = #{summary},
+</if>
+    <if test="_parameter.containsKey('content') and content != null">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('link')">
+    link = #{link},
+</if>
+    <if test="_parameter.containsKey('inner')">
+    is_inner = #{inner},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('beginTime') and beginTime != null">
+    begin_time = #{beginTime},
+</if>
+    <if test="_parameter.containsKey('endTime')">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('conditions')">
+    conditions = #{conditions},
+</if>
+    <if test="_parameter.containsKey('regulation')">
+    regulation = #{regulation},
+</if>
+    <if test="_parameter.containsKey('views') and views != null">
+    views = #{views},
+</if>
+    <if test="_parameter.containsKey('classify') and classify != null">
+    classify = #{classify},
+</if>
+    <if test="_parameter.containsKey('target') and target != null">
+    target = #{target},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('companyId') and status != null">
+        company_id = #{companyId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   activity_info
+WHERE  id = #{id}
+</delete>
+
+    <select id="findIdAndCover" resultMap="ActivityInfoMap">
+        select
+        id,cover,begig_time,end_time
+        from activity_info
+        <where><trim>
+            <if test="companyId != null">
+                 company_id = #{companyId}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <select id="findBAndFActivity" resultType="java.util.Map">
+
+        select id,cover,begin_time,IFNULL(end_time,"")as end_time,status,created
+        from activity_info ai
+        where ai.id in
+        (
+        select activity_id from activity_join aj
+        where aj.company_id = #{companyId}
+        and aj.type = 0
+        and ((aj.is_paid = 1 and aj.is_free = 0)
+        or (aj.is_paid = 0 and aj.is_free = 1))
+        )
+        UNION
+        select id,cover,begin_time,IFNULL(end_time,"")as end_time,status,created
+				from activity_info
+				where company_id = #{companyId}
+				and type = 1
+				and status!= 0
+        order by status asc,created desc
+    </select>
+
+
+
+    <select id="findByCompanyId" resultType="java.util.Map">
+        select
+        id,
+        IFNULL(cover,"")as cover,
+        begin_time,
+        IFNULL(end_time,"")as end_time,
+        status,created
+        from activity_info
+        <where><trim prefixOverrides="and">
+            <if test="companyId!=null">
+                company_id = #{companyId}
+            </if>
+            <if test="status!=null">
+                and  status = #{status}
+            </if>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+        </trim></where>
+        order by created desc
+    </select>
+
+    <select id="findBJoinActivity" resultType="java.util.Map">
+        select id,cover,begin_time,IFNULL(end_time,"")as end_time,status,created
+        from activity_info ai
+        where ai.id in
+        (
+        select activity_id from activity_join aj
+        where aj.company_id = #{companyId}
+        and aj.type = 0
+        and ((aj.is_paid = 1 and aj.is_free = 0)
+        or (aj.is_paid = 0 and aj.is_free = 1))
+        )
+    </select>
+
+
+    <select id="findFActivity" resultType="java.util.Map">
+        select
+        id,cover,begin_time,IFNULL(end_time,"")as end_time,status,created,'1' as is_join
+        from activity_info ai
+        where ai.status<![CDATA[!=]]>0
+        and ai.id in
+        (
+        select activity_id from activity_join aj
+        where aj.company_id = #{BcompanyId}
+        and aj.type = 0
+        and ((aj.is_paid = 1 and aj.is_free = 0)
+        or (aj.is_paid = 0 and aj.is_free = 1))
+        )
+        UNION
+        select id,cover,begin_time,IFNULL(end_time,"")as end_time,status,created,'0' as is_join
+				from activity_info
+				where company_id = #{FcompanyId}
+				and type = 0
+				and status<![CDATA[!=]]>0
+				and id not in ( select activity_id from activity_join aj
+        where aj.company_id = #{BcompanyId}
+        and aj.type = 0
+        and ((aj.is_paid = 1 and aj.is_free = 0)
+        or (aj.is_paid = 0 and aj.is_free = 1)))
+        order by status asc,created desc
+    </select>
+    <select id="findByFCompanyId" resultType="java.util.Map">
+        select ai.id,ai.link,
+        ai.name,ai.cover,ai.summary,
+        ai.created, u.name as userName,u.avatar as userAvatar
+        from activity_info ai
+        left join user u on u.id = ai.creator
+        <where><trim prefixOverrides="and">
+            <if test="companyId!=null">
+                ai.company_id = #{FCompanyId}
+            </if>
+            <if test="status!=null">
+                and  ai.status = #{status}
+            </if>
+            <if test="type!=null">
+                and ai.type = #{type}
+            </if>
+        </trim></where>
+        order by created desc
+    </select>
+
+    <select id="findOneById" resultMap="ActivityInfoDtoMap">
+        select a.*,u.name creatorName from activity_info a left join user u on a.creator = u.id where a.id = #{id}
+    </select>
+
+</mapper>

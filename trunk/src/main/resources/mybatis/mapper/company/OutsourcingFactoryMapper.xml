@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.OutsourcingFactoryDao">
+    <resultMap id="OutsourcingFactoryMap" type="com.lwxf.industry4.webapp.domain.entity.company.OutsourcingFactory">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="leader_tel" property="leaderTel" jdbcType="VARCHAR" />
+        <result column="leader_name" property="leaderName" jdbcType="VARCHAR" />
+        <result column="bank" property="bank" jdbcType="VARCHAR" />
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="INTEGER" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="signing_time" property="signingTime" jdbcType="TIMESTAMP" />
+        <result column="factory_leader" property="factoryLeader" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, city_area_id, address, leader_tel, leader_name, bank, bank_account, notes, state, creator, created, updator, updated, signing_time, factory_leader
+</sql>
+
+    <select id="selectById" resultMap="OutsourcingFactoryMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   outsourcing_factory
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="OutsourcingFactoryMap">
+SELECT <include refid="columns" />
+FROM   outsourcing_factory
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="cityAreaId != null">
+    AND city_area_id = #{cityAreaId}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="leaderTel != null">
+    AND leader_tel = #{leaderTel}
+</if>
+<if test="leaderName != null">
+    AND leader_name = #{leaderName}
+</if>
+<if test="bank != null">
+    AND bank = #{bank}
+</if>
+<if test="bankAccount != null">
+    AND bank_account = #{bankAccount}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="state != null">
+    AND state = #{state}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="updator != null">
+    AND updator = #{updator}
+</if>
+<if test="updated != null">
+    AND updated = #{updated}
+</if>
+<if test="signingTime != null">
+    AND signing_time = #{signingTime}
+</if>
+<if test="factoryLeader != null">
+    AND factory_leader = #{factoryLeader}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+outsourcing_factory(id, name, city_area_id, address, leader_tel, leader_name, bank, bank_account, notes, state, creator, created, updator, updated, signing_time, factory_leader)
+             VALUES(#{id}, #{name}, #{cityAreaId}, #{address}, #{leaderTel}, #{leaderName}, #{bank}, #{bankAccount}, #{notes}, #{state}, #{creator}, #{created}, #{updator}, #{updated}, #{signingTime}, #{factoryLeader})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE outsourcing_factory
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('cityAreaId')">
+    city_area_id = #{cityAreaId},
+</if>
+    <if test="_parameter.containsKey('address')">
+    address = #{address},
+</if>
+    <if test="_parameter.containsKey('leaderTel')">
+    leader_tel = #{leaderTel},
+</if>
+    <if test="_parameter.containsKey('leaderName')">
+    leader_name = #{leaderName},
+</if>
+    <if test="_parameter.containsKey('bank')">
+    bank = #{bank},
+</if>
+    <if test="_parameter.containsKey('bankAccount')">
+    bank_account = #{bankAccount},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('state')">
+    state = #{state},
+</if>
+    <if test="_parameter.containsKey('updator')">
+    updator = #{updator},
+</if>
+    <if test="_parameter.containsKey('updated')">
+    updated = #{updated},
+</if>
+    <if test="_parameter.containsKey('signingTime')">
+    signing_time = #{signingTime},
+</if>
+    <if test="_parameter.containsKey('factoryLeader')">
+    factory_leader = #{factoryLeader}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   outsourcing_factory
+WHERE  id = #{id}
+</delete>
+
+</mapper>

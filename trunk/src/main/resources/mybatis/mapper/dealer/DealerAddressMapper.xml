@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealer.DealerAddressDao">
+    <resultMap id="DealerAddressMap" type="com.lwxf.industry4.webapp.domain.entity.dealer.DealerAddress">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+        <result column="consignee_tel" property="consigneeTel" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="checked" property="checked" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="WxDealerAddressDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dealer.WxDealerAddressDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+        <result column="consignee_tel" property="consigneeTel" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="merger_name" property="mergerName" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="checked" property="checked" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+        id, company_id, consignee_name, consignee_tel, city_area_id, address, checked, created, creator
+    </sql>
+
+    <sql id="columnsDto">
+        da.id, da.company_id, da.consignee_name, da.consignee_tel, da.city_area_id, da.address, da.checked,
+        da.created, da.creator, c.name company_name, ca.merger_name, u.name creator_name
+    </sql>
+
+    <select id="selectById" resultMap="DealerAddressMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dealer_address
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectDtoById" resultMap="WxDealerAddressDtoMap" parameterType="String">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_address da
+        LEFT JOIN company c ON c.id = da.company_id
+        LEFT JOIN city_area ca ON ca.id = da.city_area_id
+        LEFT JOIN user u ON u.id = da.creator
+        WHERE da.id = #{id}
+    </select>
+
+    <select id="selectDefaultDto" resultMap="WxDealerAddressDtoMap" parameterType="string">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_address da
+        LEFT JOIN company c ON c.id = da.company_id
+        LEFT JOIN city_area ca ON ca.id = da.city_area_id
+        LEFT JOIN user u ON u.id = da.creator
+        WHERE da.company_id = #{cid}
+        Limit 1
+    </select>
+
+    <select id="selectByFilter" resultMap="DealerAddressMap">
+        SELECT <include refid="columns" />
+        FROM   dealer_address
+        <where><trim prefixOverrides="AND">
+        <if test="id != null">
+            id = #{id}
+        </if>
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+        <if test="consigneeName != null">
+            AND consignee_name = #{consigneeName}
+        </if>
+        <if test="consigneeTel != null">
+            AND consignee_tel = #{consigneeTel}
+        </if>
+        <if test="cityAreaId != null">
+            AND city_area_id = #{cityAreaId}
+        </if>
+        <if test="address != null">
+            AND address = #{address}
+        </if>
+        <if test="checked != null">
+            AND checked = #{checked}
+        </if>
+        <if test="created != null">
+            AND created = #{created}
+        </if>
+        <if test="creator != null">
+            AND creator = #{creator}
+        </if>
+        </trim></where>
+    </select>
+
+    <select id="selectDtoByFilter" resultMap="WxDealerAddressDtoMap">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_address da
+        LEFT JOIN company c ON c.id = da.company_id
+        LEFT JOIN city_area ca ON ca.id = da.city_area_id
+        LEFT JOIN user u ON u.id = da.creator
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                da.id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND da.company_id = #{companyId}
+            </if>
+            <if test="consigneeName != null">
+                AND da.consignee_name = #{consigneeName}
+            </if>
+            <if test="consigneeTel != null">
+                AND da.consignee_tel = #{consigneeTel}
+            </if>
+            <if test="cityAreaId != null">
+                AND da.city_area_id = #{cityAreaId}
+            </if>
+            <if test="address != null">
+                AND da.address = #{address}
+            </if>
+            <if test="checked != null">
+                AND da.checked = #{checked}
+            </if>
+            <if test="created != null">
+                AND da.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND da.creator = #{creator}
+            </if>
+        </trim></where>
+        ORDER BY da.checked DESC, da.created DESC
+    </select>
+
+    <select id="countByCid" parameterType="string" resultType="integer">
+        SELECT COUNT(*) FROM dealer_address da
+        WHERE da.company_id = #{cid}
+    </select>
+
+    <select id="findListByCid" parameterType="string" resultMap="DealerAddressMap">
+        SELECT * FROM dealer_address da
+        WHERE da.company_id = #{companyId}
+    </select>
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+        dealer_address(id, company_id, consignee_name, consignee_tel, city_area_id, address, checked, created, creator)
+        VALUES(#{id}, #{companyId}, #{consigneeName}, #{consigneeTel}, #{cityAreaId}, #{address}, #{checked}, #{created}, #{creator})
+    </insert>
+
+    <update id="cancelCheckedByCid" parameterType="string">
+        UPDATE dealer_address SET checked = 0 WHERE company_id = #{cid} AND checked = 1
+    </update>
+
+    <update id="updateByMapContext">
+        UPDATE dealer_address
+        <set><trim suffixOverrides=",">
+        <if test="_parameter.containsKey('companyId') and companyId != null">
+            company_id = #{companyId},
+        </if>
+            <if test="_parameter.containsKey('consigneeName') and consigneeName != null">
+            consignee_name = #{consigneeName},
+        </if>
+            <if test="_parameter.containsKey('consigneeTel') and consigneeTel != null">
+            consignee_tel = #{consigneeTel},
+        </if>
+            <if test="_parameter.containsKey('cityAreaId') and cityAreaId != null">
+            city_area_id = #{cityAreaId},
+        </if>
+            <if test="_parameter.containsKey('address') and address != null">
+            address = #{address},
+        </if>
+            <if test="_parameter.containsKey('checked') and checked != null">
+            checked = #{checked},
+        </if>
+            <if test="_parameter.containsKey('created')">
+            created = #{created},
+        </if>
+            <if test="_parameter.containsKey('creator')">
+            creator = #{creator}
+        </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   dealer_address
+        WHERE  id = #{id}
+    </delete>
+
+</mapper>

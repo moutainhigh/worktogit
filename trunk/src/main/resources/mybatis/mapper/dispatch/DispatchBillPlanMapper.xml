@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dispatch.DispatchBillPlanDao">
+    <resultMap id="DispatchBillPlanMap" type="com.lwxf.industry4.webapp.domain.entity.dispatch.DispatchBillPlan">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="num" property="num" jdbcType="INTEGER" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="plan_time" property="planTime" jdbcType="TIMESTAMP"/>
+        <result column="actual_num" property="actualNum" />
+        <result column="audit_status" property="auditStatus" />
+        <result column="auditor" property="auditor" />
+    </resultMap>
+    <sql id="columns">
+   id, status, created, creator, num, updated, updator,note,branch_id,name,plan_time,actual_num,audit_status,auditor
+</sql>
+
+    <select id="selectById" resultMap="DispatchBillPlanMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dispatch_bill_plan
+WHERE  id = #{id}
+</select>
+
+    <select id="findByStatusAndBranchId" resultMap="DispatchBillPlanMap" >
+        SELECT <include refid="columns" />
+        FROM   dispatch_bill_plan
+        WHERE  status = #{status} and branch_id=#{branchId}
+    </select>
+
+    <select id="selectByFilter" resultMap="DispatchBillPlanMap">
+SELECT *
+FROM   dispatch_bill_plan
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="num != null">
+    AND num = #{num}
+</if>
+<if test="updated != null">
+    AND updated = #{updated}
+</if>
+<if test="updator != null">
+    AND updator = #{updator}
+</if>
+    <if test="note != null">
+        AND note = #{note}
+    </if>
+    <if test="branchId != null">
+        AND branch_id = #{branchId}
+    </if>
+    <if test="auditStatus != null">
+        AND audit_status = #{auditStatus}
+    </if>
+    <if test="auditStatus == null">
+        AND (audit_status = 1 or audit_status = 2)
+    </if>
+    <if test="auditor != null">
+        AND auditor = #{auditor}
+    </if>
+    <if test="planTime != null">
+        AND DATE_FORMAT(plan_time, '%Y-%m-%d') = DATE_FORMAT(#{planTime}, '%Y-%m-%d')
+    </if>
+    <if test="auditType != null">
+        AND id in (select dispatch_bill_plan_id from dispatch_bill_plan_item
+        where order_product_id in (select id from order_product where custom_order_id in (select custom_order_id from payment where status=3)))
+    </if>
+</trim></where>
+order by created desc
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_bill_plan(id, status, created, creator, num, updated, updator,note,branch_id,name,plan_time,actual_num,audit_status,auditor)
+            VALUES(#{id}, #{status}, #{created}, #{creator}, #{num}, #{updated}, #{updator},#{note},#{branchId},#{name},#{planTime},#{actualNum},#{auditStatus},#{auditor})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dispatch_bill_plan
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('status')">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('num')">
+    num = #{num},
+</if>
+    <if test="_parameter.containsKey('updated')">
+    updated = #{updated},
+</if>
+    <if test="_parameter.containsKey('updator')">
+    updator = #{updator},
+</if>
+    <if test="_parameter.containsKey('note')">
+        note = #{note},
+    </if>
+    <if test="_parameter.containsKey('branchId')">
+        branch_id = #{branchId},
+    </if>
+    <if test="_parameter.containsKey('name')">
+        name = #{name},
+    </if>
+    <if test="_parameter.containsKey('planTime')">
+        plan_time = #{planTime},
+    </if>
+    <if test="_parameter.containsKey('actualNum')">
+        actual_num = #{actualNum},
+    </if>
+    <if test="_parameter.containsKey('auditStatus')">
+        audit_status = #{auditStatus},
+    </if>
+    <if test="_parameter.containsKey('auditor')">
+        auditor = #{auditor}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_bill_plan
+WHERE  id = #{id}
+</delete>
+
+</mapper>

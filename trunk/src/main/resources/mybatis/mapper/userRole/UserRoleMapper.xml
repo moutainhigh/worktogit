@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.userRole.UserRoleDao">
+    <resultMap id="UserRoleMap" type="com.lwxf.industry4.webapp.domain.entity.userRole.UserRole">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="role_grorp_name" property="roleGrorpName" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+
+        <result column="roleId" property="roleId" jdbcType="VARCHAR" />
+        <result column="userId" property="userId" jdbcType="VARCHAR" />
+        <result column="roleName" property="roleName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, role_id, user_id, role_grorp_name, reserve1, reserve2, reserve3, reserve4
+</sql>
+
+
+    <select id="selectById" resultMap="UserRoleMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_role
+        WHERE  id = #{id} or user_id = #{id}
+    </select>
+
+    <select id="getAllUserRole" resultMap="UserRoleMap" parameterType="String">
+        SELECT a.role_id roleId,a.user_id userId,b.name roleName
+        FROM   user_role a
+        LEFT JOIN role b on a.role_id = b.id
+        WHERE  user_id = #{userId}
+  </select>
+
+    <select id="selectByFilter" resultMap="UserRoleMap">
+SELECT <include refid="columns" />
+FROM   user_role
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="roleId != null">
+    AND role_id = #{roleId}
+</if>
+<if test="userId != null">
+    AND user_id = #{userId}
+</if>
+<if test="roleGrorpName != null">
+    AND role_grorp_name = #{roleGrorpName}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+user_role(id, role_id, user_id, role_grorp_name, reserve1, reserve2, reserve3, reserve4)
+   VALUES(#{id}, #{roleId}, #{userId}, #{roleGrorpName}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE user_role
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('roleId') and roleId != null">
+    role_id = #{roleId},
+</if>
+    <if test="_parameter.containsKey('userId') and userId != null">
+    user_id = #{userId},
+</if>
+    <if test="_parameter.containsKey('roleGrorpName')">
+    role_grorp_name = #{roleGrorpName},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_role
+WHERE  id = #{id} or user_id = #{id}
+</delete>
+
+</mapper>

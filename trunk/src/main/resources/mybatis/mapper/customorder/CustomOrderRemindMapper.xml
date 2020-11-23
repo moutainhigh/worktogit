@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderRemindDao">
+    <resultMap id="CustomOrderRemindMap"
+               type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderRemind">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="branch_id" property="branchId" jdbcType="CHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="time_consuming" property="timeConsuming" jdbcType="VARCHAR"/>
+        <result column="receiver" property="receiver" jdbcType="CHAR"/>
+        <result column="receipt_time" property="receiptTime" jdbcType="TIMESTAMP"/>
+        <result column="commit_time" property="commitTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="CustomOrderremindDtoMap"
+               type="com.lwxf.industry4.webapp.domain.dto.customorder.CustomOrderRemindDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR"/>
+        <result column="branch_id" property="branchId" jdbcType="CHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="orderStatus" property="orderStatus" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="time_consuming" property="timeConsuming" jdbcType="VARCHAR"/>
+        <result column="receiver" property="receiver" jdbcType="CHAR"/>
+        <result column="receipt_time" property="receiptTime" jdbcType="TIMESTAMP"/>
+        <result column="commit_time" property="commitTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="factory_final_price" property="factoryFinalPrice" jdbcType="DECIMAL"/>
+        <result column="dealer_name" property="dealerName" jdbcType="VARCHAR"/>
+        <result column="dealer_tel" property="dealerTel" jdbcType="VARCHAR"/>
+        <result column="balance" property="balance" jdbcType="DECIMAL"/>
+        <result column="status_name" property="statusName" jdbcType="VARCHAR"/>
+        <result column="creator_name" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="receiver_name" property="receiverName" jdbcType="VARCHAR"/>
+        <result column="order_receiver_name" property="orderReceiverName" jdbcType="VARCHAR"/>
+        <result column="estimatedDeliveryDate" property="estimatedDeliveryDate" jdbcType="TIMESTAMP"/>
+        <result column="customerName" property="customerName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="columns">
+        id, custom_order_id, branch_id, status, creator, created, time_consuming, receiver, receipt_time, commit_time, remark
+    </sql>
+    <sql id="dtoColumns">
+        cc.name customerName,co.estimated_delivery_date estimatedDeliveryDate, cor.id, cor.custom_order_id, cor.branch_id, cor.status, cor.creator, cor.created, cor.time_consuming,
+        cor.receiver, cor.receipt_time, cor.commit_time, cor.remark, co.no, co.factory_final_price, c.name dealer_name,
+        c.leader_tel dealer_tel, da.balance, bc.value status_name, u.name creator_name, uu.name receiver_name,
+        uuu.name order_receiver_name,co.status orderStatus
+    </sql>
+
+    <select id="selectById" resultMap="CustomOrderRemindMap" parameterType="string">
+        SELECT
+        <include refid="columns"/>
+        FROM custom_order_remind
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByOrderId" resultMap="CustomOrderRemindMap" parameterType="string">
+        SELECT
+        <include refid="columns"/>
+        FROM custom_order_remind
+        WHERE custom_order_id = #{orderId}
+    </select>
+
+    <select id="selectDtoByOrderId" resultMap="CustomOrderremindDtoMap" parameterType="string">
+        select
+        <include refid="dtoColumns"/>
+        from custom_order_remind cor
+        left join custom_order co on co.id = cor.custom_order_id
+        left join company c on c.id = co.company_id
+        left join company_customer cc on cc.id=co.customer_id
+        left join dealer_account da on da.company_id = c.id and da.type = 1
+        left join basecode bc on bc.code = cor.status and bc.type = 'customOrderRemindStatus'
+        left join user u on u.id = cor.creator
+        left join user uu on uu.id = cor.receiver
+        left join user uuu on uuu.id = co.receiver
+        WHERE cor.custom_order_id = #{orderId}
+    </select>
+
+    <select id="selectDtoByFilter" resultMap="CustomOrderremindDtoMap">
+        select
+        <include refid="dtoColumns"/>
+        from custom_order_remind cor
+        left join custom_order co on co.id = cor.custom_order_id
+        left join company c on c.id = co.company_id
+        left join company_customer cc on cc.id=co.customer_id
+        left join dealer_account da on da.company_id = c.id and da.type = 1
+        left join basecode bc on bc.code = cor.status and bc.type = 'customOrderRemindStatus'
+        left join user u on u.id = cor.creator
+        left join user uu on uu.id = cor.receiver
+        left join user uuu on uuu.id = co.receiver
+        <where>
+            <trim prefixOverrides="AND">
+                cor.status  <![CDATA[!= ]]> 3
+                <if test="customOrderId != null">
+                    AND cor.custom_order_id = #{customOrderId}
+                </if>
+                <if test="branchId != null">
+                    AND cor.branch_id = #{branchId}
+                </if>
+                <if test="status != null">
+                    AND cor.status = #{status}
+                </if>
+                <if test="creator != null">
+                    AND cor.creator = #{creator}
+                </if>
+                <if test="receiver != null">
+                    AND cor.receiver = #{receiver}
+                </if>
+                <if test="no != null">
+                    AND co.no like concat(concat("%",#{no}),"%")
+                </if>
+                <if test="dealerName != null">
+                    AND c.name like concat(concat("%",#{dealerName}),"%")
+                </if>
+                <if test="dealerTel != null">
+                    AND c.leader_tel like concat(concat("%",#{dealerTel}),"%")
+                </if>
+            </trim>
+        </where>
+        order by cor.created desc
+    </select>
+
+    <select id="selectByFilter" resultMap="CustomOrderRemindMap">
+        SELECT
+        <include refid="columns"/>
+        FROM custom_order_remind
+        <where>
+            <trim prefixOverrides="AND">
+                status  <![CDATA[!= ]]> 3
+                <if test="id != null">
+                    AND id = #{id}
+                </if>
+                <if test="customOrderId != null">
+                    AND custom_order_id = #{customOrderId}
+                </if>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+                <if test="status != null">
+                    AND status = #{status}
+                </if>
+                <if test="creator != null">
+                    AND creator = #{creator}
+                </if>
+                <if test="created != null">
+                    AND created = #{created}
+                </if>
+                <if test="timeConsuming != null">
+                    AND time_consuming = #{timeConsuming}
+                </if>
+                <if test="receiver != null">
+                    AND receiver = #{receiver}
+                </if>
+                <if test="receiptTime != null">
+                    AND receipt_time = #{receiptTime}
+                </if>
+                <if test="commitTime != null">
+                    AND commit_time = #{commitTime}
+                </if>
+                <if test="remark != null">
+                    AND remark = #{remark}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+        custom_order_remind(id, custom_order_id, branch_id, status, creator, created, time_consuming, receiver, receipt_time, commit_time, remark)
+        VALUES(#{id}, #{customOrderId}, #{branchId}, #{status}, #{creator}, #{created}, #{timeConsuming}, #{receiver}, #{receiptTime}, #{commitTime}, #{remark})
+    </insert>
+
+    <update id="updateByMapContext">
+        UPDATE custom_order_remind
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('customOrderId') and customOrderId != null">
+                    custom_order_id = #{customOrderId},
+                </if>
+                <if test="_parameter.containsKey('branchId')">
+                    branch_id = #{branchId},
+                </if>
+                <if test="_parameter.containsKey('status') and status != null">
+                    status = #{status},
+                </if>
+                <if test="_parameter.containsKey('creator') and creator != null">
+                    creator = #{creator},
+                </if>
+                <if test="_parameter.containsKey('created') and created != null">
+                    created = #{created},
+                </if>
+                <if test="_parameter.containsKey('timeConsuming')">
+                    time_consuming = #{timeConsuming},
+                </if>
+                <if test="_parameter.containsKey('receiver')">
+                    receiver = #{receiver},
+                </if>
+                <if test="_parameter.containsKey('receiptTime')">
+                    receipt_time = #{receiptTime},
+                </if>
+                <if test="_parameter.containsKey('commitTime')">
+                    commit_time = #{commitTime},
+                </if>
+                <if test="_parameter.containsKey('remark')">
+                    remark = #{remark}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM   custom_order_remind
+        WHERE  id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.OperationsDao">
+    <resultMap id="OperationsMap" type="com.lwxf.industry4.webapp.domain.entity.system.Operations">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="key" property="key" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="relevant_resource" property="relevantResource" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, name, `key`, type, relevant_resource
+</sql>
+
+    <select id="selectById" resultMap="OperationsMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   operations
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="OperationsMap">
+        SELECT <include refid="columns" />
+        FROM   operations
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="key != null">
+                AND `key` = #{key}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="relevantResource != null">
+                AND relevant_resource = #{relevantResource}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+operations(id, name, `key`, type, relevant_resource)
+    VALUES(#{id}, #{name}, #{key}, #{type}, #{relevantResource})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE operations
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('type') and type != null">
+                type = ${type},
+            </if>
+            <if test="_parameter.containsKey('relevantResource')">
+                relevant_resource = #{relevantResource}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   operations
+WHERE  id = #{id}
+</delete>
+
+    <select id="findAll" resultMap="OperationsMap">
+        SELECT <include refid="columns" />
+        FROM   operations
+    </select>
+
+    <select id="findListByMapContext" resultMap="OperationsMap">
+        select <include refid="columns"/> from operations
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="key != null">
+                AND `key` = #{key}
+            </if>
+            <if test="types != null">
+                AND type in
+                <foreach collection="types" item="type" open="(" close=")" separator=",">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="relevantResource != null">
+                AND relevant_resource = #{relevantResource}
+            </if>
+        </trim></where>
+    </select>
+
+    <select id="findOneByName" resultMap="OperationsMap">
+        select <include refid="columns"/> from operations where name = #{name}
+    </select>
+    <select id="findOneByKey" resultMap="OperationsMap">
+        select <include refid="columns"/> from operations where `key` = #{key}
+    </select>
+
+    <select id="findAllByTypes" resultMap="OperationsMap">
+        select <include refid="columns"/> from operations where type in
+        <foreach collection="list" separator="," close=")" open="(" item="typ">
+            ${typ}
+        </foreach>
+    </select>
+</mapper>

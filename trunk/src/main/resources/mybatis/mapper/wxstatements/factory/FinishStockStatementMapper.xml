@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.factory.finishStock.FinishStockStatementDao">
+
+    <select id="findFinishStockStatementByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1  and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1)) and delivered is null ) as mon,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2)) and delivered is null ) as tues,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and  is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3)) and delivered is null ) as wed,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and  is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4)) and delivered is null ) as thur,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and  is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5)) and delivered is null) as fri,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and  is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6)) and delivered is null) as sat,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and  is_in=1 and date_format(operated,'%Y-%m-%d') <= (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7)) and delivered is null) as sun
+            ]]>
+        </if>
+    </select>
+
+    <select id="findFinishStockStatementByMonth"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and  date_format(operated,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(operated,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d')
+         )  as point1,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(operated,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')
+      ) as point2,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(operated,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')
+      ) as point3,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and date_format(operated,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(operated,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')
+      ) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and   date_format(operated,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d')
+        and delivered is null ) as point1,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and   date_format(operated,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')
+        and delivered is null ) as point2,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and   date_format(operated,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')
+        and delivered is null ) as point3,
+       (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1 and   date_format(operated,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')
+        and delivered is null) as point4
+       ]]>
+        </if>
+    </select>
+
+
+    <select id="findFinishStockStatementByQuarter"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and  month(operated)=#{firstMonth}) as month1,
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and  month(operated)=#{secondMonth}) as month2,
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and  YEAR(operated)=YEAR(NOW()) and  month(operated)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and date_format(operated,'%m')  <=  #{firstMonth}
+            and delivered is null) as month1,
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and date_format(operated,'%m')  <=  #{secondMonth}
+           and delivered is null ) as month2,
+            (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and date_format(operated,'%m')  <=  #{thirdMonth}
+            and delivered is null) as month3
+            ]]>
+        </if>
+
+    </select>
+
+    <select id="findAFinishStockStatementByYear"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=1) as jan,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=2) as feb,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=3) as mar,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=4) as apr,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=5) as may,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=6) as jun,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=7) as jul,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=8) as aug,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=9) as sept,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=10) as oct,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=11) as nov,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)=12) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=1
+        and delivered is null) as jan,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=2
+        and delivered is null) as feb,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=3
+        and delivered is null) as mar,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=4
+        and delivered is null) as apr,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=5
+        and delivered is null) as may,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=6
+        and delivered is null) as jun,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=7
+        and delivered is null) as jul,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=8
+        and delivered is null) as aug,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=9
+        and delivered is null) as sept,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=10
+        and delivered is null) as oct,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=11
+        and delivered is null) as nov,
+        (select count(*) from finished_stock_item where branch_id=#{branchId} and is_in=1  and YEAR(operated)=YEAR(NOW()) and month(operated)<=12
+        and delivered is null) as dece
+        ]]>
+        </if>
+
+    </select>
+    <select id="findFinishStockStatements" resultType="com.lwxf.industry4.webapp.domain.dto.aftersale.DateNum">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*)  from finished_stock_item
+            where
+            <if test="dateType != null and dateType != ''and dateType =='0'.toString()">
+                date_format(operated,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='1'.toString()">
+                date_format(operated,'%Y-%m') = date_format(#{date},'%Y-%m')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='2'.toString()">
+                date_format(operated,'%Y') = date_format(#{date},'%Y')
+            </if>
+            and branch_id=#{branchId} and is_in=1
+            ) as count
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            select
+            (select count(*)  from finished_stock_item
+            where
+            <if test="dateType != null and dateType != ''and dateType =='0'.toString()">
+                date_format(operated,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='1'.toString()">
+                date_format(operated,'%Y-%m') = date_format(#{date},'%Y-%m')
+            </if>
+            <if test="dateType != null and dateType != ''and dateType =='2'.toString()">
+                date_format(operated,'%Y') = date_format(#{date},'%Y')
+            </if>
+            and branch_id=#{branchId} and is_in=1
+              and delivered is null
+            ) as count
+
+        </if>
+    </select>
+
+
+    <select id="findList"  resultType="com.lwxf.mybatis.utils.MapContext">
+
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+        select
+        (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type=0
+         and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+        )as guiTi,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type in (1,2)
+            and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+            )as menBan,
+            (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type=4
+            and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+            )as wuJin
+        ]]>
+        </if>
+
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+       <![CDATA[
+        select
+        (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type=0
+         and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+        and delivered is null
+        )as guiTi,
+               (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type in (1,2)
+          and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+        and delivered is null
+        )as menBan,
+               (select count(*) from finished_stock_item where  branch_id=#{branchId} and is_in=1 and type=4
+           and date_format(operated,'%Y-%m-%d') >= date_format(#{startTime},'%Y-%m-%d')
+            and date_format(operated,'%Y-%m-%d') <= date_format(#{endTime},'%Y-%m-%d')
+        and delivered is null
+        )as wuJin
+               ]]>
+        </if>
+
+    </select>
+</mapper>

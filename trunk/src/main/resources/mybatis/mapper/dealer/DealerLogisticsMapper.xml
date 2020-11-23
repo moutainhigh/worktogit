@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealer.DealerLogisticsDao">
+    <resultMap id="DealerLogisticsMap" type="com.lwxf.industry4.webapp.domain.entity.dealer.DealerLogistics">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR" />
+        <result column="checked" property="checked" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="DealerLogisticsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dealer.WxDealerLogisticsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="CHAR" />
+        <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+        <result column="checked" property="checked" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+        id, company_id, logistics_company_id, checked, created, creator
+    </sql>
+    <sql id="columnsDto">
+        dl.id, dl.company_id, dl.logistics_company_id, dl.checked, dl.created, dl.creator,
+        c.name company_name, lc.name logistics_name, u.name creator_name
+    </sql>
+
+    <select id="selectById" resultMap="DealerLogisticsMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dealer_logistics
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectDtoById" resultMap="DealerLogisticsDtoMap" parameterType="string">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_logistics dl
+        LEFT JOIN company c ON c.id = dl.company_id
+        LEFT JOIN logistics_company lc ON lc.id = dl.logistics_company_id
+        LEFT JOIN user u ON u.id = dl.creator
+        WHERE dl.id = #{id}
+    </select>
+
+    <select id="selectDefaultDto" resultMap="DealerLogisticsDtoMap" parameterType="string">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_logistics dl
+        LEFT JOIN company c ON c.id = dl.company_id
+        LEFT JOIN logistics_company lc ON lc.id = dl.logistics_company_id
+        LEFT JOIN user u ON u.id = dl.creator
+        WHERE dl.company_id = #{cid} and dl.checked=1
+        Limit 1
+    </select>
+
+    <select id="selectByFilter" resultMap="DealerLogisticsMap">
+        SELECT <include refid="columns" />
+        FROM   dealer_logistics
+        <where><trim prefixOverrides="AND">
+        <if test="id != null">
+            id = #{id}
+        </if>
+        <if test="companyId != null">
+            AND company_id = #{companyId}
+        </if>
+        <if test="logisticsCompanyId != null">
+            AND logistics_company_id = #{logisticsCompanyId}
+        </if>
+        <if test="checked != null">
+            AND checked = #{checked}
+        </if>
+        <if test="created != null">
+            AND created = #{created}
+        </if>
+        <if test="creator != null">
+            AND creator = #{creator}
+        </if>
+        </trim></where>
+    </select>
+
+    <select id="selectDtoByFilter" resultMap="DealerLogisticsDtoMap">
+        SELECT <include refid="columnsDto" />
+        FROM   dealer_logistics dl
+        LEFT JOIN company c ON c.id = dl.company_id
+        LEFT JOIN logistics_company lc ON lc.id = dl.logistics_company_id
+        LEFT JOIN user u ON u.id = dl.creator
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                dl.id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND dl.company_id = #{companyId}
+            </if>
+            <if test="logisticsCompanyId != null">
+                AND dl.logistics_company_id = #{logisticsCompanyId}
+            </if>
+            <if test="checked != null">
+                AND dl.checked = #{checked}
+            </if>
+            <if test="created != null">
+                AND dl.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND dl.creator = #{creator}
+            </if>
+        </trim></where>
+        ORDER BY dl.checked DESC, dl.created DESC
+    </select>
+
+    <select id="selectByMap" resultMap="DealerLogisticsMap">
+        SELECT <include refid="columns" />
+        FROM   dealer_logistics
+        WHERE company_id = #{companyId} AND logistics_company_id = #{logisticsCompanyId} LIMIT 1
+    </select>
+    <select id="findByCid" resultMap="DealerLogisticsDtoMap">
+        SELECT dl.*,lc.name logistics_name
+        FROM   dealer_logistics dl
+        left join logistics_company lc on dl.logistics_company_id=lc.id
+        WHERE dl.company_id = #{cid}
+    </select>
+    <select id="countByCid" parameterType="string" resultType="integer">
+        SELECT COUNT(*) FROM dealer_logistics dl
+        WHERE dl.company_id = #{cid}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO
+        dealer_logistics(id, company_id, logistics_company_id, checked, created, creator)
+                  VALUES(#{id}, #{companyId}, #{logisticsCompanyId}, #{checked}, #{created}, #{creator})
+    </insert>
+
+    <update id="cancelCheckedByCid" parameterType="string">
+      UPDATE dealer_logistics SET checked = 0 WHERE company_id = #{cid} AND checked = 1
+    </update>
+
+    <update id="updateByMapContext">
+        UPDATE dealer_logistics
+        <set><trim suffixOverrides=",">
+        <if test="_parameter.containsKey('companyId') and companyId != null">
+            company_id = #{companyId},
+        </if>
+            <if test="_parameter.containsKey('logisticsCompanyId') and logisticsCompanyId != null">
+            logistics_company_id = #{logisticsCompanyId},
+        </if>
+            <if test="_parameter.containsKey('checked') and checked != null">
+            checked = #{checked},
+        </if>
+            <if test="_parameter.containsKey('created')">
+            created = #{created},
+        </if>
+            <if test="_parameter.containsKey('creator')">
+            creator = #{creator}
+        </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   dealer_logistics
+        WHERE  id = #{id}
+    </delete>
+    <delete id="deleteByCid" parameterType="String">
+        DELETE FROM   dealer_logistics
+        WHERE  company_id = #{cid}
+    </delete>
+</mapper>

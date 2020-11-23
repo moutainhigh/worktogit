@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.jdproduct.JdProductInfoDao">
+    <resultMap id="JdProductInfoMap" type="com.lwxf.industry4.webapp.domain.entity.jdproduct.JdProductInfo">
+        <result column="fetching_Time" property="fetchingTime" jdbcType="TIMESTAMP" />
+        <result column="product_Picture" property="productPicture" jdbcType="VARCHAR" />
+        <result column="produc_title" property="producTitle" jdbcType="VARCHAR" />
+        <result column="product_href" property="productHref" jdbcType="VARCHAR" />
+        <result column="product_price" property="productPrice" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+fetching_Time, product_Picture, produc_title, product_href, product_price, reserve1, reserve2, reserve3, reserve4
+</sql>
+
+    <select id="selectById" resultMap="JdProductInfoMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   jd_product_info
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="JdProductInfoMap">
+SELECT <include refid="columns" />
+FROM   jd_product_info
+<where><trim prefixOverrides="AND">
+<if test="fetchingTime != null">
+    fetching_Time = #{fetchingTime}
+</if>
+<if test="productPicture != null">
+    AND product_Picture = #{productPicture}
+</if>
+<if test="producTitle != null">
+    AND produc_title = #{producTitle}
+</if>
+<if test="productHref != null">
+    AND product_href = #{productHref}
+</if>
+<if test="productPrice != null">
+    AND product_price = #{productPrice}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+</trim></where>
+order by order_by
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+jd_product_info(fetching_Time, product_Picture, produc_title, product_href, product_price, reserve1, reserve2, reserve3, reserve4)
+         VALUES(#{fetchingTime}, #{productPicture}, #{producTitle}, #{productHref}, #{productPrice}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE jd_product_info
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('fetchingTime')">
+    fetching_Time = #{fetchingTime},
+</if>
+    <if test="_parameter.containsKey('productPicture')">
+    product_Picture = #{productPicture},
+</if>
+    <if test="_parameter.containsKey('producTitle')">
+    produc_title = #{producTitle},
+</if>
+    <if test="_parameter.containsKey('productHref')">
+    product_href = #{productHref},
+</if>
+    <if test="_parameter.containsKey('productPrice')">
+    product_price = #{productPrice},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="Long">
+DELETE FROM   jd_product_info
+WHERE  id = #{id}
+</delete>
+    <delete id="deleteByFetchingTime" parameterType="java.util.Date">
+DELETE FROM   jd_product_info
+WHERE  fetching_Time &gt;= #{fetchingTime}
+</delete>
+
+</mapper>

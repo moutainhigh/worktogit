@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.reservation.ReservationPayedRecordDao">
+    <resultMap id="ReservationPayedRecordMap" type="com.lwxf.industry4.webapp.domain.entity.reservation.ReservationPayedRecord">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="reservation_id" property="reservationId" jdbcType="CHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="payer" property="payer" jdbcType="CHAR" />
+        <result column="payed_time" property="payedTime" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="mode" property="mode" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, reservation_id, amount, payer, payed_time, notes, type, mode
+</sql>
+
+    <select id="selectById" resultMap="ReservationPayedRecordMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   reservation_payed_record
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ReservationPayedRecordMap">
+SELECT <include refid="columns" />
+FROM   reservation_payed_record
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="reservationId != null">
+    AND reservation_id = #{reservationId}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="payer != null">
+    AND payer = #{payer}
+</if>
+<if test="payedTime != null">
+    AND payed_time = #{payedTime}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="mode != null">
+    AND mode = #{mode}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+reservation_payed_record(id, reservation_id, amount, payer, payed_time, notes, type, mode)
+                  VALUES(#{id}, #{reservationId}, #{amount}, #{payer}, #{payedTime}, #{notes}, #{type}, #{mode})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE reservation_payed_record
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('amount') and amount != null">
+    amount = #{amount},
+</if>
+    <if test="_parameter.containsKey('payer') and payer != null">
+    payer = #{payer},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('mode') and mode != null">
+    mode = #{mode}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   reservation_payed_record
+WHERE  id = #{id}
+</delete>
+
+</mapper>

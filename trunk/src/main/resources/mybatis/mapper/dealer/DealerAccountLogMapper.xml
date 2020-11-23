@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealer.DealerAccountLogDao">
+    <resultMap id="DealerAccountLogMap" type="com.lwxf.industry4.webapp.domain.entity.dealer.DealerAccountLog">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dealer_account_id" property="dealerAccountId" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="is_disburse" property="disburse" jdbcType="BIT" />
+        <result column="resource_id" property="resourceId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="DealerAccountLogDto" type="com.lwxf.industry4.webapp.domain.dto.dealer.DealerAccountLogDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dealer_account_id" property="dealerAccountId" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="is_disburse" property="disburse" jdbcType="BIT" />
+        <result column="resource_id" property="resourceId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="creatorName" property="creatorName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, dealer_account_id, content, type, creator, created, amount, notes, is_disburse, resource_id,company_id
+</sql>
+
+    <select id="selectById" resultMap="DealerAccountLogMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   dealer_account_log
+        WHERE  id = #{id}
+    </select>
+    <select id="selectByLogId" resultMap="DealerAccountLogDto" parameterType="String">
+        SELECT
+        dal.creator, dal.created,u.name as creatorName,dal.amount,dal.type
+        FROM   dealer_account_log dal
+        left join user u on u.id = dal.creator
+        WHERE  dal.id = #{logId}
+    </select>
+    <select id="selectByFilter" resultMap="DealerAccountLogMap">
+        SELECT <include refid="columns" />
+        FROM   dealer_account_log
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="dealerAccountId != null">
+                AND dealer_account_id = #{dealerAccountId}
+            </if>
+            <if test="content != null">
+                AND content = #{content}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="amount != null">
+                AND amount = #{amount}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="disburse != null">
+                AND is_disburse = #{disburse}
+            </if>
+            <if test="resourceId != null">
+                AND resource_id = #{resourceId}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+dealer_account_log(id, dealer_account_id, content, type, creator, created, amount, notes, is_disburse, resource_id,company_id)
+            VALUES(#{id}, #{dealerAccountId}, #{content}, #{type}, #{creator}, #{created}, #{amount}, #{notes}, #{disburse}, #{resourceId},#{companyId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE dealer_account_log
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('dealerAccountId') and dealerAccountId != null">
+                dealer_account_id = #{dealerAccountId},
+            </if>
+            <if test="_parameter.containsKey('content') and content != null">
+                content = #{content},
+            </if>
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('created')">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('amount') and amount != null">
+                amount = #{amount},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('disburse') and disburse != null">
+                is_disburse = #{disburse},
+            </if>
+            <if test="_parameter.containsKey('resourceId')">
+                resource_id = #{resourceId}
+            </if>
+            <if test="_parameter.containsKey('companyId')">
+                company_id = #{companyId}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dealer_account_log
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findByCompanyIdAndCondition" resultMap="DealerAccountLogMap">
+        select
+        id,type,amount,content,resource_id,created
+        from dealer_account_log
+        <where><trim prefixOverrides="AND">
+            <if test="beginTime != null">
+                AND created &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND created &lt;= #{endTime}
+            </if>
+            <if test="type == 1">
+                AND (type = 1 or type = 0)
+            </if>
+            <if test="type == 3">
+                AND (type = 2 or type = 3)
+            </if>
+            <if test="type == 4">
+                AND type = 4
+            </if>
+            <if test="companyId != null">
+                and company_id = #{companyId}
+            </if>
+        </trim></where>
+        order by created desc
+    </select>
+
+    <select id="findByOrderIdAndType" resultMap="DealerAccountLogMap">
+        select
+        <include refid="columns"/>
+        from dealer_account_log
+        where type = 2
+        and resource_id = #{resourceId}
+        limit 1
+    </select>
+
+</mapper>

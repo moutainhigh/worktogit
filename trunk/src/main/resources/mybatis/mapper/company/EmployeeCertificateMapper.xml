@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeCertificateDao">
+    <resultMap id="EmployeeCertificateMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeCertificate">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="company" property="company" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="VARCHAR" />
+        <result column="award_time" property="awardTime" jdbcType="DATE" />
+    </resultMap>
+    <resultMap id="EmployeeCertificateDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeCertificateDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="company" property="company" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="VARCHAR" />
+        <result column="award_time" property="awardTime" jdbcType="DATE" />
+    </resultMap>
+    <sql id="columns">
+id, company_employee_id, name, company, level, award_time
+</sql>
+
+    <select id="selectById" resultMap="EmployeeCertificateMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_certificate
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeCertificateMap">
+SELECT <include refid="columns" />
+FROM   employee_certificate
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="companyEmployeeId != null">
+    AND company_employee_id = #{companyEmployeeId}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="company != null">
+    AND company = #{company}
+</if>
+<if test="level != null">
+    AND level = #{level}
+</if>
+<if test="awardTime != null">
+    AND award_time = #{awardTime}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_certificate(id, company_employee_id, name, company, level, award_time)
+              VALUES(#{id}, #{companyEmployeeId}, #{name}, #{company}, #{level}, #{awardTime})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_certificate
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('company') and company != null">
+    company = #{company},
+</if>
+    <if test="_parameter.containsKey('level')">
+    level = #{level},
+</if>
+    <if test="_parameter.containsKey('awardTime')">
+    award_time = #{awardTime}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_certificate
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByEid" resultMap="EmployeeCertificateDtoMap">
+        select <include refid="columns"/> from employee_certificate where company_employee_id = #{eid}
+    </select>
+
+</mapper>

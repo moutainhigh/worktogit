@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.branch.BranchDao">
+    <resultMap id="BranchMap" type="com.lwxf.industry4.webapp.domain.entity.branch.Branch">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="leader_name" property="leaderName" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="expire_date" property="expireDate" jdbcType="VARCHAR"/>
+        <result column="pay_date" property="payDate" jdbcType="TIMESTAMP"/>
+        <result column="dealer_login_num" property="dealerLoginNum" jdbcType="VARCHAR"/>
+        <result column="dealer_login_wx_num" property="dealerLoginWxNum" jdbcType="VARCHAR"/>
+        <result column="dealer_login_pc_num" property="dealerLoginPcNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_num" property="factoryLoginNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_wx_num" property="factoryLoginWxNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_pc_num" property="factoryLoginPcNum" jdbcType="VARCHAR"/>
+        <result column="enable_remind" property="enableRemind" jdbcType="TINYINT"/>
+        <result column="to_examine_plan" property="toExaminePlan" jdbcType="TINYINT"/>
+        <result column="examine_type" property="examineType" jdbcType="TINYINT"/>
+        <result column="engineering_order_prefix" property="engineeringOrderPrefix" jdbcType="VARCHAR"/>
+        <result column="print_template" property="printTemplate"/>
+    </resultMap>
+    <resultMap id="BranchDtoMap" type="com.lwxf.industry4.webapp.domain.dto.branch.BranchDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="leader_name" property="leaderName" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="expire_date" property="expireDate" jdbcType="VARCHAR"/>
+        <result column="pay_date" property="payDate" jdbcType="TIMESTAMP"/>
+        <result column="statusName" property="statusName"/>
+        <result column="typeName" property="typeName"/>
+        <result column="dealer_login_num" property="dealerLoginNum" jdbcType="VARCHAR"/>
+        <result column="dealer_login_wx_num" property="dealerLoginWxNum" jdbcType="VARCHAR"/>
+        <result column="dealer_login_pc_num" property="dealerLoginPcNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_num" property="factoryLoginNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_wx_num" property="factoryLoginWxNum" jdbcType="VARCHAR"/>
+        <result column="factory_login_pc_num" property="factoryLoginPcNum" jdbcType="VARCHAR"/>
+        <result column="enable_remind" property="enableRemind" jdbcType="TINYINT"/>
+        <result column="to_examine_plan" property="toExaminePlan" jdbcType="TINYINT"/>
+        <result column="examine_type" property="examineType" jdbcType="TINYINT"/>
+        <result column="engineering_order_prefix" property="engineeringOrderPrefix" jdbcType="VARCHAR"/>
+        <result column="print_template" property="printTemplate"/>
+    </resultMap>
+    <sql id="columns">
+        id, name, status, address, tel, leader_name, area, type, created, expire_date, pay_date, dealer_login_num, dealer_login_wx_num,
+        dealer_login_pc_num, factory_login_num, factory_login_wx_num, factory_login_pc_num, enable_remind,to_examine_plan,examine_type,engineering_order_prefix,print_template
+    </sql>
+    <sql id="columnDtos">
+        b.*, c.value statusName, cc.value typeName
+    </sql>
+
+    <select id="selectById" resultMap="BranchMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM branch
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="BranchMap">
+        SELECT
+        <include refid="columns"/>
+        FROM branch
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="name != null">
+                    AND name = #{name}
+                </if>
+                <if test="status != null">
+                    AND status = #{status}
+                </if>
+                <if test="address != null">
+                    AND address = #{address}
+                </if>
+                <if test="tel != null">
+                    AND tel = #{tel}
+                </if>
+                <if test="leaderName != null">
+                    AND leader_name = #{leaderName}
+                </if>
+                <if test="area != null">
+                    AND area = #{area}
+                </if>
+                <if test="type != null">
+                    AND type = #{type}
+                </if>
+                <if test="created != null">
+                    AND created = #{created}
+                </if>
+                <if test="expireDate != null">
+                    AND expire_date = #{expireDate}
+                </if>
+                <if test="payDate != null">
+                    AND pay_date = #{payDate}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+    INSERT INTO
+    branch(id, name, status, address, tel, leader_name, area, type, created, expire_date, pay_date,
+    dealer_login_num, dealer_login_wx_num, dealer_login_pc_num, factory_login_num, factory_login_wx_num, factory_login_pc_num, enable_remind,to_examine_plan,examine_type,engineering_order_prefix,print_template)
+    VALUES(#{id}, #{name}, #{status}, #{address}, #{tel}, #{leaderName}, #{area}, #{type}, #{created},
+    #{expireDate}, #{payDate}, #{dealerLoginNum}, #{dealerLoginWxNum}, #{dealerLoginPcNum}, #{factoryLoginNum}, #{factoryLoginWxNum}, #{factoryLoginPcNum}, #{enableRemind},#{toExaminePlan},#{examineType},#{engineeringOrderPrefix},#{printTemplate})
+    </insert>
+
+    <update id="updateByMapContext">
+        UPDATE branch
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('name') and name != null">
+                    name = #{name},
+                </if>
+                <if test="_parameter.containsKey('status') and status != null">
+                    status = #{status},
+                </if>
+                <if test="_parameter.containsKey('address')">
+                    address = #{address},
+                </if>
+                <if test="_parameter.containsKey('tel')">
+                    tel = #{tel},
+                </if>
+                <if test="_parameter.containsKey('leaderName')">
+                    leader_name = #{leaderName},
+                </if>
+                <if test="_parameter.containsKey('area')">
+                    area = #{area},
+                </if>
+                <if test="_parameter.containsKey('type') and type != null">
+                    type = #{type},
+                </if>
+                <if test="_parameter.containsKey('expireDate') and expireDate != null">
+                    expire_date = #{expireDate},
+                </if>
+                <if test="_parameter.containsKey('payDate')">
+                    pay_date = #{payDate},
+                </if>
+                <if test="_parameter.containsKey('dealerLoginNum') and dealerLoginNum != null">
+                    dealer_login_num = #{dealerLoginNum},
+                </if>
+                <if test="_parameter.containsKey('dealerLoginWxNum') and dealerLoginWxNum != null">
+                    dealer_login_wx_num = #{dealerLoginWxNum},
+                </if>
+                <if test="_parameter.containsKey('dealerLoginPcNum') and dealerLoginPcNum != null">
+                    dealer_login_pc_num = #{dealerLoginPcNum},
+                </if>
+                <if test="_parameter.containsKey('factoryLoginNum') and factoryLoginNum != null">
+                    factory_login_num = #{factoryLoginNum},
+                </if>
+                <if test="_parameter.containsKey('factoryLoginWxNum') and factoryLoginWxNum != null">
+                    factory_login_wx_num = #{factoryLoginWxNum},
+                </if>
+                <if test="_parameter.containsKey('factoryLoginPcNum') and factoryLoginPcNum != null">
+                    factory_login_pc_num = #{factoryLoginPcNum},
+                </if>
+                <if test="_parameter.containsKey('enableRemind') and enableRemind != null">
+                    enable_remind = #{enableRemind},
+                </if>
+                <if test="_parameter.containsKey('toExaminePlan') and toExaminePlan != null">
+                    to_examine_plan = #{toExaminePlan},
+                </if>
+                <if test="_parameter.containsKey('examineType') and examineType != null">
+                    examine_type = #{examineType},
+                </if>
+                <if test="_parameter.containsKey('printTemplate') and printTemplate != null">
+                    print_template = #{printTemplate},
+                </if>
+                <if test="_parameter.containsKey('engineeringOrderPrefix') and engineeringOrderPrefix != null">
+                    engineering_order_prefix = #{engineeringOrderPrefix}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM   branch
+        WHERE  id = #{id}
+    </delete>
+
+    <select id="findListByFilter" resultMap="BranchDtoMap">
+        select
+        <include refid="columnDtos"/>
+        from branch b
+        left join basecode c on b.status = c.code
+        left join basecode cc on b.type = cc.code
+        where c.type = 'branchStatus'
+        and cc.type = 'branchType'
+        <trim suffixOverrides="AND">
+            <if test="name != null">
+                AND b.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                AND b.status = #{status}
+            </if>
+            <if test="address != null">
+                AND b.address = #{address}
+            </if>
+            <if test="tel != null">
+                AND b.tel like CONCAT('%',#{tel},'%')
+            </if>
+            <if test="leaderName != null">
+                AND b.leader_name = #{leaderName}
+            </if>
+            <if test="area != null">
+                AND b.area = #{area}
+            </if>
+            <if test="type != null">
+                AND b.type = #{type}
+            </if>
+            <if test="created != null">
+                AND b.created = #{created}
+            </if>
+            <if test="expireDate != null">
+                AND b.expire_date = #{expireDate}
+            </if>
+            <if test="payDate != null">
+                AND b.pay_date = #{payDate}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findCurrentBranch" resultMap="BranchDtoMap">
+        select
+        <include refid="columnDtos"/>
+        from branch b
+        left join basecode c on b.status = c.code and c.type = 'branchStatus'
+        left join basecode cc on b.type = cc.code and cc.type = 'branchType'
+        limit 1
+    </select>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.SysExceptionDao">
+    <resultMap id="SysExceptionMap" type="com.lwxf.industry4.webapp.domain.entity.system.SysException">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="post_type" property="postType" jdbcType="VARCHAR" />
+        <result column="param" property="param" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="columns">
+id, post_type, param, created, url, content
+</sql>
+
+    <select id="selectById" resultMap="SysExceptionMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   sys_exception
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="SysExceptionMap">
+SELECT <include refid="columns" />
+FROM   sys_exception
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="postType != null">
+    AND post_type = #{postType}
+</if>
+<if test="param != null">
+    AND param = #{param}
+</if>
+
+<if test="url != null">
+    AND url like  '%${url}%'
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="beginDate!=null and beginDate!=''">
+    <![CDATA[   and DATE_FORMAT(created, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+</if>
+<if test="endDate!=null and endDate!=''">
+    <![CDATA[  and DATE_FORMAT(created, '%Y-%m-%d') <= DATE_FORMAT(#{endDate}, '%Y-%m-%d')    ]]>
+</if>
+</trim></where>
+order by created desc
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+sys_exception(id, post_type, param, created, url, content)
+       VALUES(#{id}, #{postType}, #{param}, #{created}, #{url}, #{content})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE sys_exception
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('postType')">
+    post_type = #{postType},
+</if>
+    <if test="_parameter.containsKey('param')">
+    param = #{param},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('url')">
+    url = #{url},
+</if>
+    <if test="_parameter.containsKey('content')">
+    content = #{content}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   sys_exception
+WHERE  id = #{id}
+</delete>
+
+</mapper>

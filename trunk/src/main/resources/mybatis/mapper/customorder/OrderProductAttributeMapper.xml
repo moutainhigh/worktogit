@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.OrderProductAttributeDao">
+    <resultMap id="OrderProductAttributeMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.OrderProductAttribute">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+        <result column="product_attribute_key_id" property="productAttributeKeyId" jdbcType="CHAR" />
+        <result column="product_attribute_value_id" property="productAttributeValueId" jdbcType="CHAR" />
+        <result column="key_name" property="keyName" jdbcType="VARCHAR" />
+        <result column="value_name" property="valueName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, order_product_id, product_attribute_key_id, product_attribute_value_id, key_name, value_name
+</sql>
+
+    <select id="selectById" resultMap="OrderProductAttributeMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   order_product_attribute
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="OrderProductAttributeMap">
+        SELECT <include refid="columns" />
+        FROM   order_product_attribute
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="orderProductId != null">
+                AND order_product_id = #{orderProductId}
+            </if>
+            <if test="productAttributeKeyId != null">
+                AND product_attribute_key_id = #{productAttributeKeyId}
+            </if>
+            <if test="productAttributeValueId != null">
+                AND product_attribute_value_id = #{productAttributeValueId}
+            </if>
+            <if test="keyName != null">
+                AND key_name = #{keyName}
+            </if>
+            <if test="valueName != null">
+                AND value_name = #{valueName}
+            </if>
+        </trim></where>
+
+    </select>
+    <select id="findListByProductId" resultMap="OrderProductAttributeMap">
+        SELECT <include refid="columns" />
+        FROM   order_product_attribute where order_product_id=#{id}
+
+    </select>
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+order_product_attribute(id, order_product_id, product_attribute_key_id, product_attribute_value_id, key_name, value_name)
+                 VALUES(#{id}, #{orderProductId}, #{productAttributeKeyId}, #{productAttributeValueId}, #{keyName}, #{valueName})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE order_product_attribute
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('orderProductId')">
+                order_product_id = #{orderProductId},
+            </if>
+            <if test="_parameter.containsKey('productAttributeKeyId')">
+                product_attribute_key_id = #{productAttributeKeyId},
+            </if>
+            <if test="_parameter.containsKey('productAttributeValueId')">
+                product_attribute_value_id = #{productAttributeValueId},
+            </if>
+            <if test="_parameter.containsKey('keyName')">
+                key_name = #{keyName},
+            </if>
+            <if test="_parameter.containsKey('valueName')">
+                value_name = #{valueName}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   order_product_attribute
+WHERE  id = #{id}
+</delete>
+
+</mapper>

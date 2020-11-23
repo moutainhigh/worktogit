@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.activity.ActivityParamsDao">
+    <resultMap id="ActivityParamsMap" type="com.lwxf.industry4.webapp.domain.entity.activity.ActivityParams">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="activity_id" property="activityId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="params" property="params" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, activity_id, name, params, notes
+</sql>
+
+    <select id="selectById" resultMap="ActivityParamsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   activity_params
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ActivityParamsMap">
+SELECT <include refid="columns" />
+FROM   activity_params
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="activityId != null">
+    AND activity_id = #{activityId}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="params != null">
+    AND params = #{params}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+activity_params(id, activity_id, name, params, notes)
+         VALUES(#{id}, #{activityId}, #{name}, #{params}, #{notes})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE activity_params
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('activityId') and activityId != null">
+    activity_id = #{activityId},
+</if>
+    <if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('params')">
+    params = #{params},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   activity_params
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findByActivityId" resultMap="ActivityParamsMap">
+        select
+        <include refid="columns"/>
+        from activity_params
+        where activity_id = #{activityId}
+    </select>
+
+    <select id="deleteByActivityId" resultType="java.lang.Integer">
+        delete from activity_join where activity_id= #{activityId}
+    </select>
+
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductSpecDao">
+    <resultMap id="ProductSpecMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductSpec">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR" />
+    </resultMap>
+
+    <resultMap id="ProductSpecDtoMap" type="com.lwxf.industry4.webapp.domain.dto.product.ProductSpecDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="product_category_id" property="productCategoryId" jdbcType="VARCHAR" />
+        <result column="productCategoryName" property="productCategoryName"/>
+        <result column="type" property="type" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, name, notes, product_category_id,type
+</sql>
+    <sql id="columnsDto">
+      s.id, s.name,s.notes, s.product_category_id,pc.name productCategoryName,s.type
+    </sql>
+    <select id="selectById" resultMap="ProductSpecMap" parameterType="String">
+        SELECT <include refid="columnsDto" />
+        from product_spec s left join product_category pc on s.product_category_id = pc.id
+        WHERE  s.id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProductSpecMap">
+SELECT <include refid="columns" />
+FROM   product_spec
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="productCategoryId != null">
+    AND product_category_id = #{productCategoryId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_spec(id, name, notes, product_category_id,type)
+      VALUES(#{id}, #{name}, #{notes}, #{productCategoryId},#{type})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_spec
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('type')">
+      type = #{type}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_spec
+WHERE  id = #{id}
+</delete>
+
+    <select id="selectProductSpecList" resultMap="ProductSpecDtoMap">
+        select <include refid="columnsDto"/> from product_spec s left join product_category pc on s.product_category_id = pc.id where s.product_category_id = #{cid}
+        <if test="name!=null">
+            AND s.name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="isExistByProductSpec" resultType="java.lang.Boolean">
+        select count(*) from product_spec where product_category_id = #{productCategoryId} and name = #{name}
+        <if test="id!=null">
+            AND id &lt;&gt; #{id}
+        </if>
+    </select>
+
+    <select id="selectByCategoryId" resultMap="ProductSpecDtoMap">
+        select <include refid="columnsDto"/> from product_spec s left join product_category pc on s.product_category_id = pc.id where s.product_category_id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="ProductSpecMap">
+        SELECT <include refid="columns" />
+        from product_spec
+    </select>
+
+    <select id="selectByType" resultMap="ProductSpecMap">
+        select
+        <include refid="columns"/>
+        from product_spec
+        where type = #{type}
+    </select>
+</mapper>

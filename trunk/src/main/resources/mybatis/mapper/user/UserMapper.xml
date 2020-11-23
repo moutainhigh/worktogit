@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserDao">
+	<resultMap id="UserMap" type="com.lwxf.industry4.webapp.domain.entity.user.User">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="TINYINT" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday"/>
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="TINYINT" />
+		<result column="background" property="background" jdbcType="VARCHAR" />
+		<result column="created" property="created" jdbcType="TIMESTAMP" />
+		<result column="last_login" property="lastLogin" jdbcType="TIMESTAMP" />
+		<result column="time_zone" property="timeZone" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+		<result column="followers" property="followers" jdbcType="INTEGER" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="is_changed_login_name" property="changedLoginName" jdbcType="BIT" />
+		<result column="branch_id" property="branchId"/>
+		<result column="enable_login_pc" property="enableLoginPc" jdbcType="TINYINT"/>
+		<result column="enable_login_wx" property="enableLoginWx" jdbcType="TINYINT"/>
+	</resultMap>
+	<resultMap id="UserAreaDtoMap" type="com.lwxf.industry4.webapp.domain.dto.user.UserAreaDto">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="TINYINT" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="TINYINT" />
+		<result column="background" property="background" jdbcType="VARCHAR" />
+		<result column="created" property="created" jdbcType="TIMESTAMP" />
+		<result column="last_login" property="lastLogin" jdbcType="TIMESTAMP" />
+		<result column="time_zone" property="timeZone" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+		<result column="followers" property="followers" jdbcType="INTEGER" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="is_changed_login_name" property="changedLoginName" jdbcType="BIT" />
+		<result column="cityAreaName" property="cityAreaName" jdbcType="VARCHAR" />
+		<result column="political_outlook" property="politicalOutlook" jdbcType="TINYINT" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="work_unit" property="workUnit" jdbcType="VARCHAR" />
+		<result column="work" property="work" jdbcType="VARCHAR" />
+		<result column="leaderTel" property="leaderTel" jdbcType="VARCHAR" />
+		<result column="leader" property="leader" jdbcType="VARCHAR" />
+		<result column="companyName" property="companyName" jdbcType="VARCHAR" />
+		<result column="customerManager" property="customerManager" jdbcType="VARCHAR" />
+		<result column="customerManagerName" property="customerManagerName" jdbcType="VARCHAR" />
+		<result column="companyId" property="companyId" jdbcType="VARCHAR" />
+		<result column="income" property="income" jdbcType="TINYINT" />
+		<result column="education" property="education" jdbcType="TINYINT" />
+		<result column="identitys" property="identitys"/>
+		<result column="score" property="score"/>
+		<result column="branch_id" property="branchId"/>
+		<result column="enable_login_pc" property="enableLoginPc" jdbcType="TINYINT"/>
+        <result column="enable_login_wx" property="enableLoginWx" jdbcType="TINYINT"/>
+	</resultMap>
+	<resultMap id="UserMapCG" type="com.lwxf.industry4.webapp.domain.entity.user.User">
+		<id column="id" property="id" jdbcType="CHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="email" property="email" jdbcType="VARCHAR"/>
+		<result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+		<result column="created" property="created" jdbcType="TIMESTAMP"/>
+		<result column="lastLogin" property="lastLogin" jdbcType="TIMESTAMP"/>
+		<result column="timeZone" property="timeZone" jdbcType="VARCHAR"/>
+		<result column="language" property="language" jdbcType="VARCHAR"/>
+		<result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP"/>
+		<result column="state" property="state" jdbcType="TINYINT"/>
+		<result column="background" property="background" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="sex" property="sex"  jdbcType="TINYINT" />
+		<result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+		<result column="is_changed_login_name" property="changedLoginName" jdbcType="BIT" />
+		<result column="branch_id" property="branchId"/>
+        <result column="enable_login_pc" property="enableLoginPc" jdbcType="TINYINT"/>
+        <result column="enable_login_wx" property="enableLoginWx" jdbcType="TINYINT"/>
+	</resultMap>
+	<sql id="columns">
+id, name, sex, email, avatar, birthday, mobile, state, background, created, last_login, time_zone, language, city_area_id, followers, login_name, type, is_changed_login_name,branch_id,enable_login_pc,enable_login_wx
+</sql>
+	<sql id="columnsMap">
+        id, name, sex, email, avatar, birthday, mobile, state, background, created, last_login, time_zone, language, city_area_id, followers, login_name, type, is_changed_login_name,branch_id,enable_login_pc,enable_login_wx
+    </sql>
+	<sql id="columnsSet">
+        id,name,email,avatar,birthday,mobile,state,sex,is_changed_login_name
+    </sql>
+
+	<sql id="col">
+		u.id, u.name, u.sex, u.email, u.avatar, u.birthday, u.mobile, u.state, u.background, u.created, u.last_login, u.time_zone, u.language, u.city_area_id, u.followers, u.login_name, u.type, u.is_changed_login_name,u.branch_id
+	</sql>
+
+	<select id="selectAllUserId" resultType="java.lang.String">
+        SELECT id FROM user
+    </select>
+
+
+	<select id="selectByEmail" resultMap="UserAreaDtoMap">
+		SELECT
+		<include refid="columns"/>
+		FROM user
+		WHERE email = #{email} LIMIT 1
+	</select>
+	<select id="selectById" resultMap="UserMap" parameterType="String">
+		SELECT <include refid="columns" />
+		FROM   user
+		WHERE  id = #{id}
+	</select>
+	<select id="selectUserAreaDtoById" resultMap="UserAreaDtoMap" parameterType="String">
+		SELECT <include refid="columns" />
+		FROM   user
+		WHERE  id = #{id}
+	</select>
+
+	<select id="findUserMessageById" resultMap="UserAreaDtoMap">
+		select  <include refid="col"/>,us.* from  user u left join user_basis us on u.id=us.user_id where u.id=#{userId}
+
+	</select>
+
+	<select id="findCityNameByUID" resultMap="UserAreaDtoMap">
+		select <include refid="col"/>,ci.merger_name cityAreaName from user u left join city_area ci on u.city_area_id=ci.id where u.id=#{userId}
+	</select>
+	<select id="selectByFilter" resultMap="UserMap">
+		SELECT <include refid="columns" />
+		FROM   user
+		<where><trim prefixOverrides="AND">
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="name != null">
+				AND name = #{name}
+			</if>
+			<if test="sex != null">
+				AND sex = #{sex}
+			</if>
+			<if test="email != null">
+				AND email = #{email}
+			</if>
+			<if test="avatar != null">
+				AND avatar = #{avatar}
+			</if>
+			<if test="birthday != null">
+				AND birthday = #{birthday}
+			</if>
+			<if test="mobile != null">
+				AND mobile = #{mobile}
+			</if>
+			<if test="state != null">
+				AND state = #{state}
+			</if>
+			<if test="background != null">
+				AND background = #{background}
+			</if>
+			<if test="created != null">
+				AND created = #{created}
+			</if>
+			<if test="lastLogin != null">
+				AND last_login = #{lastLogin}
+			</if>
+			<if test="timeZone != null">
+				AND time_zone = #{timeZone}
+			</if>
+			<if test="language != null">
+				AND language = #{language}
+			</if>
+			<if test="cityAreaId != null">
+				AND city_area_id = #{cityAreaId}
+			</if>
+			<if test="followers != null">
+				AND followers = #{followers}
+			</if>
+			<if test="loginName != null">
+				AND login_name = #{loginName}
+			</if>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<if test="changedLoginName != null">
+				AND is_changed_login_name = #{changedLoginName}
+			</if>
+			<if test="branchId != null">
+				AND branch_id = #{branchId}
+			</if>
+		</trim></where>
+
+	</select>
+
+	<insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+  user(id, name, sex, email, avatar, birthday, mobile, state, background, created, last_login, time_zone, language, city_area_id, followers, login_name, type, is_changed_login_name,branch_id, enable_login_pc, enable_login_wx)
+VALUES(#{id}, #{name}, #{sex}, #{email}, #{avatar}, #{birthday}, #{mobile}, #{state}, #{background}, #{created}, #{lastLogin}, #{timeZone}, #{language}, #{cityAreaId}, #{followers}, #{loginName}, #{type}, #{changedLoginName},#{branchId}, #{enableLoginPc}, #{enableLoginWx})
+</insert>
+
+	<update id="updateByMapContext">
+		UPDATE user
+		<set><trim suffixOverrides=",">
+			<if test="_parameter.containsKey('name') and name != null">
+				name = #{name},
+			</if>
+			<if test="_parameter.containsKey('sex') and sex != null">
+				sex = #{sex},
+			</if>
+			<if test="_parameter.containsKey('email')">
+				email = #{email},
+			</if>
+			<if test="_parameter.containsKey('avatar')">
+				avatar = #{avatar},
+			</if>
+			<if test="_parameter.containsKey('birthday')">
+				birthday = #{birthday},
+			</if>
+			<if test="_parameter.containsKey('mobile')">
+				mobile = #{mobile},
+			</if>
+			<if test="_parameter.containsKey('state') and state != null">
+				state = #{state},
+			</if>
+			<if test="_parameter.containsKey('background')">
+				background = #{background},
+			</if>
+			<if test="_parameter.containsKey('lastLogin')">
+				last_login = #{lastLogin},
+			</if>
+			<if test="_parameter.containsKey('timeZone') and timeZone != null">
+				time_zone = #{timeZone},
+			</if>
+			<if test="_parameter.containsKey('language')">
+				language = #{language},
+			</if>
+			<if test="_parameter.containsKey('cityAreaId')">
+				city_area_id = #{cityAreaId},
+			</if>
+			<if test="_parameter.containsKey('followers') and followers != null">
+				followers = #{followers},
+			</if>
+			<if test="_parameter.containsKey('loginName') and loginName != null">
+				login_name = #{loginName},
+			</if>
+			<if test="_parameter.containsKey('type') and type != null">
+				type = #{type},
+			</if>
+			<if test="_parameter.containsKey('changedLoginName') and changedLoginName != null">
+				is_changed_login_name = #{changedLoginName},
+			</if>
+			<if test="_parameter.containsKey('enableLoginPc') and enableLoginPc != null">
+				enable_login_pc = #{enableLoginPc},
+			</if>
+			<if test="_parameter.containsKey('enableLoginWx') and enableLoginWx != null">
+				enable_login_wx = #{enableLoginWx},
+			</if>
+		</trim></set>
+		WHERE  id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="String">
+DELETE FROM   user
+WHERE  id = #{id}
+</delete>
+	<select id="selectUserDtoListByUserIds" resultType="com.lwxf.industry4.webapp.domain.dto.user.UserDto">
+		SELECT id,NAME FROM USER WHERE id in
+		<foreach collection="array" item="userId" open="(" close=")" separator=",">
+			#{userId}
+		</foreach>
+	</select>
+	<select id="selectByUserIdList" resultMap="UserMap">
+		SELECT
+		<include refid="columns"/>
+		FROM user
+		WHERE id in
+		<foreach collection="list" item="userId" open="(" close=")" separator=",">
+			#{userId}
+		</foreach>
+	</select>
+	<select id="isExistsByEmail" resultType="java.lang.Boolean">
+        SELECT
+        COUNT(*)
+        FROM user
+        WHERE email = #{email} LIMIT 1
+    </select>
+	<select id="selectByUserId" resultMap="UserMapCG">
+		SELECT
+		<include refid="columnsMap"/>
+		FROM user
+		WHERE id = #{userId}
+	</select>
+	<select id="findByMobile" resultMap="UserAreaDtoMap">
+		SELECT
+		<include refid="columns"/>
+		FROM user
+		WHERE mobile = #{mobile} LIMIT 1
+	</select>
+
+
+
+	<select id="findUserInfoByUserIds"  resultMap="UserMap">
+		SELECT <include refid="columns" />
+		FROM   user where id in
+		<foreach collection="collection" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<update id="updateUserName">
+		update user set
+		<if test="username != null">
+			username = #{username}
+		</if>
+		where id=#{id}
+	</update>
+
+	<select id="findUserById" resultType="java.util.Map">
+		select <include refid="columnsSet"/> from user where id = #{id}
+	</select>
+
+
+	<select id="findByLoginName" resultMap="UserAreaDtoMap">
+		SELECT
+		<include refid="columns"/>
+		FROM user
+		WHERE login_name = #{loginName} LIMIT 1
+	</select>
+
+	<select id="selectCompanyShopkeeperByCompanyIds" resultMap="UserMap">
+		select <include refid="col"/> from user u RIGHT JOIN (SELECT c.*,e.user_id uid FROM company c LEFT JOIN (SELECT * FROM company_employee WHERE role_id = (select id from role where `key` = #{key} and branch_id = #{branchId} )) e on c.id = e.company_id where c.id in
+		<foreach collection="ids" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+		) c ON u.id = c.uid order by field(c.id
+		<foreach collection="ids" open="," separator="," item="id">
+			#{id}
+		</foreach>
+		)
+	</select>
+
+<select id="findByUserIds" resultMap="UserMap">
+	select
+	<include refid="columns"/>
+	from user
+	where id in
+	<foreach collection="list" open="(" separator="," close=")" item="value">
+		#{value}
+	</foreach>
+
+</select>
+
+	<select id="findByClient" resultMap="UserAreaDtoMap">
+		select
+		u.*,cc.customer_manager as customerManager,uu.name customerManagerName,
+		c.name as companyName,c.leader,c.leader_tel as leaderTel,c.id as companyId,
+		ub.address as address,ca.merger_name as cityAreaName
+		from user u
+		left join company_customer cc on cc.user_id = u.id
+		left join company c on c.id = cc.company_id
+		left join user_basis ub on ub.user_id = u.id
+		left join city_area ca on ca.id = u.city_area_id
+		left join user uu on cc.customer_manager = uu.id
+		<where><trim prefixOverrides="and">
+			<if test="type!=null">
+				u.type = #{type}
+			</if>
+			<if test="companyId!=null">
+				and cc.id in
+				(select id from company_customer
+				where company_id = #{companyId})
+			</if>
+			<if test="condition!=null">
+				and (u.name like '%${condition}%'
+				or u.mobile like '%${condition}%')
+			</if>
+			<if test="branchId!=null">
+				and c.branch_id = #{branchId}
+			</if>
+		</trim></where>
+		order by u.created desc
+	</select>
+
+	<select id="findByUid" resultMap="UserAreaDtoMap">
+		select
+		u.*,cc.customer_manager as customerManager,
+		c.name as companyName,c.leader,c.leader_tel as leaderTel,c.id as companyId,
+		ub.address as address,ca.merger_name as cityAreaName
+		from user u
+		left join company_customer cc on cc.user_id = u.id
+		left join company c on c.id = cc.company_id
+		left join user_basis ub on ub.user_id = u.id
+		left join city_area ca on ca.id = u.city_area_id
+		where u.id = #{userId} limit 1
+	</select>
+
+
+    <select id="factoryUserPersonalInfo" resultType="java.util.Map">
+		select
+		u.id,u.avatar,u.name,u.sex,c.name as companyName,u.city_area_id as cityAreaId,
+		u.email,ub.contact_number,a.merger_name as cityName,
+		ub.address,ub.identity_number,ub.wechat_number
+		from user u
+		left join user_basis ub on u.id = ub.user_id
+		left join city_area a on u.city_area_id = a.id
+		left join company c on c.id = #{companyId}
+		where u.id = #{userId}
+	</select>
+
+
+	<select id="findFactoryUserDeptName" resultType="com.lwxf.mybatis.utils.MapContext">
+		select d.name as organizationName,dept.name as deptName
+		from dept d
+		left join dept dept on dept.id = d.parent_id
+		where d.id in
+		  (
+			  select dept_id from dept_member
+			  where employee_id in
+				  (select id from company_employee
+				  where user_id = #{userId}
+				  and company_id = #{companyId}
+				  and status = 0)
+		  )
+	</select>
+	
+	<select id="findFactoryUserAccountInfo" resultType="java.util.Map">
+		SELECT u.login_name as loginName,r.name as roleName,ce.no
+		from  user u
+		left join role r on r.id in (select role_id from company_employee where user_id = #{userId})
+		left join company_employee ce on ce.user_id = u.id
+		where u.id =#{userId} limit 1
+	</select>
+	<select id="findAllUserIdByBranchId" resultType="string">
+		SELECT u.id from user u
+where u.branch_id=#{branchId}
+
+	</select>
+	<select id="findByMobileAndBranchId" resultMap="UserMap">
+		SELECT u.id from user u
+		where u.branch_id=#{branchId} and u.mobile=#{mobile}
+
+	</select>
+	
+	<select id="countEnableDealerUser" resultType="integer">
+		SELECT
+			count( * )
+		FROM
+			USER u
+			RIGHT JOIN ( SELECT ce.user_id FROM role r RIGHT JOIN company_employee ce ON r.id = ce.role_id WHERE ce.role_id = #{roleId} ) e ON e.user_id = u.id
+		WHERE
+			u.type = 1 and u.state = 1 and u.branch_id = #{branchId}
+    </select>
+
+    <select id="countEnableWxLoginDealerUser" resultType="integer">
+		SELECT
+			count( * )
+		FROM
+			USER u
+			RIGHT JOIN ( SELECT ce.user_id FROM role r RIGHT JOIN company_employee ce ON r.id = ce.role_id WHERE ce.role_id = #{roleId} ) e ON e.user_id = u.id
+		WHERE
+			u.type = 1 and u.enable_login_wx = 1 and u.branch_id = #{branchId}
+    </select>
+
+	<select id="countEnablePcLoginDealerUser" resultType="integer">
+		SELECT
+			count( * )
+		FROM
+			USER u
+			RIGHT JOIN ( SELECT ce.user_id FROM role r RIGHT JOIN company_employee ce ON r.id = ce.role_id WHERE ce.role_id = #{roleId} ) e ON e.user_id = u.id
+		WHERE
+			u.type = 1 and u.enable_login_pc = 1 and u.branch_id = #{branchId}
+    </select>
+
+	<select id="countEnableFactoryUser" resultType="integer">
+        SELECT COUNT(*) FROM user u WHERE u.type = 0 AND u.branch_id = #{branchId} AND u.state = 1
+    </select>
+
+	<select id="countEnableWxLoginFactoryUser" resultType="integer">
+        SELECT COUNT(*) FROM user u WHERE u.type = 0 AND u.branch_id = #{branchId} AND u.enable_login_wx = 1
+    </select>
+
+	<select id="countEnablePcLoginFactoryUser" resultType="integer">
+        SELECT COUNT(*) FROM user u WHERE u.type = 0 AND u.branch_id = #{branchId} AND u.enable_login_pc = 1
+    </select>
+
+	<select id="countDealerUser" resultType="integer">
+        SELECT
+			count( * )
+		FROM
+			USER u
+			RIGHT JOIN ( SELECT ce.user_id FROM role r RIGHT JOIN company_employee ce ON r.id = ce.role_id WHERE ce.role_id = #{roleId} ) e ON e.user_id = u.id
+		WHERE
+			u.type = 1 and u.branch_id = #{branchId}
+    </select>
+
+</mapper>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.engineering.EngineeringDao">
+    <resultMap id="EngineeringMap" type="com.lwxf.industry4.webapp.domain.entity.engineering.Engineering">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="custom_id" property="customId" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+        <result column="consignee_tel" property="consigneeTel" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="place_order_time" property="placeOrderTime" jdbcType="TIMESTAMP" />
+        <result column="place_order" property="placeOrder" jdbcType="CHAR" />
+        <result column="receiver" property="receiver" jdbcType="CHAR" />
+        <result column="merchandiser" property="merchandiser" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="total_num" property="totalNum" jdbcType="INTEGER" />
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="EngineeringDtoMap" type="com.lwxf.industry4.webapp.domain.dto.engineeringOrder.EngineeringDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="custom_id" property="customId" jdbcType="CHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+        <result column="consignee_tel" property="consigneeTel" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="place_order_time" property="placeOrderTime" jdbcType="TIMESTAMP" />
+        <result column="place_order" property="placeOrder" jdbcType="CHAR" />
+        <result column="receiver" property="receiver" jdbcType="CHAR" />
+        <result column="merchandiser" property="merchandiser" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="total_num" property="totalNum" jdbcType="INTEGER" />
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+        <result column="placeOrderName" property="placeOrderName"  />
+        <result column="receiverName" property="receiverName"  />
+        <result column="dealerName" property="dealerName"  />
+    </resultMap>
+    <sql id="columns">
+id, branch_id, company_id, custom_id, no, consignee_name, consignee_tel, city_area_id, address, place_order_time, place_order, receiver, merchandiser, notes, created, creator, total_num, total_amount,del_flag
+</sql>
+
+    <select id="selectById" resultMap="EngineeringMap" parameterType="string">
+        SELECT <include refid="columns" />
+        FROM   engineering
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="EngineeringMap">
+        SELECT <include refid="columns" />
+        FROM   engineering
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="customId != null">
+                AND custom_id = #{customId}
+            </if>
+            <if test="no != null">
+                AND no = #{no}
+            </if>
+            <if test="consigneeName != null">
+                AND consignee_name = #{consigneeName}
+            </if>
+            <if test="consigneeTel != null">
+                AND consignee_tel = #{consigneeTel}
+            </if>
+            <if test="cityAreaId != null">
+                AND city_area_id = #{cityAreaId}
+            </if>
+            <if test="address != null">
+                AND address = #{address}
+            </if>
+            <if test="placeOrderTime != null">
+                AND place_order_time = #{placeOrderTime}
+            </if>
+            <if test="placeOrder != null">
+                AND place_order = #{placeOrder}
+            </if>
+            <if test="receiver != null">
+                AND receiver = #{receiver}
+            </if>
+            <if test="merchandiser != null">
+                AND merchandiser = #{merchandiser}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="totalNum != null">
+                AND total_num = #{totalNum}
+            </if>
+            <if test="totalAmount != null">
+                AND total_amount = #{totalAmount}
+            </if>
+        </trim></where>
+
+    </select>
+    <select id="findEngineeringOrderList" resultMap="EngineeringDtoMap">
+        SELECT e.*,u.name placeOrderName,uu.name receiverName,uuu.name merchandiserName,c.name dealerName ,cc.name customerName
+        FROM   engineering e
+        left join company c on e.company_id=c.id
+        left join company_customer cc on cc.id=e.custom_id
+        left join user u on u.id=e.place_order
+        left join user uu on uu.id=e.receiver
+        left join user uuu on uuu.id=e.merchandiser
+        <where><trim prefixOverrides="AND">
+               e.del_flag=0
+            <if test="branchId != null">
+                AND e.branch_id = #{branchId}
+            </if>
+            <if test="dealerName != null">
+                AND c.name like '%${dealerName}%'
+            </if>
+            <if test="customerName != null">
+                AND cc.name like '%${customerName}%'
+            </if>
+            <if test="no != null">
+                AND e.no like upper('%${no}%')
+            </if>
+            <if test="consigneeName != null">
+                AND e.consignee_name like '%${consigneeName}%'
+            </if>
+            <if test="consigneeTel != null">
+                AND e.consignee_tel like '%${consigneeTel}%'
+            </if>
+            <if test="cityAreaId != null">
+                AND e.city_area_id = #{cityAreaId}
+            </if>
+            <if test="address != null">
+                AND e.address = #{address}
+            </if>
+            <if test="startTime != null">
+                <![CDATA[   and DATE_FORMAT(e.created, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[   and DATE_FORMAT(e.created, '%Y-%m-%d')<=  DATE_FORMAT(#{endTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="placeOrder != null">
+                AND e.place_order = #{placeOrder}
+            </if>
+            <if test="receiver != null">
+                AND e.receiver = #{receiver}
+            </if>
+            <if test="merchandiser != null">
+                AND e.merchandiser = #{merchandiser}
+            </if>
+            <if test="notes != null">
+                AND e.notes = #{notes}
+            </if>
+            <if test="created != null">
+                AND e.created = #{created}
+            </if>
+            <if test="creator != null">
+                AND e.creator = #{creator}
+            </if>
+            <if test="totalNum != null">
+                AND e.total_num = #{totalNum}
+            </if>
+            <if test="totalAmount != null">
+                AND e.total_amount = #{totalAmount}
+            </if>
+        </trim></where>
+
+    </select>
+
+
+    <select id="findOneById" resultMap="EngineeringDtoMap">
+        SELECT e.*,u.name placeOrderName,uu.name receiverName,uuu.name merchandiserName,c.name dealerName ,cc.name customerName,c2.id provinceId,c1.id cityId
+        FROM   engineering e
+        left join company c on e.company_id=c.id
+        left join company_customer cc on cc.id=e.custom_id
+        left join user u on u.id=e.place_order
+        left join user uu on uu.id=e.receiver
+        left join user uuu on uuu.id=e.merchandiser
+        left join city_area c0 on c0.id=e.city_area_id
+         left join city_area c1 on c0.parent_id = c1.id
+        left join city_area c2 on c1.parent_id = c2.id
+        where e.id=#{id}
+
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+engineering(id, branch_id, company_id, custom_id, no, consignee_name, consignee_tel, city_area_id, address, place_order_time, place_order, receiver, merchandiser, notes, created, creator, total_num, total_amount,del_flag)
+     VALUES(#{id}, #{branchId}, #{companyId}, #{customId}, #{no}, #{consigneeName}, #{consigneeTel}, #{cityAreaId}, #{address}, #{placeOrderTime}, #{placeOrder}, #{receiver}, #{merchandiser}, #{notes}, #{created}, #{creator}, #{totalNum}, #{totalAmount},#{delFlag})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE engineering
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('branchId')">
+                branch_id = #{branchId},
+            </if>
+            <if test="_parameter.containsKey('companyId')">
+                company_id = #{companyId},
+            </if>
+            <if test="_parameter.containsKey('customId')">
+                custom_id = #{customId},
+            </if>
+            <if test="_parameter.containsKey('no')">
+                no = #{no},
+            </if>
+            <if test="_parameter.containsKey('consigneeName')">
+                consignee_name = #{consigneeName},
+            </if>
+            <if test="_parameter.containsKey('consigneeTel')">
+                consignee_tel = #{consigneeTel},
+            </if>
+            <if test="_parameter.containsKey('cityAreaId')">
+                city_area_id = #{cityAreaId},
+            </if>
+            <if test="_parameter.containsKey('address')">
+                address = #{address},
+            </if>
+            <if test="_parameter.containsKey('placeOrderTime')">
+                place_order_time = #{placeOrderTime},
+            </if>
+            <if test="_parameter.containsKey('placeOrder')">
+                place_order = #{placeOrder},
+            </if>
+            <if test="_parameter.containsKey('receiver')">
+                receiver = #{receiver},
+            </if>
+            <if test="_parameter.containsKey('merchandiser')">
+                merchandiser = #{merchandiser},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('created')">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('creator')">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('totalNum')">
+                total_num = #{totalNum},
+            </if>
+            <if test="_parameter.containsKey('totalAmount')">
+                total_amount = #{totalAmount},
+            </if>
+            <if test="_parameter.containsKey('delFlag')">
+                del_flag = #{delFlag}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+update   engineering set del_flag=1
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.factory.aftersaleStatement.AftersaleStatementDao">
+    <select id="findAftersaleStatementByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*) from aftersale_apply where branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            select
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and  type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and  type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and  type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and  type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and  type=5 and date_format(check_time,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            select
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from aftersale_apply where type=5 and branch_id=#{branchId} and  date_format(finish_date,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+    </select>
+    <select id="findAftersaleStatementTypeByWeek"  resultType="com.lwxf.mybatis.utils.MapContext">
+select (
+select count(*)
+from
+              aftersale_apply
+where
+      branch_id=#{branchId}
+      and type=4
+  and date_format(created,'%Y-%m-%d') <![CDATA[ >= ]]> date_format(#{startTime},'%Y-%m-%d')
+  and date_format(created,'%Y-%m-%d') <![CDATA[ <= ]]> date_format(#{endTime},'%Y-%m-%d')
+   ) as feedback,
+(
+select count(*)
+from
+    aftersale_apply
+where
+    branch_id=#{branchId}
+    and type=5
+    and date_format(created,'%Y-%m-%d') <![CDATA[ >= ]]> date_format(#{startTime},'%Y-%m-%d')
+and date_format(created,'%Y-%m-%d') <![CDATA[ <= ]]> date_format(#{endTime},'%Y-%m-%d')
+) as buLiao
+    </select>
+
+    <select id="findfindAftersaleStatementTypeOneByWeek"  resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        select
+        (select count(*) count from
+        aftersale_apply
+        where
+        branch_id=#{branchId}
+        and is_charge=0
+        and date_format(check_time,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(check_time,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'free',
+        (select count(*) count from
+        aftersale_apply
+        where
+        branch_id=#{branchId}
+        and is_charge=1
+        and date_format(check_time,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(check_time,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'charge',
+        (select count(*) count from
+        aftersale_apply
+        where
+        branch_id=#{branchId}
+        and status=2
+        and date_format(check_time,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(check_time,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'refuse'
+        ]]>
+    </select>
+
+    <select id="findfindAftersaleStatementTypeTwoByWeek"  resultType="com.lwxf.mybatis.utils.MapContext">
+        <![CDATA[
+        select
+                (select count(*) count from
+            aftersale_apply
+        where
+            branch_id=#{branchId}
+            and result_order_id in (SELECT id from custom_order where `status`=1)
+        and date_format(created,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(created,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'waitPay',
+        (select count(*) count from
+            aftersale_apply
+        where
+            branch_id=#{branchId}
+            and result_order_id in (SELECT id from custom_order where `status`=3)
+        and date_format(created,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(created,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'produce',
+        (select count(*) count from
+            aftersale_apply
+        where
+            branch_id=#{branchId}
+            and result_order_id in (SELECT id from custom_order where `status`=5)
+        and date_format(created,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(created,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'waitDispatchBill',
+        (select count(*) count from
+            aftersale_apply
+        where
+            branch_id=#{branchId}
+            and result_order_id in (SELECT id from custom_order where `status`=6)
+        and date_format(created,'%Y-%m-%d')  >=  date_format(#{startTime},'%Y-%m-%d')
+        and date_format(created,'%Y-%m-%d')  <=  date_format(#{endTime},'%Y-%m-%d')
+        )as 'endDispatchBill'
+        ]]>
+    </select>
+
+    <select id="findAftersaleStatementByMonth"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+       select
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and   date_format(created,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d'))  as point1,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and   date_format(created,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')) as point2,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and   date_format(created,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')) as point3,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and   date_format(created,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+       select
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(check_time,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(check_time,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d'))  as point1,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(check_time,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(check_time,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')) as point2,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and date_format(check_time,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(check_time,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')) as point3,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(check_time,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(check_time,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(finish_date,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(finish_date,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d'))  as point1,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(finish_date,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(finish_date,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')) as point2,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(finish_date,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(finish_date,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')) as point3,
+       (select count(*) from aftersale_apply where branch_id=#{branchId} and type=5 and  date_format(finish_date,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(finish_date,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')) as point4
+       ]]>
+        </if>
+    </select>
+
+    <select id="findAftersaleStatementByQuarter"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and  month(created)=#{firstMonth}) as month1,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and  month(created)=#{secondMonth}) as month2,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId}   and  YEAR(created)=YEAR(NOW()) and  month(created)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and  month(created)=#{firstMonth}) as month1,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(created)=#{secondMonth}) as month2,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(created)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(created)=#{firstMonth}) as month1,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(created)=#{secondMonth}) as month2,
+            (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(created)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+    </select>
+    
+    <select id="findAftersaleStatementByYear"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=1) as jan,
+        (select count(*) from aftersale_apply where   branch_id=#{branchId}  and YEAR(created)=YEAR(NOW()) and month(created)=2) as feb,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=3) as mar,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=4) as apr,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=5) as may,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=6) as jun,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=7) as jul,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=8) as aug,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=9) as sept,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=10) as oct,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=11) as nov,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId}   and YEAR(created)=YEAR(NOW()) and month(created)=12) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=1) as jan,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=2) as feb,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=3) as mar,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=4) as apr,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=5) as may,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=6) as jun,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=7) as jul,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=8) as aug,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=9) as sept,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=10) as oct,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=11) as nov,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5  and YEAR(check_time)=YEAR(NOW()) and month(check_time)=12) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=1) as jan,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=2) as feb,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=3) as mar,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=4) as apr,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=5) as may,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=6) as jun,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=7) as jul,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=8) as aug,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=9) as sept,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=10) as oct,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=11) as nov,
+        (select count(*) from aftersale_apply where  branch_id=#{branchId} and type=5 and YEAR(finish_date)=YEAR(NOW()) and month(finish_date)=12) as dece
+        ]]>
+        </if>
+    </select>
+    <select id="findAftersaleStatements"  resultType="integer">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*)  from
+            aftersale_apply
+            <where><trim prefixOverrides="AND">
+                 and branch_id=#{branchId}
+                <if test="beginDate != null and endDate != ''">
+                    <![CDATA[
+                and  date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="created != null">
+
+                and date_format(created,'%Y-%m-%d')=#{created}
+                </if>
+            </trim></where>
+            )as count
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            select (
+            select count(*)
+            from
+            aftersale_apply
+            <where><trim prefixOverrides="AND">
+                and branch_id=#{branchId}
+                <if test="beginDate != null and endDate != ''">
+                    <![CDATA[
+                and  date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="created != null">
+                    <![CDATA[
+                and  date_format(created,'%Y-%m-%d')=#{created}
+                ]]>
+                </if>
+            </trim></where>
+            ) as count
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            select
+            (select count(*)  from
+            aftersale_apply
+            <where><trim prefixOverrides="AND">
+                and branch_id=#{branchId}
+                <if test="beginDate != null and endDate != ''">
+                    <![CDATA[
+                and  date_format(created,'%Y-%m-%d') >= date_format(#{beginDate},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{endDate},'%Y-%m-%d')
+                ]]>
+                </if>
+                <if test="created != null">
+                    <![CDATA[
+                and  date_format(created,'%Y-%m-%d')=#{created}
+                ]]>
+                </if>
+            </trim></where>
+            )as count
+        </if>
+    </select>
+
+</mapper>

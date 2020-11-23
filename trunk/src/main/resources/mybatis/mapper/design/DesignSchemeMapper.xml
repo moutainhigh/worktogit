@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.design.DesignSchemeDao">
+    <resultMap id="DesignSchemeMap" type="com.lwxf.industry4.webapp.domain.entity.design.DesignScheme">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="door_state" property="doorState" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="FLOAT" />
+        <result column="styles" property="styles" jdbcType="VARCHAR" />
+        <result column="cost" property="cost" jdbcType="DECIMAL" />
+        <result column="plural_forms" property="pluralForms" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="community_address" property="communityAddress" jdbcType="VARCHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="theme_color_brand" property="themeColorBrand" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="TINYINT" />
+        <result column="page_view" property="pageView" jdbcType="INTEGER" />
+        <result column="praise" property="praise" jdbcType="INTEGER" />
+        <result column="share" property="share" jdbcType="INTEGER" />
+        <result column="attention" property="attention" jdbcType="INTEGER" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="result" property="result" jdbcType="VARCHAR" />
+        <result column="vr_video_path" property="vrVideoPath" jdbcType="VARCHAR" />
+        <result column="link" property="link" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <resultMap id="DesignSchemeMapDto" type="com.lwxf.industry4.webapp.domain.dto.design.DesignSchemeDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="door_state" property="doorState" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="FLOAT" />
+        <result column="styles" property="styles" jdbcType="VARCHAR" />
+        <result column="cost" property="cost" jdbcType="DECIMAL" />
+        <result column="plural_forms" property="pluralForms" jdbcType="INTEGER" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="community_address" property="communityAddress" jdbcType="VARCHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="theme_color_brand" property="themeColorBrand" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="TINYINT" />
+        <result column="page_view" property="pageView" jdbcType="INTEGER" />
+        <result column="praise" property="praise" jdbcType="INTEGER" />
+        <result column="share" property="share" jdbcType="INTEGER" />
+        <result column="attention" property="attention" jdbcType="INTEGER" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="result" property="result" jdbcType="VARCHAR" />
+        <result column="vr_video_path" property="vrVideoPath" jdbcType="VARCHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="designer_name" property="designer_name"/>
+        <result column="designer_avatar" property="designer_avatar"/>
+        <result column="doorStateName" property="doorStateName"/>
+        <result column="design_style_name" property="design_style_name"/>
+        <result column="link" property="link" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, designer, door_state, area, styles, cost, plural_forms, notes, cover, community_address, company_id, created, creator, status, theme_color_brand, source, page_view, praise, share, attention, no, result,vr_video_path,link
+</sql>
+
+    <sql id="columnDtos">
+d.id, d.name, d.designer, d.door_state, d.area, d.styles, d.cost, d.plural_forms, d.notes, d.cover, d.community_address, d.company_id, d.created, d.creator, d.status, d.theme_color_brand, d.source, d.page_view, d.praise, d.share, d.attention, d.no, d.result,d.vr_video_path,d.link
+</sql>
+
+    <sql id="Acolumns">
+d.id, d.name, d.cover, d.designer, d.styles, d.creator, d.created, d.company_id, u.name as designer_name,u.avatar as designer_avatar,ds.name as design_style_name,c.name as companyName,d.page_view,d.praise,d.attention,d.share,d.result
+</sql>
+
+    <sql id="Bcolumns">
+d.id, d.cover, d.designer,
+u.name as designer_name,u.avatar as designer_avatar,
+d.page_view,d.praise,d.attention,d.share,d.result
+</sql>
+
+    <select id="selectByCondition" resultMap="DesignSchemeMapDto">
+        SELECT
+        d.id,
+        IFNULL(d.cover,"") as cover,
+        IFNULL(d.designer,"") as designer,
+        IFNULL(d.name,"") as name,
+        IFNULL(d.area,"") as area,
+        IFNULL(ds.name,"") as styleName ,
+        IFNULL(dos.name,"") as stateName,
+        IFNULL(u.name,"") as designer_name,
+        IFNULL(u.avatar,"") as designer_avatar,
+        d.page_view,
+        d.attention,
+        d.share
+        FROM design_scheme d
+        left join user u on d.designer = u.id
+        left join design_style ds on ds.id = d.styles
+        left join door_state dos on dos.id = d.door_state
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="name != null">
+                    AND d.name LIKE '%${name}%'
+                </if>
+                <if test="status != null">
+                    AND d.status = #{status}
+                </if>
+                <if test="designer != null">
+                    AND d.designer = #{designer}
+                </if>
+                <if test="styles != null">
+                    AND d.styles = #{styles}
+                </if>
+                <if test="companyId != null">
+                    AND d.company_id = #{companyId}
+                </if>
+                <if test="doorStateIds != null">
+                    AND d.door_state in
+                    <foreach collection="doorStateIds" item="doorStateId" open="(" separator="," close=")">
+                        #{doorStateId}
+                    </foreach>
+                </if>
+                <if test="area != null and 150 >= area">
+                    AND d.area &lt;= #{area}
+                </if>
+                <if test="area != null and area > 150 ">
+                    AND d.area &gt; #{area}
+                </if>
+            </trim>
+        </where>
+        order by d.created desc
+    </select>
+
+    <select id="findListByFilter" resultMap="DesignSchemeMapDto">
+        select <include refid="columnDtos"/>,u.name creatorName,uu.name designer_name,style.name design_style_name,door.name doorStateName
+        from design_scheme d
+        left join user u on d.creator = u.id
+        left join user uu on d.designer = uu.id
+        left join door_state door on door.id = d.door_state
+        left join design_style style on d.styles = style.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="name != null">
+                    AND d.name LIKE '%${name}%'
+                </if>
+                <if test="status != null and status.size >0">
+                    AND d.status in
+                    <foreach collection="status" open="(" close=")" separator="," item="statu">
+                        #{statu}
+                    </foreach>
+                </if>
+                <if test="designer != null">
+                    AND d.designer = #{designer}
+                </if>
+                <if test="styles != null">
+                    AND d.styles = #{styles}
+                </if>
+                <if test="creator != null">
+                    AND d.creator = #{creator}
+                </if>
+                <if test="startTime != null">
+                    AND d.created &gt;= #{startTime}
+                </if>
+                <if test="endTime != null">
+                    AND d.created &lt;= #{endTime}
+                </if>
+                <if test="companyId != null">
+                    AND d.company_id = #{companyId}
+                </if>
+                <if test="branchId != null">
+                    AND d.branch_id = #{branchId}
+                </if>
+                <if test="type != null">
+                AND d.type = #{type}
+                </if>
+                <if test="homeStyles != null">
+                    AND d.door_state in
+                    <foreach collection="homeStyles" item="homeStyles" open="(" separator="," close=")">
+                        #{homeStyles}
+                    </foreach>
+                </if>
+                <if test="area != null">
+                    AND d.area &lt;= #{area}
+                </if>
+                <if test="no!=null">
+                    AND d.no LIKE '%${no}%'
+                </if>
+                <if test="doorState">
+                    AND d.door_state = #{doorState}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectById" resultMap="DesignSchemeMapDto" parameterType="String">
+        SELECT
+       <include refid="columns"/>
+        FROM design_scheme d
+        WHERE d.id = #{id}
+    </select>
+
+    <select id="selectBySchemeId" parameterType="String" resultType="java.util.Map">
+        SELECT
+        d.id, d.cover, d.name,u.name as designerName,
+        IFNULL(ds.name,"") as stylesName,
+        IFNULL(dos.name,"") as doorStateName,
+        d.community_address as communityAddress,
+        d.cost,d.area,
+        d.plural_forms as pluralForms,
+        d.page_view as pageView,
+        IFNULL(d.vr_video_path,"") as vrVideoPath,
+        IFNULL(d.notes,"") as notes
+        FROM design_scheme d
+        left join user u on d.designer = u.id
+        left join design_style ds on ds.id = d.styles
+        left join door_state dos on dos.id = d.door_state
+        WHERE d.id = #{id} limit 1
+    </select>
+
+    <select id="selectByFilter" resultMap="DesignSchemeMap">
+        SELECT <include refid="columns" />
+        FROM   design_scheme
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="designer != null">
+                AND designer = #{designer}
+            </if>
+            <if test="doorState != null">
+                AND door_state = #{doorState}
+            </if>
+            <if test="area != null">
+                AND area = #{area}
+            </if>
+            <if test="styles != null">
+                AND styles = #{styles}
+            </if>
+            <if test="cost != null">
+                AND cost = #{cost}
+            </if>
+            <if test="pluralForms != null">
+                AND plural_forms = #{pluralForms}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="cover != null">
+                AND cover = #{cover}
+            </if>
+            <if test="communityAddress != null">
+                AND community_address = #{communityAddress}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="themeColorBrand != null">
+                AND theme_color_brand = #{themeColorBrand}
+            </if>
+            <if test="source != null">
+                AND source = #{source}
+            </if>
+            <if test="pageView != null">
+                AND page_view = #{pageView}
+            </if>
+            <if test="praise != null">
+                AND praise = #{praise}
+            </if>
+            <if test="share != null">
+                AND share = #{share}
+            </if>
+            <if test="attention != null">
+                AND attention = #{attention}
+            </if>
+            <if test="no != null">
+                AND no = #{no}
+            </if>
+            <if test="result != null">
+                AND result = #{result}
+            </if>
+            <if test="vrVideoPath != null">
+                AND  vr_video_path = #{vrVideoPath}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+design_scheme(id, name, designer, door_state, area, styles, cost, plural_forms, notes, cover, community_address, company_id, created, creator, status, theme_color_brand, source, page_view, praise, share, attention, no, result,vr_video_path,link)
+       VALUES(#{id}, #{name}, #{designer}, #{doorState}, #{area}, #{styles}, #{cost}, #{pluralForms}, #{notes}, #{cover}, #{communityAddress}, #{companyId}, #{created}, #{creator}, #{status}, #{themeColorBrand}, #{source}, #{pageView}, #{praise}, #{share}, #{attention}, #{no}, #{result},#{vrVideoPath},#{link})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE design_scheme
+        <set>
+            <trim suffixOverrides=",">
+              <if test="_parameter.containsKey('designer')">
+                designer = #{designer},
+            </if>
+            <if test="_parameter.containsKey('doorState')">
+                door_state = #{doorState},
+            </if>
+            <if test="_parameter.containsKey('area')">
+                area = #{area},
+            </if>
+            <if test="_parameter.containsKey('styles')">
+                styles = #{styles},
+            </if>
+            <if test="_parameter.containsKey('cost')">
+                cost = #{cost},
+            </if>
+            <if test="_parameter.containsKey('pluralForms')">
+                plural_forms = #{pluralForms},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('cover')">
+                cover = #{cover},
+            </if>
+            <if test="_parameter.containsKey('communityAddress')">
+                community_address = #{communityAddress},
+            </if>
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('themeColorBrand')">
+                theme_color_brand = #{themeColorBrand},
+            </if>
+            <if test="_parameter.containsKey('source') and source != null">
+                source = #{source},
+            </if>
+            <if test="_parameter.containsKey('pageView') and pageView != null">
+                page_view = #{pageView},
+            </if>
+            <if test="_parameter.containsKey('praise') and praise != null">
+                praise = #{praise},
+            </if>
+            <if test="_parameter.containsKey('share') and share != null">
+                share = #{share},
+            </if>
+            <if test="_parameter.containsKey('attention') and attention != null">
+                attention = #{attention},
+            </if>
+            <if test="_parameter.containsKey('no') and no != null">
+                no = #{no},
+            </if>
+            <if test="_parameter.containsKey('result')">
+                result = #{result},
+            </if>
+            <if test="_parameter.containsKey('vrVideoPath')">
+                vr_video_path = #{vrVideoPath},
+            </if>
+                <if test="_parameter.containsKey('link')">
+                    link = #{link}
+                </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   design_scheme
+WHERE  id = #{id}
+</delete>
+
+    <select id="findCountByDesigner" resultType="java.lang.Integer">
+        select count(*) from design_scheme where designer = #{designer}
+    </select>
+
+    <select id="findOneById" resultMap="DesignSchemeMapDto">
+        select <include refid="columnDtos"/>,u.name creatorName,uu.name designer_name,style.name design_style_name,door.name doorStateName
+        from design_scheme d
+        left join user u on d.creator = u.id
+        left join user uu on d.designer = uu.id
+        left join door_state door on d.door_state = door.id
+        left join design_style style on d.styles = style.id
+                <if test="_parameter != null">
+                    where d.id = #{_parameter}
+                </if>
+    </select>
+
+
+    <select id="findStyleAndCountByDesigner" resultType="java.util.Map">
+        select
+        design_style_id,dss.name,count(design_style_id) as count
+        from design_scheme ds
+        left join design_style dss on dss.id = ds.styles
+        where designer = #{designer}
+        GROUP BY design_style_id
+    </select>
+
+    <select id="findByDesignerAndStatus" resultMap="DesignSchemeMapDto">
+    select <include refid="columnDtos"/>,
+    u.name creatorName,uu.name designer_name,style.name design_style_name
+    from design_scheme d
+    left join user u on d.creator = u.id
+    left join user uu on d.designer = uu.id
+    left join design_style style on d.design_style_id = style.id
+    where d.designer = #{designer}
+    and d.status = 2
+    order by d.page_view desc
+    </select>
+
+    <select id="findListBydesigner" resultType="java.util.Map">
+        SELECT
+        d.id,
+        IFNULL(d.cover,"") as cover,
+        IFNULL(d.designer,"") as designer,
+        IFNULL(d.name,"") as name,
+        IFNULL(d.area,"") as area,
+        IFNULL(ds.name,"") as design_style_name,
+        IFNULL(dos.name,"") as homeStyle,
+        IFNULL(u.name,"") as designer_name,
+        IFNULL(u.avatar,"") as designer_avatar,
+        d.page_view,
+        d.attention,
+        d.share
+        FROM design_scheme d
+        left join user u on d.designer = u.id
+        left join design_style ds on ds.id = d.styles
+        left join door_state dos on dos.id = d.door_state
+        <where>
+            <trim prefixOverrides="AND">
+
+                <if test="status != null">
+                    AND d.status = #{status}
+                </if>
+                <if test="designer != null">
+                    AND d.designer = #{designer}
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="findList" resultType="java.util.Map">
+        select ds.link,
+        ds.id,ds.name,ds.cover,ds.notes as summary,u.name as userName,u.avatar as userAvatar,ds.created
+        from design_scheme ds
+        left join user u on u.id = ds.designer
+        <where><trim prefixOverrides="and">
+            <if test="companyId!=null">
+                ds.company_id = #{companyId}
+            </if>
+            <if test="status!=null">
+                and ds.status = #{status}
+            </if>
+        </trim></where>
+            order by ds.created desc
+    </select>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeePermissionDao">
+    <resultMap id="EmployeePermissionMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeePermission">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="employee_id" property="employeeId" jdbcType="CHAR" />
+        <result column="module_key" property="moduleKey" jdbcType="VARCHAR" />
+        <result column="menu_key" property="menuKey" jdbcType="VARCHAR" />
+        <result column="operations" property="operations" jdbcType="VARCHAR" />
+        <result column="is_show" property="show" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, employee_id, module_key, menu_key, operations,is_show
+</sql>
+
+    <select id="selectById" resultMap="EmployeePermissionMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   employee_permission
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="EmployeePermissionMap">
+        SELECT <include refid="columns" />
+        FROM   employee_permission
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="employeeId != null">
+                AND employee_id = #{employeeId}
+            </if>
+            <if test="moduleKey != null">
+                AND module_key = #{moduleKey}
+            </if>
+            <if test="menuKey != null">
+                AND menu_key = #{menuKey}
+            </if>
+            <if test="operations != null">
+                AND operations = #{operations}
+            </if>
+            <if test="show!=null">
+                AND is_show = #{show}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+employee_permission(id, employee_id, module_key, menu_key, operations,is_show)
+             VALUES(#{id}, #{employeeId}, #{moduleKey}, #{menuKey}, #{operations},#{show})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE employee_permission
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('moduleKey') and moduleKey != null">
+                module_key = #{moduleKey},
+            </if>
+            <if test="_parameter.containsKey('menuKey') and menuKey != null">
+                menu_key = #{menuKey},
+            </if>
+            <if test="_parameter.containsKey('operations') and operations != null">
+                operations = #{operations}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_permission
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByEmployeeId" resultMap="EmployeePermissionMap" parameterType="String">
+        SELECT ep.id, ep.employee_id, ep.module_key, ep.menu_key, ep.operations,ep.is_show
+        FROM   employee_permission ep left join menus m on ep.module_key = m.key
+        WHERE ep.employee_id = #{employeeId} and ep.is_show = ${show} order by m.sort asc
+    </select>
+
+    <insert id="addList">
+        insert into employee_permission (id, employee_id, module_key, menu_key, operations,is_show) values
+        <foreach collection="list"  separator="," item="rolePermission" >
+            (#{rolePermission.id},#{rolePermission.roleId},#{rolePermission.moduleKey},#{rolePermission.menuKey},#{rolePermission.operations},#{rolePermission.show})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByEmployeeId">
+        delete from employee_permission
+        where employee_id = #{eid}
+    </delete>
+
+    <select id="findByEmpIdAndkey" resultMap="EmployeePermissionMap">
+        select
+        <include refid="columns"/>
+        from employee_permission
+        where employee_id = #{employeeId}
+        and  module_key = #{moduleKey}
+        and  menu_key = #{menuKey}
+    </select>
+    <select id="findByMenusKey" resultMap="EmployeePermissionMap">
+        select <include refid="columns"/> from employee_permission where menu_key = #{key} OR module_key = #{key}
+    </select>
+
+    <delete id="deleteByKey">
+        delete from employee_permission where menu_key = #{key} OR module_key = #{key}
+    </delete>
+
+</mapper>

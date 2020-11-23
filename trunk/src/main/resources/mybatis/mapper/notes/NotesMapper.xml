@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.notes.NotesDao">
+    <resultMap id="NotesMap" type="com.lwxf.industry4.webapp.domain.entity.notes.Notes">
+        <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+        <result column="notes_content" property="notesContent" jdbcType="CLOB" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+source_id, notes_content, create_time, create_by, reserve1, reserve2, reserve3, reserve4
+</sql>
+
+    <select id="selectById" resultMap="NotesMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   notes
+WHERE  id = #{id} or source_id=#{id}
+</select>
+
+    <select id="selectByFilter" resultMap="NotesMap">
+SELECT <include refid="columns" />
+FROM   notes
+<where><trim prefixOverrides="AND">
+<if test="sourceId != null">
+    source_id = #{sourceId}
+</if>
+<if test="notesContent != null">
+    AND notes_content = #{notesContent}
+</if>
+<if test="createTime != null">
+    AND create_time = #{createTime}
+</if>
+<if test="createBy != null">
+    AND create_by = #{createBy}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="true">
+INSERT INTO 
+ notes(id,source_id, notes_content, create_time, create_by, reserve1, reserve2, reserve3, reserve4)
+VALUES(#{id},#{sourceId}, #{notesContent}, #{createTime}, #{createBy}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE notes
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('sourceId')">
+    source_id = #{sourceId},
+</if>
+    <if test="_parameter.containsKey('notesContent')">
+    notes_content = #{notesContent},
+</if>
+    <if test="_parameter.containsKey('createTime')">
+    create_time = #{createTime},
+</if>
+    <if test="_parameter.containsKey('createBy')">
+    create_by = #{createBy},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="Long">
+DELETE FROM   notes
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.DealerShopDao">
+    <resultMap id="DealerShopMap" type="com.lwxf.industry4.webapp.domain.entity.company.DealerShop">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="lng" property="lng" jdbcType="FLOAT" />
+        <result column="lat" property="lat" jdbcType="FLOAT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="followers" property="followers" jdbcType="INTEGER" />
+        <result column="leader" property="leader" jdbcType="CHAR" />
+        <result column="leader_tel" property="leaderTel" jdbcType="CHAR" />
+        <result column="business_manager" property="businessManager" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="shop_area" property="shopArea" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="logo" property="logo" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="service_tel" property="serviceTel" jdbcType="VARCHAR" />
+        <result column="service_staff" property="serviceStaff" jdbcType="CHAR" />
+        <result column="shop_info" property="shopInfo" jdbcType="VARCHAR" />
+        <result column="shop_cover_file" property="shopCoverFile" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="DealerShopDtoMap" type="com.lwxf.industry4.webapp.domain.dto.company.dealerShop.DealerShopDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="lng" property="lng" jdbcType="FLOAT" />
+        <result column="lat" property="lat" jdbcType="FLOAT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="followers" property="followers" jdbcType="INTEGER" />
+        <result column="leader" property="leader" jdbcType="CHAR" />
+        <result column="leader_tel" property="leaderTel" jdbcType="CHAR" />
+        <result column="business_manager" property="businessManager" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="shop_area" property="shopArea" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="logo" property="logo" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="service_tel" property="serviceTel" jdbcType="VARCHAR" />
+        <result column="service_staff" property="serviceStaff" jdbcType="CHAR" />
+        <result column="shop_info" property="shopInfo" jdbcType="VARCHAR" />
+        <result column="shop_cover_file" property="shopCoverFile" jdbcType="CHAR" />
+        <result column="leaderName" property="leaderName" jdbcType="VARCHAR" />
+        <result column="mergerName" property="mergerName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, company_id, type, city_area_id, lng, lat, created, creator, followers, leader, leader_tel, business_manager, address, shop_area, status, logo, grade, service_tel, service_staff, shop_info, shop_cover_file
+</sql>
+    <sql id="columnDtos">
+        d.id, d.name, d.company_id, d.type, d.city_area_id, d.lng, d.lat, d.created, d.creator, d.followers, d.leader, d.leader_tel, d.business_manager, d.address, d.shop_area, d.status, d.logo, d.grade, d.service_tel, d.service_staff, d.shop_info, d.shop_cover_file,d.leaderName
+    </sql>
+
+    <select id="selectById" resultMap="DealerShopMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dealer_shop
+WHERE  id = #{id}
+</select>
+    <select id="findDealerShopById" resultMap="DealerShopDtoMap" parameterType="String">
+        select <include refid="columnDtos"/>,ca.merger_name mergerName from
+        (SELECT d.*,u.name leaderName from  dealer_shop d LEFT JOIN user u on d.leader=u.id) d
+        left join  city_area ca on d.city_area_id=ca.id where d.id=#{dealerShopId}
+    </select>
+
+    <select id="selectByFilter" resultMap="DealerShopMap">
+SELECT <include refid="columns" />
+FROM   dealer_shop
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="cityAreaId != null">
+    AND city_area_id = #{cityAreaId}
+</if>
+<if test="lng != null">
+    AND lng = #{lng}
+</if>
+<if test="lat != null">
+    AND lat = #{lat}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="followers != null">
+    AND followers = #{followers}
+</if>
+<if test="leader != null">
+    AND leader = #{leader}
+</if>
+<if test="leaderTel != null">
+    AND leader_tel = #{leaderTel}
+</if>
+<if test="businessManager != null">
+    AND business_manager = #{businessManager}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="shopArea != null">
+    AND shop_area = #{shopArea}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="logo != null">
+    AND logo = #{logo}
+</if>
+<if test="grade != null">
+    AND grade = #{grade}
+</if>
+<if test="serviceTel != null">
+    AND service_tel = #{serviceTel}
+</if>
+<if test="serviceStaff != null">
+    AND service_staff = #{serviceStaff}
+</if>
+<if test="shopInfo != null">
+    AND shop_info = #{shopInfo}
+</if>
+<if test="shopCoverFile != null">
+    AND shop_cover_file = #{shopCoverFile}
+</if>
+</trim></where>
+
+</select>
+    <select id="findShopList" resultMap="DealerShopMap" parameterType="string">
+        select id,name  from dealer_shop
+        <where>
+            address like  '%${_parameter}%'
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dealer_shop(id, name, company_id, type, city_area_id, lng, lat, created, creator, followers, leader, leader_tel, business_manager, address, shop_area, status, logo, grade, service_tel, service_staff, shop_info, shop_cover_file)
+     VALUES(#{id}, #{name}, #{companyId}, #{type}, #{cityAreaId}, #{lng}, #{lat}, #{created}, #{creator}, #{followers}, #{leader}, #{leaderTel}, #{businessManager}, #{address}, #{shopArea}, #{status}, #{logo}, #{grade}, #{serviceTel}, #{serviceStaff}, #{shopInfo}, #{shopCoverFile})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dealer_shop
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('companyId') and companyId != null">
+    company_id = #{companyId},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('cityAreaId')">
+    city_area_id = #{cityAreaId},
+</if>
+    <if test="_parameter.containsKey('lng')">
+    lng = #{lng},
+</if>
+    <if test="_parameter.containsKey('lat')">
+    lat = #{lat},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('followers') and followers != null">
+    followers = #{followers},
+</if>
+    <if test="_parameter.containsKey('leader')">
+    leader = #{leader},
+</if>
+    <if test="_parameter.containsKey('leaderTel')">
+    leader_tel = #{leaderTel},
+</if>
+    <if test="_parameter.containsKey('businessManager')">
+    business_manager = #{businessManager},
+</if>
+    <if test="_parameter.containsKey('address')">
+    address = #{address},
+</if>
+    <if test="_parameter.containsKey('shopArea')">
+    shop_area = #{shopArea},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('logo')">
+    logo = #{logo},
+</if>
+    <if test="_parameter.containsKey('grade') and grade != null">
+    grade = #{grade},
+</if>
+    <if test="_parameter.containsKey('serviceTel')">
+    service_tel = #{serviceTel},
+</if>
+    <if test="_parameter.containsKey('serviceStaff')">
+    service_staff = #{serviceStaff},
+</if>
+    <if test="_parameter.containsKey('shopInfo')">
+    shop_info = #{shopInfo},
+</if>
+    <if test="_parameter.containsKey('shopCoverFile')">
+    shop_cover_file = #{shopCoverFile}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dealer_shop
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.financing.PaymentListDao">
+    <resultMap id="PaymentListMap" type="com.lwxf.industry4.webapp.domain.entity.financing.PaymentList">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="payment_id" property="paymentId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="amount" property="amount" jdbcType="FLOAT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, payment_id, company_id, custom_order_id, amount, created, creator
+</sql>
+
+    <select id="selectById" resultMap="PaymentListMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   payment_list
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="PaymentListMap">
+SELECT <include refid="columns" />
+FROM   payment_list
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="paymentId != null">
+    AND payment_id = #{paymentId}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+<if test="customOrderId != null">
+    AND custom_order_id = #{customOrderId}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+payment_list(id, payment_id, company_id, custom_order_id, amount, created, creator)
+      VALUES(#{id}, #{paymentId}, #{companyId}, #{customOrderId}, #{amount}, #{created}, #{creator})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE payment_list
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('paymentId')">
+    payment_id = #{paymentId},
+</if>
+    <if test="_parameter.containsKey('companyId')">
+    company_id = #{companyId},
+</if>
+    <if test="_parameter.containsKey('customOrderId')">
+    custom_order_id = #{customOrderId},
+</if>
+    <if test="_parameter.containsKey('amount')">
+    amount = #{amount},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   payment_list
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.PersonalAddressbookDao">
+    <resultMap id="PersonalAddressbookMap" type="com.lwxf.industry4.webapp.domain.entity.company.PersonalAddressbook">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="position" property="position" jdbcType="VARCHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="company_mobile" property="companyMobile" jdbcType="VARCHAR" />
+        <result column="company_city" property="companyCity" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, mobile, position, company_name, company_mobile, company_city, address, notes, created, creator, company_id
+</sql>
+
+    <select id="selectById" resultMap="PersonalAddressbookMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   personal_addressbook
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="PersonalAddressbookMap">
+SELECT <include refid="columns" />
+FROM   personal_addressbook
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="condition != null">
+    AND (name like '%${condition}%'
+    or mobile like '%${condition}%')
+</if>
+<if test="mobile != null">
+    AND mobile = #{mobile}
+</if>
+<if test="position != null">
+    AND position = #{position}
+</if>
+<if test="companyName != null">
+    AND company_name = #{companyName}
+</if>
+<if test="companyMobile != null">
+    AND company_mobile = #{companyMobile}
+</if>
+<if test="companyCity != null">
+    AND company_city = #{companyCity}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+personal_addressbook(id, name, mobile, position, company_name, company_mobile, company_city, address, notes, created, creator, company_id)
+              VALUES(#{id}, #{name}, #{mobile}, #{position}, #{companyName}, #{companyMobile}, #{companyCity}, #{address}, #{notes}, #{created}, #{creator}, #{companyId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE personal_addressbook
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('mobile') and mobile != null">
+    mobile = #{mobile},
+</if>
+    <if test="_parameter.containsKey('position')">
+    position = #{position},
+</if>
+    <if test="_parameter.containsKey('companyName')">
+    company_name = #{companyName},
+</if>
+    <if test="_parameter.containsKey('companyMobile')">
+    company_mobile = #{companyMobile},
+</if>
+    <if test="_parameter.containsKey('companyCity')">
+    company_city = #{companyCity},
+</if>
+    <if test="_parameter.containsKey('address')">
+    address = #{address},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('companyId') and companyId != null">
+    company_id = #{companyId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   personal_addressbook
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByCidAndUidAndMobile" resultMap="PersonalAddressbookMap">
+        select
+        <include refid="columns"/>
+        from personal_addressbook
+        where company_id = #{companyId}
+        and creator = #{uid}
+        and mobile = #{mobile}
+        limit 1
+    </select>
+
+</mapper>

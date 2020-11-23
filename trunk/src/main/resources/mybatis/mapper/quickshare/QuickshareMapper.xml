@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.quickshare.QuickshareDao">
+    <resultMap id="QuickshareMap" type="com.lwxf.industry4.webapp.domain.entity.quickshare.Quickshare">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+id, creator, content, type, status, created
+</sql>
+
+    <select id="selectById" resultMap="QuickshareMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   quickshare
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="QuickshareMap">
+SELECT <include refid="columns" />
+FROM   quickshare
+<where><trim prefixOverrides="AND">
+    <if test="condition != null">
+       content like '%${condition}%'
+    </if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+ order by created desc
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+quickshare(id, creator, content, type, status, created)
+    VALUES(#{id}, #{creator}, #{content}, #{type}, #{status}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE quickshare
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('content')">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   quickshare
+WHERE  id = #{id}
+</delete>
+
+</mapper>

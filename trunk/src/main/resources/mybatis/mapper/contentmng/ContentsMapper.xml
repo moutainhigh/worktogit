@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.contentmng.ContentsDao">
+    <resultMap id="ContentsMap" type="com.lwxf.industry4.webapp.domain.entity.contentmng.Contents">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="summary" property="summary" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+        <result column="publisher" property="publisher" jdbcType="CHAR" />
+        <result column="is_top" property="top" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="contents_type_id" property="contentsTypeId" jdbcType="CHAR" />
+        <result column="link" property="link" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ContentsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.contentmng.ContentsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="cover" property="cover" jdbcType="VARCHAR" />
+        <result column="summary" property="summary" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+        <result column="publisher" property="publisher" jdbcType="CHAR" />
+        <result column="publisher_name" property="publisherName" jdbcType="VARCHAR" />
+        <result column="is_top" property="top" jdbcType="BIT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="contents_type_id" property="contentsTypeId" jdbcType="CHAR" />
+        <result column="typeName" property="typeName" jdbcType="VARCHAR" />
+        <result column="fullPath" property="fullPath" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="contents_type_id" property="contentsTypeId" jdbcType="CHAR" />
+        <result column="link" property="link" jdbcType="VARCHAR" />
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+    <resultMap id="ContentsContentMap" type="com.lwxf.industry4.webapp.domain.entity.contentmng.ContentsContent">
+        <result column="contents_id" property="contentsId" jdbcType="CHAR" />
+        <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, cover, summary, status, publish_time, publisher, is_top, created, creator,contents_type_id,link
+</sql>
+    <sql id="columnsDto">
+id, name, cover, summary, status, publish_time, publisher, is_top, created, creator,contents_type_id,link,typeName
+</sql>
+
+    <select id="selectById" resultMap="ContentsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   contents
+WHERE  id = #{id}
+</select>
+
+    <select id="findTopContentsList" resultMap="ContentsDtoMap">
+        SELECT c.*,ct.name typeName from
+        (SELECT <include refid="columns" />
+        from contents where contents_type_id =#{typeId} and is_top = true and branch_id = #{branchId}) c
+          LEFT JOIN contents_type ct on c.contents_type_id=ct.id
+    </select>
+
+    <select id="findByContentId" resultMap="ContentsDtoMap" parameterType="String">
+        SELECT c.*,ct.name typeName,content.content,u.name creatorName
+        FROM  contents c
+        LEFT JOIN contents_type ct on ct.id=c.contents_type_id
+        LEFT JOIN contents_content content on content.contents_id = c.id
+        left join user u on c.creator = u.id
+        WHERE c.id=#{id}
+    </select>
+
+    <select id="findContentMessage" resultMap="ContentsContentMap">
+        select content from contents_content
+        WHERE  contents_id=#{contentsId}
+    </select>
+
+    <select id="selectByFilter" resultMap="ContentsDtoMap">
+SELECT c.*,ct.name as typeName,
+IFNULL((select name from user where id = c.publisher),'') as publisher_name
+FROM   contents c
+left join contents_type ct on ct.id = c.contents_type_id
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    c.id = #{id}
+</if>
+<if test="name != null">
+    AND c.name like CONCAT('%',#{name},'%')
+</if>
+<if test="cover != null">
+    AND c.cover = #{cover}
+</if>
+<if test="summary != null">
+    AND c.summary = #{summary}
+</if>
+<if test="status != null">
+    AND c.status = #{status}
+</if>
+<if test="publishTime != null">
+    AND c.publish_time = #{publishTime}
+</if>
+<if test="publisher != null">
+    AND c.publisher in (select id from user where name like '%${publisher}%')
+</if>
+<if test="top ==true">
+    AND c.is_top = #{top}
+</if>
+<if test="created != null">
+    AND c.created = #{created}
+</if>
+<if test="creator != null">
+    AND c.creator = #{creator}
+</if>
+    <if test="contentsTypeId != null">
+        AND c.contents_type_id = #{contentsTypeId}
+    </if>
+    <if test="branchId != null">
+        AND c.branch_id = #{branchId}
+    </if>
+</trim></where>
+  order by c.is_top desc
+</select>
+
+
+    <select id="findByCodeAndStatus"  resultType="java.util.Map">
+        select
+        id,summary
+        from contents
+        where code = #{code}
+        and status = #{status}
+        and is_top = 1
+        <if test="branchId != null">
+            AND branch_id = #{branchId}
+        </if>
+        order by publish_time desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+contents(id, name, cover, summary, status, publish_time, publisher, is_top, created, creator,contents_type_id,link,branch_id)
+  VALUES(#{id}, #{name}, #{cover}, #{summary}, #{status}, #{publishTime}, #{publisher}, #{top}, #{created}, #{creator},#{contentsTypeId},#{link},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE contents
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('cover')">
+    cover = #{cover},
+</if>
+    <if test="_parameter.containsKey('summary')">
+    summary = #{summary},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('publishTime')">
+    publish_time = #{publishTime},
+</if>
+    <if test="_parameter.containsKey('publisher')">
+    publisher = #{publisher},
+</if>
+    <if test="_parameter.containsKey('top') and top != null">
+    is_top = #{top},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('contentsTypeId') and contentsTypeId != null">
+        contents_type_id = #{contentsTypeId},
+    </if>
+    <if test="_parameter.containsKey('link')">
+        link = #{link}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   contents
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByCodeAndStatus" resultType="java.util.Map">
+        select
+        cs.id,cs.name,cs.summary,cs.cover,cs.link,
+        cs.publish_time as created,u.name as userName,u.avatar as userAvatar
+        from contents cs
+        left join user u on u.id = cs.publisher
+        <where><trim prefixOverrides="and">
+            <if test="code!=null">
+                code = #{code}
+            </if>
+            <if test="status!=null">
+                and status = #{status}
+            </if>
+            <if test="branchId!=null">
+                and branch_id = #{branchId}
+            </if>
+        </trim></where>
+         order by is_top desc,
+         publish_time desc
+    </select>
+
+
+    <select id="findFByContentId" resultType="java.util.Map">
+        SELECT
+        c.id,c.name,u.name as pubName,u.avatar as pubAvatar,c.publish_time as publishTime,content.content
+        FROM  contents c
+        left join user u on u.id = c.publisher
+        LEFT JOIN contents_content content on content.contents_id = c.id
+        WHERE c.id=#{id}
+    </select>
+
+</mapper>

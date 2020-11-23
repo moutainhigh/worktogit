@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.financing.BankAccountDao">
+    <resultMap id="BankAccountMap" type="com.lwxf.industry4.webapp.domain.entity.financing.BankAccount">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, code, amount, account, notes,order_num
+</sql>
+
+    <select id="selectById" resultMap="BankAccountMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   bank_account
+WHERE  id = #{id}
+</select>
+    <select id="findByCode" resultMap="BankAccountMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   bank_account
+        WHERE  code = #{code}
+    </select>
+
+    <select id="selectByFilter" resultMap="BankAccountMap">
+SELECT <include refid="columns" />
+FROM   bank_account
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name like CONCAT('%',#{name},'%')
+</if>
+<if test="code != null">
+    AND code = #{code}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="account != null">
+    AND account = #{account}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+</trim></where>
+order by order_num desc
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+bank_account(id, name, code, amount, account, notes,order_num,branch_id)
+      VALUES(#{id}, #{name}, #{code}, #{amount}, #{account}, #{notes},#{orderNum},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE bank_account
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('code')">
+    code = #{code},
+</if>
+    <if test="_parameter.containsKey('amount')">
+    amount = #{amount},
+</if>
+    <if test="_parameter.containsKey('account')">
+    account = #{account},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes}
+</if>
+    <if test="_parameter.containsKey('orderNum')">
+        order_num = #{orderNum}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   bank_account
+WHERE  id = #{id}
+</delete>
+
+</mapper>

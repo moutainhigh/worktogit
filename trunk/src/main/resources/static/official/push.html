@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="miniTips/css/m.tips.css"/>
+		<style type="text/css">
+			*{
+				margin: 0px;
+				padding: 0px;
+				font-family: "microsoft yahei";
+			}
+			
+			ul,ol{
+				list-style: none;
+			}
+			
+			body{
+				background: #F5F5F5;
+			}
+			
+			.box{
+				height: 300px;
+				 margin: 20px;
+				 background: white;
+				 border-radius: 16px;
+				box-shadow:0px 2px 21px 0px rgba(0, 0, 0, 0.2);
+			}
+			
+			
+			.box h2{
+				font-size: 24px;
+				color: #333;
+				font-weight: 600;
+				text-align: center;
+				padding-top: 16px;
+				padding-bottom: 12px;
+				
+				
+			}
+			
+			.box .note{
+				font-size: 14px;
+				color: #666666;
+				 text-align: center;
+			}
+			
+			
+			.box input{
+				display: block;
+				margin: 32px auto;
+				font-size: 20px;
+				width: 100%;
+				max-width: 200px;
+				border: none;
+				color: #333333;
+				background: none;
+				outline: none;
+				padding: 6px 0px;
+				border-bottom: solid 2px #333333;
+			}
+			
+			.box-nav{
+				
+			width: 100%;
+			height: 100%;
+			
+			}
+			
+			.box button{
+				width: 100%;
+				max-width: 200px;
+				height: 36px;
+				display: block;
+				color: white;
+				font-weight: 200;
+				outline: none;
+				margin: 0px auto;
+				border: none;
+				border-radius: 6px;
+				background: linear-gradient(135deg,#8f75da 0,#727cf5 60%);
+			}
+			
+		.box button.dis{
+			background: #DDDDDD;
+		}
+			
+			.box button.ac{
+				
+			}
+			
+	
+			
+		</style>
+	</head>
+	<body>
+		
+	<!-- 	<div class="mtips">
+			<div class="success">
+				<div class="success-nav">
+					<div class="ic">
+						<img src="success.png" >
+					</div>
+					<p class="title">提交成功</p>
+				</div>
+			</div>
+		</div> -->
+
+		<div  class="box">
+			<h2>推送授权</h2>
+			<p class="note">输入下单手机号即可获取订单信息及时推送</p>
+			
+			<input  type="tel" name="" id="tel" value="" />
+		
+			<button   type="button" id='sub' class="sub">确认绑定</button>
+		</div>
+		
+		
+		
+	</body>
+	<script src="js/axios.js" type="text/javascript" charset="utf-8"></script>
+<script src="miniTips/m.tips.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		
+var codeVal='';
+var appUrl=window.location.hostname
+		
+		document.getElementById("sub").onclick=function  () {
+			
+			var sub=document.getElementById("sub")
+			
+			var  tel=/^1[3|4|5|7|8][0-9]{9}$/
+			var telval=document.getElementById("tel").value
+				if(codeVal==''||codeVal==undefined||codeVal==null){
+					mtips.tips('未成功获取code信息，请退出后重试')
+					return false
+				}else if(tel.test(telval.trim())==false){
+						mtips.tips('您输入的手机号格式不正确')
+					return false
+				}
+				
+				sub.setAttribute('disabled',true)
+				sub.classList.add('dis')
+					mtips.loading()
+					
+					axios.post(appUrl+'official/bangdingOpenid', {
+						code:codeVal,
+						phone:telval
+					})
+					  .then(function (res) {
+												 
+							sub.removeAttribute('disabled')
+							sub.className='sub'
+							mtips.clearloading()
+							mtips.success()					   
+					   
+					  })
+					  .catch(function (error) {
+					    sub.removeAttribute('disabled')
+					    sub.className='sub'
+					    mtips.clearloading()
+					    mtips.error('出错了请稍后重试')
+					  });
+					
+		
+				
+		}
+		
+		setTimeout(function  () {
+			document.getElementById("tel").focus()
+		},500)
+		
+		
+		function getCode () {
+			
+			var code=getUrlParam('code')
+		
+			var Appid='wxbad0d3ebdb4e26dc';
+			var  Rurl=window.location.href;
+			if(code==''||code==undefined||code==null){
+			
+				window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+Appid+'&redirect_uri='+encodeURIComponent(Rurl)+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect&connect_redirect=1'
+				
+			}else{
+				codeVal=code
+			}
+		}
+		
+		getUrlParam= function (name) {
+		        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		        var r = window.location.search.substr(1).match(reg);
+		        if (r != null) return unescape(r[2]); return null;
+		}
+		
+		getCode()
+		
+	</script>
+</html>

@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customer.CompanyCustomerDao">
+    <resultMap id="CompanyCustomerMap" type="com.lwxf.industry4.webapp.domain.entity.customer.CompanyCustomer">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="customer_manager" property="customerManager" jdbcType="CHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="source" property="source" jdbcType="TINYINT" />
+        <result column="community" property="community" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+
+    </resultMap>
+
+    <resultMap id="CustomerDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customer.CustomerDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="customer_manager" property="customerManager" jdbcType="CHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="source" property="source" jdbcType="TINYINT" />
+        <result column="community" property="community" jdbcType="TINYINT" />
+        <result column="cityAreaId" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="userName" property="userName" jdbcType="CHAR" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="state" property="state" jdbcType="TINYINT" />
+        <result column="mergerName" property="mergerName" jdbcType="CHAR" />
+        <result column="workUnit" property="workUnit" jdbcType="CHAR" />
+        <result column="work" property="work" jdbcType="CHAR" />
+        <result column="salesmanName" property="salesmanName" jdbcType="CHAR" />
+        <result column="salesmanMobile" property="salesmanMobile" jdbcType="CHAR" />
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <result column="loginName" property="loginName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="customerCityCountDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customer.CustomerCityCountDto">
+        <result column="count" property="count" jdbcType="INTEGER" />
+        <result column="mergerName" property="mergerName" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="WxCustomerDto" type="com.lwxf.industry4.webapp.domain.dto.customer.WxCustomerDto">
+        <result column="customer_name" property="customerName" />
+        <result column="customer_mobile" property="customerMobile" />
+        <result column="company_name" property="companyName" />
+        <result column="customerMergerName" property="customerMergerName" />
+        <result column="company_type" property="companyType" />
+        <result column="customer_id" property="customerId" />
+        <result column="community" property="community" />
+
+    </resultMap>
+    <resultMap id="WxCustomerInfoDto" type="com.lwxf.industry4.webapp.domain.dto.customer.WxCustomerInfoDto">
+        <result column="customer_name" property="customerName" />
+        <result column="customer_mobile" property="customerMobile" />
+        <result column="company_name" property="companyName" />
+        <result column="customer_merger_name" property="customerMergerName" />
+        <result column="order_product_type" property="orderProductType" />
+        <result column="order_amount" property="orderAmount" />
+        <result column="sex" property="sex" />
+        <result column="customer_address" property="customerAddress" />
+        <result column="community" property="community" />
+        <result column="remarks" property="remarks" />
+        <result column="sale_man" property="saleMan" />
+        <result column="sale_man_mobile" property="saleManMobile" />
+        <result column="order_id" property="orderId" />
+        <result column="user_id" property="userId" />
+
+    </resultMap>
+    <resultMap id="DateNumMap" type="com.lwxf.industry4.webapp.domain.dto.aftersale.DateNum">
+        <result column="creatTime" property="creatTime" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="factoryCustomerDto" type="com.lwxf.industry4.webapp.domain.dto.customer.FactoryCustomerDto">
+        <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+        <result column="customerAddress" property="customerAddress" jdbcType="VARCHAR" />
+        <result column="customerSource" property="customerSource" jdbcType="VARCHAR" />
+        <result column="customerMergerName" property="customerMergerName" jdbcType="VARCHAR" />
+        <result column="userId" property="userId" jdbcType="CHAR" />
+        <result column="customerId" property="customerId" jdbcType="CHAR" />
+        <result column="companyId" property="companyId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="customerDtoV2" type="com.lwxf.industry4.webapp.domain.dto.customer.CustomerDtoV2">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="customer_manager" property="customerManager" jdbcType="CHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="source" property="source" jdbcType="TINYINT" />
+        <result column="community" property="community" jdbcType="VARCHAR" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="cityAreaName" property="cityAreaName"/>
+        <result column="customerManagerName" property="customerManagerName"/>
+        <result column="companyName" property="companyName"/>
+        <result column="leaderTel" property="leaderTel"/>
+        <result column="provinceId" property="provinceId"/>
+        <result column="cityId" property="cityId"/>
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+    </resultMap>
+
+    <sql id="columns">
+id, company_id, user_id, status, creator, created, customer_manager, grade,source,community,city_area_id,address,remarks,sex
+</sql>
+    <sql id="columnDtos">
+     a.id,   a.company_id,a.user_id,a.status,a.creator,a.created,a.customer_manager, a.grade,a.community,a.source,a.city_area_id cityAreaId,a.address,a.mergerName
+    </sql>
+
+    <select id="selectCustomersList" resultMap="CustomerDtoMap" parameterType="string">
+
+    </select>
+
+    <select id="selectById" resultMap="CompanyCustomerMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   company_customer
+WHERE  id = #{id}
+</select>
+    <!-- 查询客户列表-->
+    <select id="selectByFilter" resultMap="CustomerDtoMap">
+SELECT <include refid="columnDtos" />,u.sex,u.name userName,u.mobile,u.state,u.work ,u.workUnit
+        FROM   (SELECT a.*,ci.merger_name mergerName from company_customer a LEFT JOIN city_area ci on a.city_area_id=ci.id) a
+         LEFT JOIN (select u.* ,us.work,us.work_unit workUnit
+        from user u left join user_basis us
+        on u.id=us.user_id)u
+        on a.user_id=u.id
+<where><trim prefixOverrides="AND">
+    <if test="condition != null">
+        (u.name like '%${condition}%'
+        or u.mobile like '%${condition}%'
+        or a.mergerName like '%${condition}%'
+         or a.address like '%${condition}%')
+    </if>
+    <if test="companyId != null">
+        AND a.company_id = #{companyId}
+    </if>
+    <if test="userId != null">
+        AND a.user_id = #{userId}
+    </if>
+    <if test="status != null">
+        AND a.status = #{status}
+    </if>
+    <if test="creator != null">
+        AND a.creator = #{creator}
+    </if>
+    <if test="created != null">
+        AND a.created = #{created}
+    </if>
+    <if test="customerManager != null">
+        AND a.customer_manager = #{customerManager}
+    </if>
+    <if test="grade != null">
+        AND a.grade = #{grade}
+    </if>
+    <if test="source != null">
+        AND a.source = #{source}
+    </if>
+    <if test="community != null">
+        AND community = #{community}
+    </if>
+    <if test="cityAreaId != null">
+        AND a.city_area_id = #{cityAreaId}
+    </if>
+    <if test="address != null">
+        AND a.address = #{address}
+    </if>
+    <if test="remarks != null">
+        AND a.remarks = #{remarks}
+    </if>
+    <if test="branchId != null">
+        AND a.branch_id = #{branchId}
+    </if>
+    <if test="name != null">
+        AND a.name = #{name}
+    </if>
+    <if test="phone != null">
+        AND a.phone = #{phone}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+company_customer(id, company_id, user_id, status, creator, created, customer_manager, grade,source,community,city_area_id,address,remarks,name,phone,sex)
+          VALUES(#{id}, #{companyId}, #{userId}, #{status}, #{creator}, #{created},
+                 #{customerManager}, #{grade},#{source},#{community},#{cityAreaId},#{address},#{remarks},#{name},#{phone},#{sex})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE company_customer
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('companyId') and companyId != null">
+    company_id = #{companyId},
+</if>
+    <if test="_parameter.containsKey('userId') and userId != null">
+    user_id = #{userId},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('customerManager') and customerManager != null">
+    customer_manager = #{customerManager},
+</if>
+    <if test="_parameter.containsKey('grade') and grade != null">
+    grade = #{grade},
+</if>
+    <if test="_parameter.containsKey('source') and source != null">
+        source = #{source},
+</if>
+    <if test="_parameter.containsKey('community') and community != null">
+    community = #{community},
+</if>
+    <if test="_parameter.containsKey('cityAreaId') and cityAreaId != null">
+        city_area_id = #{cityAreaId},
+    </if>
+    <if test="_parameter.containsKey('address') and address != null">
+        address = #{address},
+    </if>
+    <if test="_parameter.containsKey('remarks') and remarks != null">
+        remarks = #{remarks},
+    </if>
+    <if test="_parameter.containsKey('name') and name != null">
+        name = #{name},
+    </if>
+    <if test="_parameter.containsKey('phone') and phone != null">
+        phone = #{phone},
+    </if>
+    <if test="_parameter.containsKey('sex') and sex != null">
+        sex = #{sex}
+    </if>
+
+
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   company_customer
+WHERE  id = #{id}
+
+</delete>
+
+    <update id="updateCustomerStatus">
+        update company_customer set status=3 where user_id=#{userId}
+    </update>
+
+    <select id="selectCustomerByCUId" resultMap="CompanyCustomerMap">
+        select  <include refid="columns" />
+        from company_customer where user_id=#{userId} and company_id=#{companyId}
+    </select>
+
+    <select id="findCustomerMessageById" resultMap="CustomerDtoMap">
+        SELECT a.company_id,a.user_id,a.status,a.creator,a.created,a.customer_manager, a.grade,a.community,a.source,a.city_area_id cityAreaId,
+               u.sex,u.name userName,u.contact_number mobile,u.state,u.address,u.work ,u.workUnit,a.mergerName,a.salesmanMobile,a.salesmanName,u.birthday,a.avatar,u.login_name loginName,a.remarks
+        FROM (SELECT cc.* ,u.mobile salesmanMobile,u.name salesmanName ,u.avatar from
+            (SELECT cc.*,ci.merger_name mergerName from company_customer cc LEFT JOIN city_area ci on cc.city_area_id=ci.id) cc
+              LEFT JOIN user u on cc.customer_manager=u.id )a
+                 LEFT JOIN (select u.* ,us.contact_number ,us.address,us.work,us.work_unit workUnit
+                            from user u left join user_basis us
+                                                  on u.id=us.user_id )u
+                           on a.user_id=u.id
+        where a.company_id=#{companyId} and a.user_id=#{userId}
+
+    </select>
+    <select id="findCityCount" resultMap="customerCityCountDtoMap">
+        SELECT count(ca.merger_name) count,ca.merger_name mergerName
+        from (SELECT cc.user_id userId,u.city_area_id cityAreaId from  company_customer cc
+       LEFT JOIN user u on cc.user_id=u.id
+        <where><trim prefixOverrides="AND">
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                cc.company_id = #{companyId}
+            </if>
+            <if test="_parameter.containsKey('saleMan') and saleMan != null">
+                AND cc.customer_manager = #{saleMan}
+            </if>
+            <if test="_parameter.containsKey('selectTime') and selectTime != null">
+                AND date_format(cc.created,'%Y-%m')=#{selectTime}
+            </if>
+        </trim>
+            and u.city_area_id is not null
+        </where> )
+             cc left  JOIN
+           city_area ca on cc.cityAreaId=ca.id  GROUP BY ca.id
+
+    </select>
+    <select id="findCustomerByMap" resultMap="CompanyCustomerMap">
+        SELECT <include refid="columns" /> from company_customer
+        <where><trim prefixOverrides="AND">
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                company_id = #{companyId}
+            </if>
+            <if test="_parameter.containsKey('saleMan') and saleMan != null">
+                AND customer_manager = #{saleMan}
+            </if>
+            <if test="_parameter.containsKey('selectTime') and selectTime != null">
+                AND date_format(created,'%Y-%m')=#{selectTime}
+            </if>
+            <if test="_parameter.containsKey('name') and name != null">
+                AND name = #{name}
+            </if>
+        </trim>
+        </where>
+    </select>
+    <select id="findCustomerDatenum" resultMap="DateNumMap">
+    SELECT date_format(created,'%Y-%m-%d') creatTime,IFNULL(COUNT(*) ,0) as count  from company_customer
+    <where><trim prefixOverrides="AND">
+        <if test="_parameter.containsKey('companyId') and companyId != null">
+            company_id = #{companyId}
+        </if>
+        <if test="_parameter.containsKey('saleMan') and saleMan != null">
+            AND customer_manager = #{saleMan}
+        </if>
+        <if test="_parameter.containsKey('selectTime') and selectTime != null">
+            AND date_format(created,'%Y-%m')=#{selectTime}
+        </if>
+    </trim>
+    </where>
+        GROUP BY date_format(created,'%Y-%m-%d') order by created
+    </select>
+
+    <select id="findCustomerAmount" resultType="integer">
+       select count(*) from company_customer
+    </select>
+    <select id="findCustomerTodayNew" resultMap="factoryCustomerDto">
+        SELECT c.source customerSource,u.name customerName,ca.merger_name customerMergerName,c.address customerAddress,c.user_id userId,c.id customerId
+        from (SELECT id,user_id,source,city_area_id caId ,address from company_customer
+          where  to_days(created) = to_days(now())
+          )c LEFT JOIN user u on c.user_id=u.id
+           LEFT JOIN city_area ca on ca.id = c.caId
+    </select>
+    <select id="findCustomerThisMonth" resultType="integer">
+        select count(*) from company_customer where  DATE_FORMAT(created,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+    </select>
+
+    <select id="findLastMoth" resultType="integer">
+        select count(*) from company_customer where  PERIOD_DIFF(date_format(now(),'%Y%m'),date_format(created,'%Y%m'))=1
+    </select>
+
+    <select id="findFactoryCustomerEveryMonthAdd" resultMap="DateNumMap">
+          select DATE_FORMAT(created,'%Y-%m') as creatTime ,count(*) count from company_customer where YEAR(created)=YEAR(NOW()) group by creatTime
+    </select>
+
+    <select id="findCustomerListByCid" resultMap="CompanyCustomerMap">
+        SELECT <include refid="columns" /> from company_customer where company_id=#{companyId}
+    </select>
+    <select id="findCompanyNameByUid" resultType="string">
+        SELECT c.name companyName from company_customer cc left join company c on cc.company_id=c.id where cc.user_id=#{customerId}
+    </select>
+
+
+    <select id="findCustomers" resultMap="factoryCustomerDto">
+        SELECT c.companyId,c.created,c.customerId,c.source customerSource,u.name customerName,ca.merger_name customerMergerName,c.address customerAddress,u.id userId from
+           (SELECT id customerId,company_id companyId,user_id,source,city_area_id caId ,address,created from company_customer
+        <where>
+            <trim prefixOverrides="AND">
+            <!--company_id in-->
+            <!--<foreach collection="companyIds" open="(" separator="," close=")" item="companyId">-->
+                <!--#{companyId}-->
+            <!--</foreach>-->
+            <if test="mergerName != null">
+                 city_area_id in (SELECT id from city_area where merger_name like '%${mergerName}%')
+            </if>
+            <if test="condition != null">
+                and user_id in (SELECT id from user WHERE name like '%${condition}%' or mobile like '%${condition}%'  )
+            </if>
+            <if test="source != null">
+                and source=#{source}
+            </if>
+            <if test="dealerName != null">
+                and company_id in (select id from company where name like '%${dealerName}%')
+            </if>
+            <if test="orderNo != null">
+                and user_id in (select customer_id from custom_order where no like '%${orderNo}%')
+            </if>
+            <if test="todayNew != null">
+                 and to_days(created) = to_days(now())
+            </if>
+            <if test="thisMonth != null">
+                 and DATE_FORMAT( created, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+        </trim>
+        </where>
+            )c LEFT JOIN user u on c.user_id=u.id
+             LEFT JOIN city_area ca on ca.id = c.caId
+    </select>
+    <select id="findCompanyCustomer" resultType="java.util.Map">
+        select cc.id as customerId,cc.name as customerName, substring(ca.merger_name,4) as cityName,cc.address,cc.phone mobile
+        from company_customer cc
+        left join user u on u.id = cc.user_id
+        left join city_area ca on ca.id = cc.city_area_id
+        where cc.company_id = #{companyId}
+    </select>
+
+    <select id="findByPhoneAndBranchId" resultMap="CompanyCustomerMap">
+        select
+           cc.*
+        from company_customer cc
+        where cc.company_id = #{companyId} and cc.phone=#{mobile}
+    </select>
+    <select id="findWxCustomers" resultMap="WxCustomerDto">
+        select cc.name customer_name,
+               cc.community community,
+                    (case cc.sex
+                WHEN 0 THEN
+                '男'
+                WHEN 1 THEN
+                '女'
+                ELSE
+                '未知'
+                END
+                ) sexName,
+               cc.sex sex,
+               cc.city_area_id cityAreaId,
+               cc.address address,
+               cc.phone customer_mobile,
+               c.name company_name,
+               ca.merger_name customerMergerName,
+               cc.id customer_id,
+        (case c.type
+        WHEN 1 THEN
+        '直营店'
+        WHEN 2 THEN
+        '店中店'
+        WHEN 3 THEN
+        '专卖店'
+        WHEN 4 THEN
+        '加盟店'
+        ELSE
+        '未知'
+        END
+        ) company_type,cc.created
+          from company_customer cc
+            left join company c on cc.company_id=c.id
+        left join city_area ca on cc.city_area_id = ca.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="cityId != null">
+                    cc.city_area_id =#{cityId}
+                </if>
+                <if test="condation != null">
+                    and cc.name like '%${condation}%' or cc.phone like '%${condation}%'
+                    or cc.id in (select customer_id from custom_order where no like '%${condation}%')
+                </if>
+                <if test="dealerId != null">
+                    and cc.company_id = #{dealerId}
+                </if>
+                <if test="branchId != null">
+                    and c.branch_id = #{branchId}
+                </if>
+                <if test="type == 1 ">
+                    and cc.user_id not in(SELECT DISTINCT(co.customer_id) from custom_order co where co.branch_id=#{branchId} and co.customer_id is not null)
+                </if>
+                <if test="type == 2 ">
+                    and cc.user_id  in (SELECT DISTINCT(co.customer_id) from custom_order co where co.branch_id=#{branchId} and co.status <![CDATA[!= ]]> '16' and co.customer_id is not null)
+                </if>
+                <if test="type == 3 ">
+                    and cc.user_id  in(SELECT DISTINCT(co.customer_id) from custom_order co where co.branch_id=#{branchId} and co.status='16' and co.customer_id is not null )
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="findWxCustomerInfo" resultMap="WxCustomerInfoDto">
+        select
+            cc.name as customer_name,cc.phone as customer_mobile,
+               cc.sex,ca.id cityId,
+               cc.community,cc.remarks,cc.id,
+               co.name company_name,
+               us.name as sale_man,us.mobile as sale_man_mobile,
+            substring(ca.merger_name,4) as customer_merger_name,cc.address as customer_address
+        from company_customer cc
+          left join company co on cc.company_id = co.id
+                 left join user us on cc.customer_manager=us.id
+                 left join city_area ca on ca.id = cc.city_area_id
+        where cc.id = #{id}
+    </select>
+
+    <select id="findBWxCustomers" resultMap="WxCustomerDto">
+        select
+            cc.name customer_name,
+            cc.phone customer_mobile,
+            c.name company_name,
+            ca.merger_name customer_merger_name,
+            cc.id customer_id,
+            cc.community,
+            cc.created,
+            cc.address,
+            cc.sex,
+        (case cc.sex
+        WHEN 0 THEN
+        '男'
+        WHEN 1 THEN
+        '女'
+        ELSE
+        '未知'
+        END
+        ) sexName
+        from company_customer cc
+        left join company c on cc.company_id = c.id
+        left join city_area ca on cc.city_area_id = ca.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="condation != null">
+                    and (cc.name like '%${condation}%' or cc.phone like '%${condation}%')
+                </if>
+                <if test="name != null">
+                    and cc.name like '%${name}%'
+                </if>
+                <if test="phone != null">
+                    and cc.phone like '%${phone}%'
+                </if>
+                <if test="companyId != null">
+                    and cc.company_id = #{companyId}
+                </if>
+                <if test="type == 1 ">
+                    and cc.id not in (SELECT DISTINCT(co.customer_id) from custom_order co where co.company_id=#{companyId} and co.customer_id is not null)
+                </if>
+                <if test="type == 3 ">
+                    and cc.id in (SELECT DISTINCT(co.customer_id) from custom_order co where co.company_id=#{companyId} and co.status <![CDATA[!= ]]> '7' and co.customer_id is not null)
+                </if>
+                <if test="type == 2 ">
+                    and cc.id in (SELECT DISTINCT(co.customer_id) from custom_order co where co.company_id=#{companyId} and co.status='7' and co.customer_id is not null)
+                </if>
+                <if test="startTime != null">
+                    AND date_format(cc.created,'%Y-%m-%d') <![CDATA[>= ]]> #{startTime}
+                </if>
+                <if test="endTime != null">
+                    AND date_format(cc.created,'%Y-%m-%d') <![CDATA[<= ]]> #{endTime}
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="selectDtoById" resultMap="customerDtoV2">
+		select
+        cc.*,
+        c.name as companyName,c.leader_tel as leaderTel,c.id as companyId,ca.merger_name as cityAreaName
+        ,u.name customerManagerName
+        from company_customer cc
+        left join company c on c.id = cc.company_id
+        left join city_area ca on ca.id = cc.city_area_id
+        left join company_employee ce on ce.id = cc.customer_manager
+        left join user u on ce.user_id = u.id
+		where cc.id = #{userId} limit 1
+	</select>
+
+    <select id="findByMobile" resultMap="CompanyCustomerMap">
+        select <include refid="columns"/> from company_customer where phone = #{mobile}
+    </select>
+
+    <select id="findByClient" resultMap="customerDtoV2">
+        select
+        cc.*,
+        c.name as companyName,c.leader_tel as leaderTel,c.id as companyId,ca.merger_name as cityAreaName
+        ,u.name customerManagerName,
+        ca1.id cityId,ca1.parent_id provinceId
+        from company_customer cc
+        left join company c on c.id = cc.company_id
+        left join city_area ca on ca.id = cc.city_area_id
+        left join company_employee ce on ce.id = cc.customer_manager
+        left join user u on ce.user_id = u.id
+        left join city_area ca1 on ca.parent_id = ca1.id
+        <where><trim prefixOverrides="and">
+            <if test="name!=null">
+                cc.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="companyId!=null">
+                and cc.company_id = #{companyId}
+            </if>
+            <if test="phone!=null">
+                and cc.phone like CONCAT('%',#{phone},'%')
+            </if>
+            <if test="branchId!=null">
+                and c.branch_id = #{branchId}
+            </if>
+        </trim></where>
+        order by cc.created desc
+    </select>
+
+
+    <select id="findOneById" resultMap="customerDtoV2">
+        select
+        cc.*,
+        c.name as companyName,c.leader_tel as leaderTel,c.id as companyId,ca.merger_name as cityAreaName
+        ,u.name customerManagerName,
+        ca1.id cityId,ca1.parent_id provinceId
+        from company_customer cc
+        left join company c on c.id = cc.company_id
+        left join city_area ca on ca.id = cc.city_area_id
+        left join company_employee ce on ce.id = cc.customer_manager
+        left join user u on ce.user_id = u.id
+        left join city_area ca1 on ca.parent_id = ca1.id
+        where cc.id = #{id}
+    </select>
+    <select id="findCustomerCount" resultType="com.lwxf.mybatis.utils.MapContext">
+        select
+            (select count(*)  from company_customer where company_id in(select id from company where branch_id=#{branchId}) and DATE_FORMAT(created,'%Y-%m')=DATE_FORMAT(CURDATE(),'%Y-%m'))as monthNum,
+            (select count(*)  from company_customer where company_id in(select id from company where branch_id=#{branchId}) and YEARWEEK(date_format(created,'%Y-%m-%d')) = YEARWEEK(now()))as weekNum,
+            (select count(*)  from company_customer where company_id in(select id from company where branch_id=#{branchId}) and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(now(),'%Y-%m-%d'))as todayNum
+    </select>
+
+
+</mapper>

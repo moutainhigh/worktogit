@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.evaluate.EvaluateInfoDao">
+    <resultMap id="EvaluateInfoMap" type="com.lwxf.industry4.webapp.domain.entity.evaluate.EvaluateInfo">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="evaluate_order_id" property="evaluateOrderId" jdbcType="VARCHAR" />
+        <result column="evaluate_prduct_id" property="evaluatePrductId" jdbcType="VARCHAR" />
+        <result column="evaluate_type" property="evaluateType" jdbcType="INTEGER" />
+        <result column="star_level" property="starLevel" jdbcType="INTEGER" />
+        <result column="star_level_server" property="starLevelServer" jdbcType="INTEGER" />
+        <result column="star_level_logistics" property="starLevelLogistics" jdbcType="INTEGER" />
+        <result column="evaluate_content" property="evaluateContent" jdbcType="VARCHAR" />
+        <result column="hide_name" property="hideName" jdbcType="INTEGER" />
+        <result column="evaluate_user_id" property="evaluateUserId" jdbcType="VARCHAR" />
+        <result column="evaluate_user_name" property="evaluateUserName" jdbcType="VARCHAR" />
+        <result column="evaluate_like_num" property="evaluateLikeNum" jdbcType="INTEGER" />
+        <result column="evaluate_look_num" property="evaluateLookNum" jdbcType="INTEGER" />
+        <result column="evaluate_parent_id" property="evaluateParentId" jdbcType="VARCHAR" />
+        <result column="evaluate_Date" property="evaluateDate" jdbcType="TIMESTAMP" />
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+        <result column="customer_phone" property="customerPhone" jdbcType="VARCHAR" />
+        <result column="hade_evaluate" property="hadeEvaluate" jdbcType="VARCHAR" />
+        <result column="Reserve" property="Reserve" jdbcType="VARCHAR" />
+        <result column="Reserve1" property="Reserve1" jdbcType="VARCHAR" />
+        <result column="Reserve2" property="Reserve2" jdbcType="VARCHAR" />
+        <result column="Reserve3" property="Reserve3" jdbcType="VARCHAR" />
+        <result column="Reserve4" property="Reserve4" jdbcType="VARCHAR" />
+        <result column="Reserve5" property="Reserve5" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, evaluate_order_id, evaluate_prduct_id, evaluate_type, star_level, star_level_server, star_level_logistics, evaluate_content, hide_name, evaluate_user_id, evaluate_user_name, evaluate_like_num, evaluate_look_num, evaluate_parent_id, evaluate_Date, customer_name, customer_phone, hade_evaluate, Reserve, Reserve1, Reserve2, Reserve3, Reserve4, Reserve5
+</sql>
+
+    <select id="selectById" resultMap="EvaluateInfoMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   evaluate_info
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EvaluateInfoMap">
+SELECT <include refid="columns" />
+FROM   evaluate_info
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="evaluateOrderId != null">
+    AND evaluate_order_id = #{evaluateOrderId}
+</if>
+<if test="evaluatePrductId != null">
+    AND evaluate_prduct_id = #{evaluatePrductId}
+</if>
+<if test="evaluateType != null">
+    AND evaluate_type = #{evaluateType}
+</if>
+<if test="starLevel != null">
+    AND star_level = #{starLevel}
+</if>
+<if test="starLevelServer != null">
+    AND star_level_server = #{starLevelServer}
+</if>
+<if test="starLevelLogistics != null">
+    AND star_level_logistics = #{starLevelLogistics}
+</if>
+<if test="evaluateContent != null">
+    AND evaluate_content = #{evaluateContent}
+</if>
+<if test="hideName != null">
+    AND hide_name = #{hideName}
+</if>
+<if test="evaluateUserId != null">
+    AND evaluate_user_id = #{evaluateUserId}
+</if>
+<if test="evaluateUserName != null">
+    AND evaluate_user_name = #{evaluateUserName}
+</if>
+<if test="evaluateLikeNum != null">
+    AND evaluate_like_num = #{evaluateLikeNum}
+</if>
+<if test="evaluateLookNum != null">
+    AND evaluate_look_num = #{evaluateLookNum}
+</if>
+<if test="evaluateParentId != null">
+    AND evaluate_parent_id = #{evaluateParentId}
+</if>
+<if test="evaluateDate != null">
+    AND evaluate_Date = #{evaluateDate}
+</if>
+<if test="customerName != null">
+    AND customer_name = #{customerName}
+</if>
+<if test="customerPhone != null">
+    AND customer_phone = #{customerPhone}
+</if>
+<if test="hadeEvaluate != null">
+    AND hade_evaluate = #{hadeEvaluate}
+</if>
+<if test="Reserve != null">
+    AND Reserve = #{Reserve}
+</if>
+<if test="Reserve1 != null">
+    AND Reserve1 = #{Reserve1}
+</if>
+<if test="Reserve2 != null">
+    AND Reserve2 = #{Reserve2}
+</if>
+<if test="Reserve3 != null">
+    AND Reserve3 = #{Reserve3}
+</if>
+<if test="Reserve4 != null">
+    AND Reserve4 = #{Reserve4}
+</if>
+<if test="Reserve5 != null">
+    AND Reserve5 = #{Reserve5}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+evaluate_info(id, evaluate_order_id, evaluate_prduct_id, evaluate_type, star_level, star_level_server, star_level_logistics, evaluate_content, hide_name, evaluate_user_id, evaluate_user_name, evaluate_like_num, evaluate_look_num, evaluate_parent_id, evaluate_Date, customer_name, customer_phone, hade_evaluate, Reserve, Reserve1, Reserve2, Reserve3, Reserve4, Reserve5)
+       VALUES(#{id}, #{evaluateOrderId}, #{evaluatePrductId}, #{evaluateType}, #{starLevel}, #{starLevelServer}, #{starLevelLogistics}, #{evaluateContent}, #{hideName}, #{evaluateUserId}, #{evaluateUserName}, #{evaluateLikeNum}, #{evaluateLookNum}, #{evaluateParentId}, #{evaluateDate}, #{customerName}, #{customerPhone}, #{hadeEvaluate}, #{Reserve}, #{Reserve1}, #{Reserve2}, #{Reserve3}, #{Reserve4}, #{Reserve5})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE evaluate_info
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('evaluateOrderId')">
+    evaluate_order_id = #{evaluateOrderId},
+</if>
+    <if test="_parameter.containsKey('evaluatePrductId')">
+    evaluate_prduct_id = #{evaluatePrductId},
+</if>
+    <if test="_parameter.containsKey('evaluateType')">
+    evaluate_type = #{evaluateType},
+</if>
+    <if test="_parameter.containsKey('starLevel')">
+    star_level = #{starLevel},
+</if>
+    <if test="_parameter.containsKey('starLevelServer')">
+    star_level_server = #{starLevelServer},
+</if>
+    <if test="_parameter.containsKey('starLevelLogistics')">
+    star_level_logistics = #{starLevelLogistics},
+</if>
+    <if test="_parameter.containsKey('evaluateContent')">
+    evaluate_content = #{evaluateContent},
+</if>
+    <if test="_parameter.containsKey('hideName')">
+    hide_name = #{hideName},
+</if>
+    <if test="_parameter.containsKey('evaluateUserId')">
+    evaluate_user_id = #{evaluateUserId},
+</if>
+    <if test="_parameter.containsKey('evaluateUserName')">
+    evaluate_user_name = #{evaluateUserName},
+</if>
+    <if test="_parameter.containsKey('evaluateLikeNum')">
+    evaluate_like_num = #{evaluateLikeNum},
+</if>
+    <if test="_parameter.containsKey('evaluateLookNum')">
+    evaluate_look_num = #{evaluateLookNum},
+</if>
+    <if test="_parameter.containsKey('evaluateParentId')">
+    evaluate_parent_id = #{evaluateParentId},
+</if>
+    <if test="_parameter.containsKey('evaluateDate')">
+    evaluate_Date = #{evaluateDate},
+</if>
+    <if test="_parameter.containsKey('customerName')">
+    customer_name = #{customerName},
+</if>
+    <if test="_parameter.containsKey('customerPhone')">
+    customer_phone = #{customerPhone},
+</if>
+    <if test="_parameter.containsKey('hadeEvaluate')">
+    hade_evaluate = #{hadeEvaluate},
+</if>
+    <if test="_parameter.containsKey('Reserve')">
+    Reserve = #{Reserve},
+</if>
+    <if test="_parameter.containsKey('Reserve1')">
+    Reserve1 = #{Reserve1},
+</if>
+    <if test="_parameter.containsKey('Reserve2')">
+    Reserve2 = #{Reserve2},
+</if>
+    <if test="_parameter.containsKey('Reserve3')">
+    Reserve3 = #{Reserve3},
+</if>
+    <if test="_parameter.containsKey('Reserve4')">
+    Reserve4 = #{Reserve4},
+</if>
+    <if test="_parameter.containsKey('Reserve5')">
+    Reserve5 = #{Reserve5}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   evaluate_info
+WHERE  id = #{id}
+</delete>
+
+</mapper>

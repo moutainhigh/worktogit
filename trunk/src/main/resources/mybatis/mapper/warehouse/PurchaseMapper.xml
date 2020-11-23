@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.procurement.PurchaseDao">
+    <resultMap id="PurchaseMap" type="com.lwxf.industry4.webapp.domain.entity.procurement.Purchase">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="buyer" property="buyer" jdbcType="CHAR" />
+        <result column="purchase_time" property="purchaseTime" jdbcType="TIMESTAMP" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="purchase_request_no" property="purchaseRequestNo" jdbcType="VARCHAR" />
+        <result column="is_paid" property="paid" jdbcType="BIT" />
+        <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+        <result column="batch" property="batch" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="PurchaseDtoMap" type="com.lwxf.industry4.webapp.domain.dto.procurement.PurchaseDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="buyer" property="buyer" jdbcType="CHAR" />
+        <result column="purchase_time" property="purchaseTime" jdbcType="TIMESTAMP" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="purchase_request_no" property="purchaseRequestNo" jdbcType="VARCHAR" />
+        <result column="is_paid" property="paid" jdbcType="BIT" />
+        <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+        <result column="batch" property="batch" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="creatorName" property="creatorName"/>
+        <result column="supplierName" property="supplierName"/>
+        <result column="buyerName" property="buyerName"/>
+        <result column="storage_id" property="storageId" jdbcType="CHAR" />
+        <result column="storageName" property="storageName"/>
+    </resultMap>
+    <sql id="columns">
+id, name, status, buyer, purchase_time, supplier_id, notes, creator, created, purchase_request_no, is_paid, total_money, batch, remarks, storage_id
+</sql>
+    <sql id="columnDtos">
+p.id, p.name, p.status, p.buyer, p.purchase_time, p.supplier_id, p.notes, p.creator, p.created, p.purchase_request_no, p.is_paid, p.total_money, p.batch, p.storage_id, p.remarks,p.creatorName,p.supplierName,u.name buyerName,p.storageName
+</sql>
+
+    <select id="selectById" resultMap="PurchaseMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   purchase
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="PurchaseDtoMap">
+SELECT <include refid="columnDtos" />
+FROM   (select p.*,u.name creatorName from
+        (select p.*,com.name supplierName  from
+        (select p.*,s.name storageName from purchase p left join storage s on p.storage_id = s.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                p.id = #{id}
+            </if>
+            <if test="name != null">
+                AND p.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                AND p.status = #{status}
+            </if>
+            <if test="buyer != null">
+                AND p.buyer = #{buyer}
+            </if>
+            <if test="purchaseTime != null">
+                AND p.purchase_time = #{purchaseTime}
+            </if>
+            <if test="supplierId != null">
+                AND p.supplier_id = #{supplierId}
+            </if>
+            <if test="notes != null">
+                AND p.notes = #{notes}
+            </if>
+            <if test="creator != null">
+                AND p.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND p.created = #{created}
+            </if>
+            <if test="purchaseRequestNo != null">
+                AND p.purchase_request_no = #{purchaseRequestNo}
+            </if>
+            <if test="paid != null">
+                AND p.is_paid = #{paid}
+            </if>
+            <if test="totalMoney != null">
+                AND p.total_money = #{totalMoney}
+            </if>
+            <if test="batch != null">
+                AND p.batch = #{batch}
+            </if>
+            <if test="remarks != null">
+                AND p.remarks = #{remarks}
+            </if>
+            <if test="storageId != null">
+                AND storage_id = #{storageId}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </trim></where>
+        )
+        p left join company com on p.supplier_id = com.id
+        )
+        p left join user u on p.creator = u.id) p left join user u on p.buyer = u.id
+
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+purchase(id, name, status, buyer, purchase_time, supplier_id, notes, creator, created, purchase_request_no, is_paid, total_money, batch, remarks,storage_id)
+  VALUES(#{id}, #{name}, #{status}, #{buyer}, #{purchaseTime}, #{supplierId}, #{notes}, #{creator}, #{created}, #{purchaseRequestNo}, #{paid}, #{totalMoney}, #{batch}, #{remarks}, #{storageId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE purchase
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('purchaseRequestNo')">
+    purchase_request_no = #{purchaseRequestNo},
+</if>
+    <if test="_parameter.containsKey('paid') and paid != null">
+    is_paid = #{paid},
+</if>
+    <if test="_parameter.containsKey('totalMoney') and totalMoney != null">
+    total_money = #{totalMoney},
+</if>
+    <if test="_parameter.containsKey('remarks')">
+    remarks = #{remarks}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   purchase
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findOneById" resultMap="PurchaseDtoMap">
+        SELECT <include refid="columnDtos" />
+        FROM   (select p.*,u.name creatorName from
+        (select p.*,com.name supplierName  from
+        (select p.*,s.name storageName from purchase p left join storage s on p.storage_id = s.id)
+        p left join company com on p.supplier_id = com.id where p.id = #{id})
+        p left join user u on p.creator = u.id) p left join user u on p.buyer = u.id
+    </select>
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.RoleDao">
+    <resultMap id="RoleMap" type="com.lwxf.industry4.webapp.domain.entity.system.Role">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="key" property="key" jdbcType="VARCHAR" />
+        <result column="is_admin" property="admin" jdbcType="BIT" />
+        <result column="branch_id" property="branchId"/>
+        <result column="home_page" property="homePage"/>
+    </resultMap>
+    <sql id="columns">
+id, name, type, `key`, is_admin,branch_id,home_page
+</sql>
+
+    <select id="selectById" resultMap="RoleMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   role
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="RoleMap">
+        SELECT <include refid="columns" />
+        FROM   role
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="key != null">
+                AND key = #{key}
+            </if>
+            <if test="admin != null">
+                AND is_admin = #{admin}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="homePage != null">
+                AND home_page = #{homePage}
+            </if>
+        </trim></where>
+
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+  role(id, name, type, `key`, is_admin,branch_id,home_page)
+VALUES(#{id}, #{name}, #{type}, #{key}, #{admin},#{branchId},#{homePage})
+</insert>
+    <update id="updateByMapContext">
+        UPDATE role
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('homePage') and homePage != null">
+                home_page=#{homePage},
+            </if>
+            <if test="_parameter.containsKey('admin') and admin != null">
+                is_admin = #{admin}
+            </if>
+
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   role
+WHERE  id = #{id}
+</delete>
+
+    <select id="selectByKey" resultMap="RoleMap">
+        select <include refid="columns"/> from role where `key` = #{key} and branch_id = #{branchId}
+    </select>
+
+    <select id="findListByType" resultMap="RoleMap">
+        select
+        <include refid="columns"/>
+        from role
+        <where><trim prefixOverrides="AND">
+            <if test="type != null">
+                type = #{type}
+            </if>
+            <if test="key != null">
+                AND `key` != #{key}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </trim></where>
+    </select>
+
+
+    <select id="findRoleByCidAndUid" resultMap="RoleMap">
+        select
+        <include refid="columns"/>
+        from role
+        WHERE  id =
+        (select role_id
+        from company_employee
+        where company_id = #{companyId}
+        and user_id = #{userId})
+    </select>
+
+</mapper>

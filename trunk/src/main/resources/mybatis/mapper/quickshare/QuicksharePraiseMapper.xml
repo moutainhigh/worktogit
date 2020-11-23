@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.quickshare.QuicksharePraiseDao">
+    <resultMap id="QuicksharePraiseMap" type="com.lwxf.industry4.webapp.domain.entity.quickshare.QuicksharePraise">
+        <result column="quickshare_id" property="quickshareId" jdbcType="CHAR" />
+        <result column="member_id" property="memberId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="QuicksharePraiseDtoMap" type="com.lwxf.industry4.webapp.domain.dto.quickshare.QuicksharePraiseDto">
+        <result column="quickshare_id" property="quickshareId" jdbcType="CHAR" />
+        <result column="member_id" property="memberId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="praiseAvatar" property="praiseAvatar" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+quickshare_id, member_id, created
+</sql>
+    <sql id="columnDtos">
+        qp.quickshare_id, qp.member_id, qp.created
+    </sql>
+
+    <!--<select id="selectById" resultMap="QuicksharePraiseMap" parameterType="Long">-->
+<!--SELECT <include refid="columns" />-->
+<!--FROM   quickshare_praise-->
+<!--WHERE  id = #{id}-->
+<!--</select>-->
+
+    <select id="selectByMemberIdAndQuickshareId" resultMap="QuicksharePraiseMap" >
+SELECT <include refid="columns" />
+FROM   quickshare_praise
+WHERE  member_id = #{memberId}
+   AND quickshare_id = #{quickshareId}
+</select>
+    <select id="selectByQuickshareId" resultMap="QuicksharePraiseDtoMap">
+        SELECT <include refid="columnDtos" />,u.avatar praiseAvatar
+        FROM   quickshare_praise qp,user u
+        where
+        qp.member_id=u.id
+        and
+        qp.quickshare_id = #{quickshareId}
+    </select>
+    <select id="findByQsIds" resultMap="QuicksharePraiseMap">
+        select <include refid="columns"/> from quickshare_praise where quickshare_id in
+        <foreach collection="collection" item="quickshareIds" open="(" separator="," close=")">
+            #{quickshareIds}
+        </foreach>
+    </select>
+
+    <select id="selectByFilter" resultMap="QuicksharePraiseMap">
+SELECT <include refid="columns" />
+FROM   quickshare_praise
+<where><trim prefixOverrides="AND">
+<if test="quickshareId != null">
+    quickshare_id = #{quickshareId}
+</if>
+<if test="memberId != null">
+    AND member_id = #{memberId}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+quickshare_praise(quickshare_id, member_id, created)
+           VALUES(#{quickshareId}, #{memberId}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE quickshare_praise
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('quickshareId') and quickshareId != null">
+    quickshare_id = #{quickshareId},
+</if>
+    <if test="_parameter.containsKey('memberId') and memberId != null">
+    member_id = #{memberId},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteQuiPraByQuiId" parameterType="Long">
+DELETE FROM   quickshare_praise
+WHERE  quickshare_id = #{quickshareId}
+</delete>
+    <delete id="deleteByQuiIdAndUid">
+        DELETE FROM   quickshare_praise
+        WHERE  quickshare_id = #{quickshareId}
+        and member_id=#{memberId}
+    </delete>
+
+</mapper>

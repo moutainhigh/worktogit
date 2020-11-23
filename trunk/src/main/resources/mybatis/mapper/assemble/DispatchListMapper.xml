@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.assemble.DispatchListDao">
+    <resultMap id="DispatchListMap" type="com.lwxf.industry4.webapp.domain.entity.assemble.DispatchList">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="erector" property="erector" jdbcType="CHAR" />
+        <result column="construction_time" property="constructionTime" jdbcType="TIMESTAMP" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="is_take_delivery" property="takeDelivery" jdbcType="BIT" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+        <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="dispatch_bill_id" property="dispatchBillId" jdbcType="CHAR" />
+        <result column="auditor" property="auditor" jdbcType="CHAR" />
+        <result column="except_time" property="exceptTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="DispatchListDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dispatchList.DispatchListDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="erector" property="erector" jdbcType="CHAR" />
+        <result column="construction_time" property="constructionTime" jdbcType="TIMESTAMP" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="is_take_delivery" property="takeDelivery" jdbcType="BIT" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+        <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="dispatch_bill_id" property="dispatchBillId" jdbcType="CHAR" />
+        <result column="auditor" property="auditor" jdbcType="CHAR" />
+        <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+        <result column="shareMemberName" property="shareMemberName" jdbcType="VARCHAR" />
+        <result column="shareMeberMobile" property="shareMeberMobile" jdbcType="VARCHAR" />
+        <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+        <result column="customerMobile" property="customerMobile" jdbcType="VARCHAR" />
+        <result column="orderCreated" property="orderCreated" jdbcType="TIMESTAMP" />
+        <result column="deliveryDate" property="deliveryDate" jdbcType="TIMESTAMP" />
+        <result column="customerAddress" property="customerAddress" jdbcType="VARCHAR" />
+        <result column="except_time" property="exceptTime" jdbcType="TIMESTAMP" />
+        <result column="auditorName" property="auditorName" jdbcType="VARCHAR" />
+        <result column="customerId" property="customerId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="DateNumMap" type="com.lwxf.industry4.webapp.domain.dto.aftersale.DateNum">
+        <result column="creatTime" property="creatTime" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="columns">
+id, name, erector, construction_time, address, creator, created, status, no, is_take_delivery, order_id, notes, consignee, pickup_time,company_id,dispatch_bill_id,auditor,except_time
+</sql>
+
+    <select id="selectById" resultMap="DispatchListMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dispatch_list
+WHERE  id = #{id}
+</select>
+<!-- 安装单列表-->
+    <select id="findDispatchListByCid" resultMap="DispatchListDtoMap">
+        SELECT dl.*,u.name shareMemberName ,u.mobile shareMeberMobile FROM
+        (SELECT dl.* ,co.no orderNo,co.customer_id customerId,co.customerName,co.customerMobile ,co.created orderCreated,co.estimated_delivery_date deliveryDate
+        from dispatch_list dl LEFT JOIN
+          (select co.*,u.name customerName,u.mobile customerMobile from custom_order co LEFT JOIN user u on co.customer_id=u.id )co
+        on dl.order_id=co.id )dl LEFT JOIN user u on dl.erector=u.id
+    <where><trim prefixOverrides="AND">
+       <if test="condition != null">
+        (u.name like '%${condition}%'
+        or u.mobile like '%${condition}%'
+        or dl.customerName like '%${condition}%'
+        or dl.orderNo like '%${condition}%')
+    </if>
+        <if test="name != null">
+            AND dl.name = #{name}
+        </if>
+        <if test="erector != null">
+            AND dl.erector = #{erector}
+        </if>
+        <if test="constructionTime != null">
+            AND dl.construction_time = #{constructionTime}
+        </if>
+        <if test="address != null">
+            AND dl.address = #{address}
+        </if>
+        <if test="creator != null">
+            AND dl.creator = #{creator}
+        </if>
+        <if test="created != null">
+            AND dl.created = #{created}
+        </if>
+        <if test="status != null">
+            AND dl.status = #{status}
+        </if>
+        <if test="no != null">
+            AND dl.no = #{no}
+        </if>
+        <if test="takeDelivery != null">
+            AND dl.is_take_delivery = #{takeDelivery}
+        </if>
+        <if test="orderId != null">
+            AND dl.order_id = #{orderId}
+        </if>
+        <if test="notes != null">
+            AND dl. notes = #{notes}
+        </if>
+        <if test="consignee != null">
+            AND dl.consignee = #{consignee}
+        </if>
+        <if test="pickupTime != null">
+            AND dl.pickup_time = #{pickupTime}
+        </if>
+        <if test="companyId != null">
+            AND dl.company_id = #{companyId}
+        </if>
+        <if test="dispatchBillId != null">
+            AND dl.dispatchBillId = #{dispatchBillId}
+        </if>
+        <if test="auditor != null">
+            AND dl.auditor = #{auditor}
+        </if>
+        <if test="except_time != null">
+            AND dl.except_time = #{exceptTime}
+        </if>
+
+    </trim></where>
+    </select>
+
+    <select id="findDipatchListById" resultMap="DispatchListDtoMap">
+        SELECT dl.*,u.name shareMemberName ,u.mobile shareMeberMobile FROM
+            (SELECT dl.* ,co.no orderNo,co.customer_id customerId,co.customerName,co.customerMobile ,co.created orderCreated,co.delivery_date deliveryDate,co.customerAddress
+             from (SELECT dl.* ,u.name auditorName from dispatch_list dl LEFT JOIN user u on dl.auditor=u.id ) dl LEFT JOIN
+                  (select co.*,u.name customerName,u.mobile customerMobile,u.customerAddress from custom_order co LEFT JOIN
+                      (SELECT u.* ,us.address customerAddress,us.user_id from user u LEFT JOIN user_basis us on u.id=us.user_id) u on co.customer_id=u.id )co
+                      on dl.order_id=co.id )dl LEFT JOIN user u on dl.erector=u.id
+          where  dl.id=#{dispatchListId}
+
+
+    </select>
+
+    <select id="selectByFilter" resultMap="DispatchListMap">
+SELECT <include refid="columns" />
+FROM   dispatch_list
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="erector != null">
+    AND erector = #{erector}
+</if>
+<if test="constructionTime != null">
+    AND construction_time = #{constructionTime}
+</if>
+<if test="address != null">
+    AND address = #{address}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="no != null">
+    AND no = #{no}
+</if>
+<if test="takeDelivery != null">
+    AND is_take_delivery = #{takeDelivery}
+</if>
+<if test="orderId != null">
+    AND order_id = #{orderId}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="consignee != null">
+    AND consignee = #{consignee}
+</if>
+<if test="pickupTime != null">
+    AND pickup_time = #{pickupTime}
+</if>
+    <if test="pickupTime != null">
+        AND company_id = #{companyId}
+    </if>
+    <if test="dispatchBillId != null">
+        AND dl.dispatchBillId = #{dispatchBillId}
+    </if>
+    <if test="auditor != null">
+        AND dl.auditor = #{auditor}
+    </if>
+    <if test="except_time != null">
+        AND dl.except_time = #{exceptTime}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_list(id, name, erector, construction_time, address, creator, created, status, no, is_take_delivery, order_id, notes, consignee, pickup_time,company_id,dispatch_bill_id,auditor,except_time)
+       VALUES(#{id}, #{name}, #{erector}, #{constructionTime}, #{address}, #{creator}, #{created}, #{status}, #{no}, #{takeDelivery}, #{orderId}, #{notes}, #{consignee}, #{pickupTime},#{companyId},#{dispatchBillId},#{auditor},#{exceptTime})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dispatch_list
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('erector')">
+    erector = #{erector},
+</if>
+    <if test="_parameter.containsKey('constructionTime')">
+    construction_time = #{constructionTime},
+</if>
+    <if test="_parameter.containsKey('address')">
+    address = #{address},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('no') and no != null">
+    no = #{no},
+</if>
+    <if test="_parameter.containsKey('takeDelivery') and takeDelivery != null">
+    is_take_delivery = #{takeDelivery},
+</if>
+    <if test="_parameter.containsKey('orderId') and orderId != null">
+    order_id = #{orderId},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('consignee')">
+    consignee = #{consignee},
+</if>
+    <if test="_parameter.containsKey('pickupTime')">
+    pickup_time = #{pickupTime},
+</if>
+    <if test="_parameter.containsKey('companyId')">
+        company_id = #{companyId},
+    </if>
+    <if test="_parameter.containsKey('dispatchBillId')">
+        dispatch_bill_id = #{dispatchBillId},
+    </if>
+    <if test="_parameter.containsKey('auditor')">
+        auditor = #{auditor},
+    </if>
+    <if test="_parameter.containsKey('pickupTime')">
+        except_time = #{exceptTime}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_list
+WHERE  id = #{id}
+</delete>
+
+    <select id="findDiscountByCidAndStatus" resultType="integer">
+  select count(*) from dispatch_list
+        <where><trim prefixOverrides="AND">
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                company_id = #{companyId}
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                AND status = #{status}
+            </if>
+            <if test="_parameter.containsKey('saleMan') and saleMan != null">
+                AND salesman = #{saleMan}
+            </if>
+            <if test="_parameter.containsKey('selectTime') and selectTime != null">
+                AND date_format(created,'%Y-%m')=#{selectTime}
+            </if>
+        </trim>
+        </where>
+    </select>
+    <select id="findDatenumByCreatedAndCid" resultMap="DateNumMap">
+        select date_format(created,'%Y-%m-%d') creatTime,IFNULL(COUNT(*) ,0) as count from dispatch_list
+        <where><trim prefixOverrides="AND">
+            <if test="_parameter.containsKey('companyId') and companyId != null">
+                company_id = #{companyId}
+            </if>
+            <if test="_parameter.containsKey('saleMan') and saleMan != null">
+                AND salesman = #{saleMan}
+            </if>
+            <if test="_parameter.containsKey('selectTime') and selectTime != null">
+                AND date_format(created,'%Y-%m')=#{selectTime}
+            </if>
+        </trim>
+        </where>
+        GROUP BY date_format(created,'%Y-%m-%d') order by created
+    </select>
+    <select id="findTimeByOrderId" resultType="java.lang.String">
+        SELECT min(created)
+        from order_account_log
+        where order_id = #{orderId}
+        and type = 1
+        limit 1
+    </select>
+
+
+</mapper>

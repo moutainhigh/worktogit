@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.finished.FinishedProductSeriesDao">
+    <resultMap id="FinishedProductSeriesMap" type="com.lwxf.industry4.webapp.domain.entity.finished.FinishedProductSeries">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="no" property="no" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, name, no, notes, status
+</sql>
+
+    <select id="selectById" resultMap="FinishedProductSeriesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   finished_product_series
+WHERE  id = #{id}
+</select>
+
+    <select id="findAll" resultMap="FinishedProductSeriesMap">
+        SELECT
+        id, name, no
+        FROM   finished_product_series
+        where status = 1
+    </select>
+
+
+    <select id="selectByFilter" resultMap="FinishedProductSeriesMap">
+SELECT <include refid="columns" />
+FROM   finished_product_series
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="no != null">
+    AND no = #{no}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+finished_product_series(id, name, no, notes, status)
+                 VALUES(#{id}, #{name}, #{no}, #{notes}, #{status})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE finished_product_series
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('no') and no != null">
+    no = #{no},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   finished_product_series
+WHERE  id = #{id}
+</delete>
+
+</mapper>

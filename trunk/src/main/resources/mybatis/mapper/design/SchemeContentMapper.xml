@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.design.SchemeContentDao">
+    <resultMap id="SchemeContentMap" type="com.lwxf.industry4.webapp.domain.entity.design.SchemeContent">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="content_name" property="contentName" jdbcType="VARCHAR" />
+        <result column="content_notes" property="contentNotes" jdbcType="VARCHAR" />
+        <result column="content_Image" property="contentImage" jdbcType="VARCHAR" />
+        <result column="content_index" property="contentIndex" jdbcType="INTEGER" />
+        <result column="content_created" property="contentCreated" jdbcType="TIMESTAMP" />
+        <result column="scheme_id" property="schemeId" jdbcType="CHAR" />
+    </resultMap>
+
+
+    <resultMap id="SchemeContentMapDto" type="com.lwxf.industry4.webapp.domain.dto.design.SchemeContentDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="content_name" property="contentName" jdbcType="VARCHAR" />
+        <result column="content_notes" property="contentNotes" jdbcType="VARCHAR" />
+        <result column="content_Image" property="contentImage" jdbcType="VARCHAR" />
+        <result column="content_index" property="contentIndex" jdbcType="INTEGER" />
+        <result column="content_created" property="contentCreated" jdbcType="TIMESTAMP" />
+        <result column="scheme_id" property="schemeId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, content_name, content_notes, content_Image, content_index, content_created, scheme_id
+</sql>
+
+    <select id="selectById" resultMap="SchemeContentMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   scheme_content
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="SchemeContentMap">
+SELECT <include refid="columns" />
+FROM   scheme_content
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="contentName != null">
+    AND content_name = #{contentName}
+</if>
+<if test="contentNotes != null">
+    AND content_notes = #{contentNotes}
+</if>
+<if test="contentImage != null">
+    AND content_Image = #{contentImage}
+</if>
+<if test="contentIndex != null">
+    AND content_index = #{contentIndex}
+</if>
+<if test="contentCreated != null">
+    AND content_created = #{contentCreated}
+</if>
+<if test="schemeId != null">
+    AND scheme_id = #{schemeId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+scheme_content(id, content_name, content_notes, content_Image, content_index, content_created, scheme_id)
+        VALUES(#{id}, #{contentName}, #{contentNotes}, #{contentImage}, #{contentIndex}, #{contentCreated}, #{schemeId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE scheme_content
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('contentName')">
+    content_name = #{contentName},
+</if>
+    <if test="_parameter.containsKey('contentNotes')">
+    content_notes = #{contentNotes},
+</if>
+    <if test="_parameter.containsKey('contentImage')">
+    content_Image = #{contentImage},
+</if>
+    <if test="_parameter.containsKey('contentIndex')">
+    content_index = #{contentIndex},
+</if>
+    <if test="_parameter.containsKey('contentCreated') and contentCreated != null">
+    content_created = #{contentCreated},
+</if>
+    <if test="_parameter.containsKey('schemeId') and schemeId != null">
+    scheme_id = #{schemeId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   scheme_content
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findBySchemeId" resultMap="SchemeContentMapDto">
+        select
+        <include refid="columns"/>
+        from scheme_content
+        where scheme_id = #{id} order by content_index asc
+    </select>
+
+</mapper>

@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductDao">
+    <resultMap id="ProductMap" type="com.lwxf.industry4.webapp.domain.entity.product.Product">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR" />
+        <result column="product_material" property="productMaterial" jdbcType="VARCHAR" />
+        <result column="product_color" property="productColor" jdbcType="VARCHAR" />
+        <result column="product_spec" property="productSpec" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="unit" property="unit" jdbcType="TINYINT" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="thickness" property="thickness" jdbcType="INTEGER" />
+        <result column="factory_price_wall" property="factoryPriceWall" jdbcType="DECIMAL" />
+        <result column="model" property="model" jdbcType="VARCHAR" />
+        <result column="series" property="series" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="is_lower_shelf" property="lowerShelf" jdbcType="BIT" />
+        <result column="branch_id" property="branchId"/>
+        <result column="factory_price_floor" property="factoryPriceFloor" jdbcType="DECIMAL" />
+        <result column="take_away_price_wall" property="takeAwayPriceWall" jdbcType="DECIMAL" />
+        <result column="take_away_price_floor" property="takeAwayPriceFloor" jdbcType="DECIMAL" />
+        <result column="sample_price_wall" property="samplePriceWall" jdbcType="DECIMAL" />
+        <result column="sample_price_floor" property="samplePriceFloor" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="ProductDtoMap" type="com.lwxf.industry4.webapp.domain.dto.product.ProductDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="product_category_id" property="productCategoryId" jdbcType="CHAR" />
+        <result column="product_material" property="productMaterial" jdbcType="VARCHAR" />
+        <result column="product_color" property="productColor" jdbcType="VARCHAR" />
+        <result column="product_spec" property="productSpec" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="unit" property="unit" jdbcType="TINYINT" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="thickness" property="thickness" jdbcType="INTEGER" />
+        <result column="factory_price_wall" property="factoryPriceWall" jdbcType="DECIMAL" />
+        <result column="model" property="model" jdbcType="VARCHAR" />
+        <result column="series" property="series" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="is_lower_shelf" property="lowerShelf" jdbcType="BIT" />
+        <result column="categoryName" property="categoryName"/>
+        <result column="creatorName" property="creatorName"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="wxCover" property="wxCover"/>
+        <result column="factory_price_floor" property="factoryPriceFloor" jdbcType="DECIMAL" />
+        <result column="take_away_price_wall" property="takeAwayPriceWall" jdbcType="DECIMAL" />
+        <result column="take_away_price_floor" property="takeAwayPriceFloor" jdbcType="DECIMAL" />
+        <result column="sample_price_wall" property="samplePriceWall" jdbcType="DECIMAL" />
+        <result column="sample_price_floor" property="samplePriceFloor" jdbcType="DECIMAL" />
+        <result column="lowerShelfName" property="lowerShelfName"/>
+        <result column="statusName" property="statusName"/>
+    </resultMap>
+    <sql id="columns">
+id, name, notes, product_category_id, product_material, product_color, product_spec, status, creator, created, unit, type, thickness, factory_price_wall, model, series, remarks, is_lower_shelf,branch_id,factory_price_floor,take_away_price_wall,take_away_price_floor,sample_price_wall,sample_price_floor
+</sql>
+
+    <sql id="columnsDTO">
+        p.*,file.path wxCover,ca.name categoryName,b.value lowerShelfName,bb.value statusName
+    </sql>
+    <select id="selectById" resultMap="ProductMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM product
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="ProductDtoMap">
+        SELECT <include refid="columnsDTO"/> from product_category ca RIGHT JOIN
+        (SELECT p.*,u.name creatorName from user u RIGHT JOIN product p on u.id = p.creator
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                p.id = #{id}
+            </if>
+            <if test="name != null">
+                AND p.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="notes != null">
+                AND p.notes = #{notes}
+            </if>
+            <if test="categoryId != null">
+                AND p.product_category_id = #{categoryId}
+            </if>
+            <if test="productMaterial != null">
+                AND p.product_material like CONCAT('%',#{productMaterial},'%')
+            </if>
+            <if test="productColor != null">
+                AND p.product_color like CONCAT('%',#{productColor},'%')
+            </if>
+            <if test="productSpec != null">
+                AND p.product_spec like CONCAT('%',#{productSpec},'%')
+            </if>
+            <if test="status != null">
+                AND p.status = #{status}
+            </if>
+            <if test="creator != null">
+                AND p.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND p.created = #{created}
+            </if>
+            <if test="unit != null">
+                AND p.unit = #{unit}
+            </if>
+            <if test="type != null">
+                AND p.type = #{type}
+            </if>
+            <if test="thickness != null">
+                AND p.thickness = #{thickness}
+            </if>
+            <if test="factoryPrice != null">
+                AND p.factory_price = #{factoryPrice}
+            </if>
+            <if test="model != null">
+                AND p.model like CONCAT('%',#{model},'%')
+            </if>
+            <if test="series != null">
+                AND p.series = #{series}
+            </if>
+            <if test="remarks != null">
+                AND p.remarks = #{remarks}
+            </if>
+            <if test="lowerShelf != null">
+                AND p.is_lower_shelf = #{lowerShelf}
+            </if>
+            <if test="branchId != null">
+                AND p.branch_id = #{branchId}
+            </if>
+        </trim></where>
+        ) p on ca.id = p.product_category_id
+        left join (select * from product_files file where file.type = 4 ) file on file.product_id = p.id
+        left join basecode b on b.code = p.is_lower_shelf
+        left join basecode bb on bb.code = p.status
+        where b.type = 'productLowerShelf'
+        and bb.type = 'productStatus'
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+product(id, name, notes, product_category_id, product_material, product_color, product_spec, status, creator, created, unit, type, thickness, factory_price_wall, model, series, remarks, is_lower_shelf,branch_id,factory_price_floor,take_away_price_wall,take_away_price_floor,sample_price_wall,sample_price_floor)
+ VALUES(#{id}, #{name}, #{notes}, #{productCategoryId}, #{productMaterial}, #{productColor}, #{productSpec}, #{status}, #{creator}, #{created}, #{unit}, #{type}, #{thickness}, #{factoryPriceWall}, #{model}, #{series}, #{remarks}, #{lowerShelf},#{branchId},#{factoryPriceFloor},#{takeAwayPriceWall},#{takeAwayPriceFloor},#{samplePriceWall},#{samplePriceFloor})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE product
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('productCategoryId') and productCategoryId != null">
+                product_category_id = #{productCategoryId},
+            </if>
+            <if test="_parameter.containsKey('productMaterial')">
+                product_material = #{productMaterial},
+            </if>
+            <if test="_parameter.containsKey('productColor')">
+                product_color = #{productColor},
+            </if>
+            <if test="_parameter.containsKey('productSpec')">
+                product_spec = #{productSpec},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('unit') and unit != null">
+                unit = #{unit},
+            </if>
+            <if test="_parameter.containsKey('type')">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('thickness')">
+                thickness = #{thickness},
+            </if>
+            <if test="_parameter.containsKey('factoryPriceWall')">
+                factory_price_wall = #{factoryPriceWall},
+            </if>
+            <if test="_parameter.containsKey('factoryPriceFloor')">
+                factory_price_floor = #{factoryPriceFloor},
+            </if>
+            <if test="_parameter.containsKey('takeAwayPriceWall')">
+                take_away_price_wall = #{takeAwayPriceWall},
+            </if>
+            <if test="_parameter.containsKey('takeAwayPriceFloor')">
+                take_away_price_floor = #{takeAwayPriceFloor},
+            </if>
+            <if test="_parameter.containsKey('samplePriceWall')">
+                sample_price_wall = #{samplePriceWall},
+            </if>
+            <if test="_parameter.containsKey('samplePriceFloor')">
+                sample_price_floor = #{samplePriceFloor},
+            </if>
+            <if test="_parameter.containsKey('model') and model != null">
+                model = #{model},
+            </if>
+            <if test="_parameter.containsKey('series')">
+                series = #{series},
+            </if>
+            <if test="_parameter.containsKey('remarks')">
+                remarks = #{remarks},
+            </if>
+            <if test="_parameter.containsKey('lowerShelf') and lowerShelf != null">
+                is_lower_shelf = ${lowerShelf}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="selectByCategoryId" resultMap="ProductMap">
+        select
+        <include refid="columns"/>
+        from product where product_category_id = #{id}
+    </select>
+
+    <select id="selectByColorId" resultMap="ProductMap">
+        select
+        <include refid="columns"/>
+        from product where product_color = #{id}
+    </select>
+
+    <select id="selectByMaterialId" resultMap="ProductMap">
+        select
+        <include refid="columns"/>
+        from product where product_material_id = #{id}
+    </select>
+
+    <select id="selectBySpecId" resultMap="ProductMap">
+        select
+        <include refid="columns"/>
+        from product where product_spec_id = #{id}
+    </select>
+
+    <select id="selectByModel" resultMap="ProductMap">
+        select
+        <include refid="columns"/>
+        from product where model = #{no}
+    </select>
+
+    <select id="selectProductDtoById" resultMap="ProductDtoMap">
+        SELECT <include refid="columnsDTO"/> from product_category ca RIGHT JOIN
+        (SELECT p.*,u.name creatorName from user u RIGHT JOIN
+        (SELECT p.* from product p where p.id = #{id}
+        ) p on u.id = p.creator
+        ) p on ca.id = p.product_category_id
+        left join (select * from product_files file where file.type = 4 ) file on file.product_id = p.id
+        left join basecode b on b.code = p.is_lower_shelf
+        left join basecode bb on bb.code = p.status
+        where b.type = 'productLowerShelf'
+        and bb.type = 'productStatus'
+    </select>
+
+    <select id="findResourcesList" resultType="java.lang.String">
+        select DISTINCT(${resources}) from product
+        <where><trim prefixOverrides="AND">
+            ${resources} is not null
+            <if test="categoryId != null">
+                AND product_category_id = #{categoryId}
+            </if>
+            <if test="productMaterial != null">
+                AND product_material like CONCAT('%',#{productMaterial},'%')
+            </if>
+            <if test="productColor != null">
+                AND product_color like CONCAT('%',#{productColor},'%')
+            </if>
+            <if test="productSpec != null">
+                AND product_spec like CONCAT('%',#{productSpec},'%')
+            </if>
+            <if test="series != null">
+                AND series like CONCAT('%',#{series},'%')
+            </if>
+        </trim></where>
+    </select>
+
+
+    <select id="findProductsBySupplierId" resultMap="ProductMap">
+        select p.* from supplier_product sp
+        left join product p on p.id = sp.product_id
+        where supplier_id = #{supplierId}
+    </select>
+
+    <select id="findProductsRecommend" resultMap="ProductMap">
+        select * from product where is_lower_shelf=1
+    </select>
+
+    <select id="findOrderChartTotal" resultType="Map">
+        select  count(*) totalUnits, SUM(a.factory_final_price) totalMoney
+        FROM custom_order a
+        LEFT JOIN payment c on c.custom_order_id = a.id
+        WHERE
+        c.funds = 31
+        <if test="companyId != null">
+          and  a.company_id = #{companyId}
+        </if>
+        <if test="queryStartDate.length()==8">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y%m%d')
+            and  DATE_FORMAT(a.commit_time,'%Y%m%d')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==6">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y%m')
+            and  DATE_FORMAT(a.commit_time,'%Y%m')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==4">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y')
+            and  DATE_FORMAT(a.commit_time,'%Y')  &lt;= #{queryEndDate}
+        </if>
+
+        <if test="status != null">
+            AND #{status} = c.status
+        </if>
+        <if test="isCoordination != null">
+            AND a.is_coordination =1
+        </if>
+    </select>
+
+
+
+    <select id="findMaxMoneyOrder"  resultType="Map">
+       SELECT MAX(c.amount) totalMoney,a.* from custom_order a
+      LEFT JOIN payment c on c.custom_order_id = a.id
+      WHERE DATE_FORMAT(a.commit_time,'%Y%m') = DATE_FORMAT(NOW(),'%Y%m')
+    </select>
+
+
+
+
+    <select id="overdueOrderTrend"  resultType="Map">
+        select DATE_FORMAT(a.estimated_delivery_date,'%Y%m%d') estimatedDeliveryDate,count(*) totalUnits
+        FROM custom_order a
+        WHERE
+        1=1
+        and  DATE_FORMAT(a.estimated_delivery_date,'%Y%m') = #{queryDateMonth}
+        and a.estimated_delivery_date &lt;= delivery_date
+        GROUP BY  DATE_FORMAT(a.estimated_delivery_date,'%Y%m%d')
+    </select>
+
+
+    <select id="findStatusProductOrder"  resultType="Map">
+        select b.code,b.value orderProductName, count(*) totalUnits
+        FROM order_product a
+        LEFT JOIN basecode b on a.type = b.code
+        WHERE
+        1=1
+        <if test="status != null">
+            and a.status = #{status}
+        </if>
+        AND b.type = 'orderProductType'
+        GROUP BY a.type
+    </select>
+
+
+
+    <select id="findStatusProductCount"  resultType="integer">
+        SELECT count(*) FROM order_product a WHERE STATUS=#{status}
+        <if test="status == 4">
+            or (a.status = 2 and a.part_stock = 1)
+        </if>
+        <if test="startDate.length()==8">
+            and #{startDate}  &lt;= DATE_FORMAT(a.delivery_time,'%Y%m%d')
+            and  DATE_FORMAT(a.delivery_time,'%Y%m%d')  &lt;= #{endDate}
+        </if>
+        <if test="startDate.length()==6">
+            and #{startDate}  &lt;= DATE_FORMAT(a.delivery_time,'%Y%m')
+            and  DATE_FORMAT(a.delivery_time,'%Y%m')  &lt;= #{endDate}
+        </if>
+        <if test="startDate.length()==4">
+            and #{startDate}  &lt;= DATE_FORMAT(a.delivery_time,'%Y')
+            and  DATE_FORMAT(a.delivery_time,'%Y')  &lt;= #{endDate}
+        </if>
+    </select>
+    <select id="findlogisticsNameCount"  resultType="Map">
+        SELECT a.logistics_company_id,b.name,count(*) logisticsCount FROM dispatch_bill a
+        LEFT JOIN logistics_company b on b.id = a.logistics_company_id
+        WHERE b.`name` is not NULL
+        <if test="startDate.length()==8">
+            and #{startDate}  &lt;= DATE_FORMAT(a.actual_date,'%Y%m%d')
+            and  DATE_FORMAT(a.actual_date,'%Y%m%d')  &lt;= #{endDate}
+        </if>
+        <if test="startDate.length()==6">
+            and #{startDate}  &lt;= DATE_FORMAT(a.actual_date,'%Y%m')
+            and  DATE_FORMAT(a.actual_date,'%Y%m')  &lt;= #{endDate}
+        </if>
+        <if test="startDate.length()==4">
+            and #{startDate}  &lt;= DATE_FORMAT(a.actual_date,'%Y')
+            and  DATE_FORMAT(a.actual_date,'%Y')  &lt;= #{endDate}
+        </if>
+        GROUP BY a.logistics_company_id
+        ORDER BY b.name
+    </select>
+    <select id="findStatusProductOrderOverdue"  resultType="Map">
+        select b.code,b.value orderProductName, count(*) totalUnits, SUM(c.amount) totalMoney
+        FROM order_product a
+        LEFT JOIN basecode b on a.type = b.code
+        LEFT JOIN payment c on c.custom_order_id = a.id
+        WHERE
+        1=1
+        <if test="deliveryDate.length()==8">
+           and DATE_FORMAT( a.plan_finish_time, '%Y%m%d' ) &lt; #{deliveryDate}
+        </if>
+        AND b.type = 'orderProductType'
+        GROUP BY a.type
+    </select>
+
+    <select id="findOrderDeliveryDate" resultType="Map">
+        select a.plan_finish_time estimatedDeliveryDate,a.*
+        FROM order_product a
+        WHERE
+        1=1
+        <if test="status != null">
+            and a.status = #{status}
+        </if>
+        and 1 &lt;= a.status and a.status &lt;= 5
+        and DATE_FORMAT(a.plan_finish_time,'%Y%m%d')  &lt;=#{deliveryDate}
+        and a.plan_finish_time is NOT Null
+    </select>
+
+    <select id="findOrderChart" resultType="Map">
+        select b.code,b.value orderProductName, count(*) totalUnits, SUM(c.amount) totalMoney
+        FROM custom_order a
+        LEFT JOIN basecode b on order_product_type = b.code
+        LEFT JOIN payment c on c.custom_order_id = a.id
+        WHERE
+        1=1
+        <if test="companyId != null">
+           and a.company_id = #{companyId}
+        </if>
+
+        <if test="queryStartDate.length()==8">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y%m%d')
+            and  DATE_FORMAT(a.commit_time,'%Y%m%d')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==6">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y%m')
+            and  DATE_FORMAT(a.commit_time,'%Y%m')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==4">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.commit_time,'%Y')
+            and  DATE_FORMAT(a.commit_time,'%Y')  &lt;= #{queryEndDate}
+        </if>
+        AND b.type = 'orderProductType'
+        GROUP BY order_product_type
+    </select>
+
+    <select id="findOrderChartByseries" resultType="Map">
+        select b.value,a.series,count(*) totalUnits,sum(a.price) totalMoney   FROM order_product a
+        LEFT JOIN basecode b ON b.code = a.series
+        LEFT JOIN custom_order c on a.custom_order_id = c.id
+        LEFT JOIN payment e on e.custom_order_id = c.id
+        where b.type='orderProductSeries' AND a.type = #{orderProduct}
+        <if test="companyId != null">
+            and c.company_id = #{companyId}
+        </if>
+        <if test="queryStartDate.length()==8">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y%m%d')
+            and DATE_FORMAT(a.pay_time,'%Y%m%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==6">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y%m')
+            and DATE_FORMAT(a.pay_time,'%Y%m') &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==4">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y')
+            and DATE_FORMAT(a.pay_time,'%Y') &lt;= #{queryEndDate}
+        </if>
+        GROUP BY series
+    </select>
+
+    <select id="findOrderChartByDoor" resultType="Map">
+        select a.door value,count(*) totalUnits,sum(a.price) totalMoney FROM order_product a
+        LEFT JOIN custom_order c on a.custom_order_id = c.id
+        LEFT JOIN payment p on p.custom_order_id = c.id
+        where
+        p.funds = 31
+        and
+        a.door IS NOT NULL AND a.door &lt;&gt;''
+        <if test="companyId != null">
+           and c.company_id = #{companyId}
+        </if>
+        <if test="queryStartDate.length()==8">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y%m%d')
+            and DATE_FORMAT(a.pay_time,'%Y%m%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==6">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y%m')
+            and DATE_FORMAT(a.pay_time,'%Y%m') &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==4">
+            and #{queryStartDate} &lt;= DATE_FORMAT(a.pay_time,'%Y')
+            and DATE_FORMAT(a.pay_time,'%Y') &lt;= #{queryEndDate}
+        </if>
+        <if test="orderProduct != null">
+            and c.order_product_type = #{orderProduct}
+        </if>
+        GROUP BY door
+    </select>
+
+    <select id="findOrderChartByColor" resultType="Map">
+        select  a.door_color doorColor,a.door value,count(*) totalUnits,sum(a.price) totalMoney FROM order_product a
+        LEFT JOIN custom_order c on a.custom_order_id = c.id
+        LEFT JOIN payment p on p.custom_order_id = c.id
+        where
+        p.funds = 31
+        and
+        a.door_color IS NOT NULL AND a.door_color &lt;&gt;''
+        <if test="companyId != null">
+            and c.company_id = #{companyId}
+        </if>
+        <if test="queryStartDate.length()==8">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.pay_time,'%Y%m%d')
+            and  DATE_FORMAT(a.pay_time,'%Y%m%d')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==6">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.pay_time,'%Y%m')
+            and  DATE_FORMAT(a.pay_time,'%Y%m')  &lt;= #{queryEndDate}
+        </if>
+        <if test="queryStartDate.length()==4">
+            and #{queryStartDate}  &lt;= DATE_FORMAT(a.pay_time,'%Y')
+            and  DATE_FORMAT(a.pay_time,'%Y')  &lt;= #{queryEndDate}
+        </if>
+        GROUP BY door_color
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

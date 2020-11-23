@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.ShareMemberPermissionDao">
+    <resultMap id="ShareMemberPermissionMap" type="com.lwxf.industry4.webapp.domain.entity.company.ShareMemberPermission">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="share_member_id" property="shareMemberId" jdbcType="CHAR" />
+        <result column="module_key" property="moduleKey" jdbcType="VARCHAR" />
+        <result column="menu_key" property="menuKey" jdbcType="VARCHAR" />
+        <result column="operations" property="operations" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, share_member_id, module_key, menu_key, operations
+</sql>
+
+    <select id="selectById" resultMap="ShareMemberPermissionMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   share_member_permission
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ShareMemberPermissionMap">
+SELECT <include refid="columns" />
+FROM   share_member_permission
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="shareMemberId != null">
+    AND share_member_id = #{shareMemberId}
+</if>
+<if test="moduleKey != null">
+    AND module_key = #{moduleKey}
+</if>
+<if test="menuKey != null">
+    AND menu_key = #{menuKey}
+</if>
+<if test="operations != null">
+    AND operations = #{operations}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+share_member_permission(id, share_member_id, module_key, menu_key, operations)
+                 VALUES(#{id}, #{shareMemberId}, #{moduleKey}, #{menuKey}, #{operations})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE share_member_permission
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('moduleKey') and moduleKey != null">
+    module_key = #{moduleKey},
+</if>
+    <if test="_parameter.containsKey('menuKey') and menuKey != null">
+    menu_key = #{menuKey},
+</if>
+    <if test="_parameter.containsKey('operations') and operations != null">
+    operations = #{operations}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   share_member_permission
+WHERE  id = #{id}
+</delete>
+
+</mapper>

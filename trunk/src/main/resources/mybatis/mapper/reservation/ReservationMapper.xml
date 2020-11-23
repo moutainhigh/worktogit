@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.reservation.ReservationDao">
+    <resultMap id="ReservationMap" type="com.lwxf.industry4.webapp.domain.entity.reservation.Reservation">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="descr" property="descr" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="home_advisor" property="homeAdvisor" jdbcType="CHAR" />
+        <result column="erector" property="erector" jdbcType="CHAR" />
+        <result column="earnest" property="earnest" jdbcType="INTEGER" />
+        <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="ReservationDtoMap" type="com.lwxf.industry4.webapp.domain.dto.reservation.ReservationDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="descr" property="descr" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="home_advisor" property="homeAdvisor" jdbcType="CHAR" />
+        <result column="erector" property="erector" jdbcType="CHAR" />
+        <result column="earnest" property="earnest" jdbcType="INTEGER" />
+        <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+        <result column="storeName" property="storeName"/>
+    </resultMap>
+    <sql id="columns">
+id, company_id, user_id, phone, name, area, status, descr, created, city_area_id, designer, home_advisor, erector, earnest, total_price
+</sql>
+
+    <select id="selectById" resultMap="ReservationDtoMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   reservation
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="ReservationMap">
+        SELECT <include refid="columns" />
+        FROM   reservation
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="phone != null">
+                AND phone like '%${phone}%'
+            </if>
+            <if test="name != null">
+                AND name like '%${name}%'
+            </if>
+            <if test="area != null">
+                AND area = #{area}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="descr != null">
+                AND descr = #{descr}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="cityAreaId != null">
+                AND city_area_id = #{cityAreaId}
+            </if>
+            <if test="designer != null">
+                AND designer = #{designer}
+            </if>
+            <if test="homeAdvisor != null">
+                AND home_advisor = #{homeAdvisor}
+            </if>
+            <if test="erector != null">
+                AND erector = #{erector}
+            </if>
+            <if test="earnest != null">
+                AND earnest = #{earnest}
+            </if>
+            <if test="totalPrice != null">
+                AND total_price = #{totalPrice}
+            </if>
+            <if test="startTime != null">
+                AND created &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND created &lt;= #{endTime}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+reservation(id, company_id, user_id, phone, name, area, status, descr, created, city_area_id, designer, home_advisor, erector, earnest, total_price)
+     VALUES(#{id}, #{companyId}, #{userId}, #{phone}, #{name}, #{area}, #{status}, #{descr}, #{created}, #{cityAreaId}, #{designer}, #{homeAdvisor}, #{erector}, #{earnest}, #{totalPrice})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE reservation
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('phone') and phone != null">
+                phone = #{phone},
+            </if>
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('area') and area != null">
+                area = #{area},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('descr')">
+                descr = #{descr},
+            </if>
+            <if test="_parameter.containsKey('cityAreaId')">
+                city_area_id = #{cityAreaId},
+            </if>
+            <if test="_parameter.containsKey('designer')">
+                designer = #{designer},
+            </if>
+            <if test="_parameter.containsKey('homeAdvisor')">
+                home_advisor = #{homeAdvisor},
+            </if>
+            <if test="_parameter.containsKey('erector')">
+                erector = #{erector},
+            </if>
+            <if test="_parameter.containsKey('earnest')">
+                earnest = #{earnest},
+            </if>
+            <if test="_parameter.containsKey('totalPrice')">
+                total_price = #{totalPrice}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   reservation
+WHERE  id = #{id}
+</delete>
+
+    <select id="findAllByUserid" resultMap="ReservationDtoMap">
+        select r.id, r.company_id, r.user_id, r.phone, r.name, r.area, r.status, r.descr, r.created, r.city_area_id, r.designer, r.home_advisor, r.erector, r.earnest, r.total_price,s.name storeName from reservation r left join store_config s on r.company_id = s.company_id
+        where user_id=#{userId} group by created desc
+    </select>
+
+
+    <select id="findAllAmount" resultType="java.lang.Long">
+        select count(0) from reservation
+    </select>
+
+    <select id="selectReservationByStatusAndCompanyId" resultMap="ReservationMap">
+        select
+        <include refid="columns"/>
+        from reservation
+        where status=0 and company_Id = #{companyId}
+    </select>
+
+    <select id="designerReservation" resultMap="ReservationMap">
+        select
+        <include refid="columns"/>
+        from reservation
+        where company_Id = #{companyId} and designer = #{designerId}
+        and status &gt;0
+
+    </select>
+
+</mapper>

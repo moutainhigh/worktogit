@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.visitinfo.VisitInfoDao">
+    <resultMap id="VisitInfoMap" type="com.lwxf.industry4.webapp.domain.entity.visitinfo.VisitInfo">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="visit_type" property="visitType" jdbcType="VARCHAR" />
+        <result column="visit_date" property="visitDate" jdbcType="TIMESTAMP" />
+        <result column="visit_address" property="visitAddress" jdbcType="VARCHAR" />
+        <result column="visit_content" property="visitContent" jdbcType="VARCHAR" />
+        <result column="visit_duty" property="visitDuty" jdbcType="VARCHAR" />
+        <result column="visit_people" property="visitPeople" jdbcType="VARCHAR" />
+        <result column="visit_user_id" property="visitUserId" jdbcType="VARCHAR" />
+        <result column="visi_result" property="visiResult" jdbcType="VARCHAR" />
+        <result column="visit_way" property="visitWay" jdbcType="VARCHAR" />
+        <result column="visited_user_id" property="visitedUserId" jdbcType="VARCHAR" />
+        <result column="visited_intention_level" property="visitedIntentionLevel" jdbcType="VARCHAR" />
+        <result column="visited_estate" property="visitedEstate" jdbcType="VARCHAR" />
+        <result column="visited_like" property="visitedLike" jdbcType="VARCHAR" />
+        <result column="visited_focus" property="visitedFocus" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+        <result column="visit_user_name" property="visitUserName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, visit_type, visit_date, visit_address, visit_content, visit_duty, visit_people, visit_user_id, visi_result, visit_way, visited_user_id, visited_intention_level, visited_estate, visited_like, visited_focus, reserve1, reserve2, reserve3, reserve4,visited_user_name visitedUserName
+</sql>
+
+
+    <select id="selectByFilter" resultMap="VisitInfoMap">
+SELECT <include refid="columns" />
+FROM   visit_info
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="visitType != null">
+    AND visit_type = #{visitType}
+</if>
+<if test="visitDate != null">
+    AND visit_date = #{visitDate}
+</if>
+<if test="visitAddress != null">
+    AND visit_address = #{visitAddress}
+</if>
+<if test="visitContent != null">
+    AND visit_content = #{visitContent}
+</if>
+<if test="visitDuty != null">
+    AND visit_duty = #{visitDuty}
+</if>
+<if test="visitPeople != null">
+    AND visit_people = #{visitPeople}
+</if>
+<if test="visitUserId != null">
+    AND visit_user_id = #{visitUserId}
+</if>
+<if test="visiResult != null">
+    AND visi_result = #{visiResult}
+</if>
+<if test="visitWay != null">
+    AND visit_way = #{visitWay}
+</if>
+<if test="visitedUserId != null">
+    AND visited_user_id = #{visitedUserId}
+</if>
+<if test="visitedIntentionLevel != null">
+    AND visited_intention_level = #{visitedIntentionLevel}
+</if>
+<if test="visitedEstate != null">
+    AND visited_estate = #{visitedEstate}
+</if>
+<if test="visitedLike != null">
+    AND visited_like = #{visitedLike}
+</if>
+<if test="visitedFocus != null">
+    AND visited_focus = #{visitedFocus}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+<if test="visited_user_name != null">
+    AND visited_user_name = #{visited_user_name}
+</if>
+
+
+</trim></where>
+order by create_time desc
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+visit_info(id, visit_type, visit_date, visit_address, visit_content, visit_duty, visit_people, visit_user_id, visi_result, visit_way, visited_user_id, visited_intention_level, visited_estate, visited_like, visited_focus, reserve1, reserve2, reserve3, reserve4,visited_user_name,create_time)
+    VALUES(#{id}, #{visitType}, #{visitDate}, #{visitAddress}, #{visitContent}, #{visitDuty}, #{visitPeople}, #{visitUserId}, #{visiResult}, #{visitWay}, #{visitedUserId}, #{visitedIntentionLevel}, #{visitedEstate}, #{visitedLike}, #{visitedFocus}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4},#{visitedUserName},now())
+</insert>
+
+
+
+</mapper>

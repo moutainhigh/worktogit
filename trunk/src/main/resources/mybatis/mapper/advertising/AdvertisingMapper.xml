@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.advertising.AdvertisingDao">
+    <resultMap id="AdvertisingMap" type="com.lwxf.industry4.webapp.domain.entity.advertising.Advertising">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="position" property="position" jdbcType="TINYINT" />
+        <result column="link_type" property="linkType" jdbcType="TINYINT" />
+        <result column="link_path" property="linkPath" jdbcType="VARCHAR" />
+        <result column="link_status" property="linkStatus" jdbcType="BIT" />
+        <result column="img_path" property="imgPath" jdbcType="VARCHAR" />
+        <result column="is_inner" property="inner" jdbcType="BIT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="columns">
+id, name, type, position, link_type, link_path, link_status, img_path, is_inner, creator, created
+</sql>
+    <sql id="Bcolumns">
+position,link_path, link_status, img_path
+</sql>
+
+    <select id="selectById" resultMap="AdvertisingMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   advertising
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="AdvertisingMap">
+SELECT <include refid="columns" />
+FROM   advertising
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="position != null">
+    AND position = #{position}
+</if>
+<if test="linkType != null">
+    AND link_type = #{linkType}
+</if>
+<if test="linkPath != null">
+    AND link_path = #{linkPath}
+</if>
+<if test="linkStatus != null">
+    AND link_status = #{linkStatus}
+</if>
+<if test="imgPath != null">
+    AND img_path = #{imgPath}
+</if>
+<if test="inner != null">
+    AND is_inner = #{inner}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+advertising(id, name, type, position, link_type, link_path, link_status, img_path, is_inner, creator, created)
+     VALUES(#{id}, #{name}, #{type}, #{position}, #{linkType}, #{linkPath}, #{linkStatus}, #{imgPath}, #{inner}, #{creator}, #{created})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE advertising
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('position') and position != null">
+    position = #{position},
+</if>
+    <if test="_parameter.containsKey('linkType') and linkType != null">
+    link_type = #{linkType},
+</if>
+    <if test="_parameter.containsKey('linkPath')">
+    link_path = #{linkPath},
+</if>
+    <if test="_parameter.containsKey('linkStatus') and linkStatus != null">
+    link_status = #{linkStatus},
+</if>
+    <if test="_parameter.containsKey('imgPath') and imgPath != null">
+    img_path = #{imgPath},
+</if>
+    <if test="_parameter.containsKey('inner') and inner != null">
+    is_inner = #{inner}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   advertising
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByPosition" resultMap="AdvertisingMap">
+        select
+        <include refid="Bcolumns"></include>
+        from advertising
+        where position = #{position}
+    </select>
+
+</mapper>

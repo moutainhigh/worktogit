@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.supplier.SupplierProductDao">
+    <resultMap id="SupplierProductMap" type="com.lwxf.industry4.webapp.domain.entity.supplier.SupplierProduct">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="supply_time" property="supplyTime" jdbcType="FLOAT" />
+        <result column="color" property="color" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="supply_time" property="supplyTime" jdbcType="INTEGER" />
+        <result column="material_level" property="materialLevel" jdbcType="INTEGER" />
+        <result column="min_count" property="minCount" jdbcType="INTEGER" />
+        <result column="min_money" property="minMoney" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="SupplierProductDtoMap" type="com.lwxf.industry4.webapp.domain.dto.supplier.SupplierProductDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="CHAR" />
+        <result column="material_id" property="materialId" jdbcType="CHAR" />
+        <result column="supply_time" property="supplyTime" jdbcType="FLOAT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="color" property="color" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="companyName" property="companyName"/>
+        <result column="createName" property="createName"/>
+    </resultMap>
+    <sql id="columns">
+id, supplier_id, name,color, price, creator, created, notes,supply_time,material_level,min_count,min_money,material_id
+</sql>
+    <sql id="columnDtos">
+s.id, s.supplier_id, s.product_id, s.price, s.creator, s.created, s.notes,s.productName,c.name companyName,s.createName,s.material_id
+</sql>
+
+    <select id="selectById" resultMap="SupplierProductMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   supplier_product
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="SupplierProductMap">
+        SELECT   <include refid="columns" />
+        from supplier_product
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="supplierId != null">
+                AND supplier_id = #{supplierId}
+            </if>
+            <if test="price != null">
+                AND price = #{price}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+        </trim></where>
+    </select>
+
+
+    <select id="selectDtoByFilter" resultMap="SupplierProductDtoMap">
+SELECT sp.*,u.name as creator_name,s.name as supplier_name
+     from  supplier_product sp
+     left join user u on sp.creator = u.id
+     left join supplier s on s.id =sp.supplier_id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                s.id = #{id}
+            </if>
+            <if test="supplierId != null">
+                AND s.supplier_id = #{supplierId}
+            </if>
+            <if test="productId != null">
+                AND s.product_id = #{productId}
+            </if>
+            <if test="price != null">
+                AND s.price = #{price}
+            </if>
+            <if test="creator != null">
+                AND s.creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND s.created = #{created}
+            </if>
+            <if test="notes != null">
+                AND s.notes = #{notes}
+            </if>
+        </trim></where>
+</select>
+
+    <select id="selectAllSupplierProduct" resultMap="SupplierProductMap">
+       select  <include refid="columns" />
+       from supplier_product
+       where supplier_id = #{supplierId}
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+supplier_product(id, supplier_id, name, price,color, creator, created, notes,supply_time,material_level,min_count,min_money,material_id)
+          VALUES(#{id}, #{supplierId}, #{name}, #{price},#{color},#{creator}, #{created}, #{notes},#{supplyTime},#{materialLevel},#{minCount},#{minMoney},#{materialId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE supplier_product
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('price') and price != null">
+    price = #{price},
+</if>
+<if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('supplyTime')">
+        supply_time = #{supplyTime},
+    </if>
+    <if test="_parameter.containsKey('materialLevel')">
+        material_level = #{materialLevel},
+    </if>
+    <if test="_parameter.containsKey('minCount')">
+        min_count = #{minCount},
+    </if>
+    <if test="_parameter.containsKey('minMoney')">
+        min_money = #{minMoney},
+    </if>
+    <if test="_parameter.containsKey('materialId')">
+        material_id = #{materialId},
+    </if>
+    <if test="_parameter.containsKey('name')">
+        name = #{name}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   supplier_product
+WHERE  id = #{id}
+</delete>
+
+    <delete id="deleteBySupplierId" parameterType="String">
+        DELETE FROM   supplier_product
+        WHERE  supplier_id = #{supplierId}
+    </delete>
+
+
+    <select id="findOneBySupplierAndProductId" resultMap="SupplierProductMap">
+        select <include refid="columns"/> from supplier_product where supplier_id = #{id} and material_id = #{prodId}
+    </select>
+
+    <select id="findListBySupplierAndProductIds" resultMap="SupplierProductDtoMap">
+        SELECT <include refid="columnDtos" />
+        from      (select s.*,p.name productName
+        FROM
+        (select s.*,u.name createName from supplier_product s left join user u on s.creator = u.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                AND s.supplier_id = #{id}
+            </if>
+            <if test="productIds != null and productIds.size>0">
+                AND s.product_id in
+                <foreach collection="productIds" item="productId" open="(" close=")" separator=",">
+                    #{productId}
+                </foreach>
+            </if>
+        </trim></where>
+        )
+        s left join product p
+        on s.product_id = p.id
+        ) s left join company c on s.supplier_id = c.id
+    </select>
+
+    <select id="findListBySupplierIdAndMaterialType" resultMap="SupplierProductMap">
+        select <include refid="columns"/> from supplier_product sp
+        left join material m on sp.material_id=m.id
+        where sp.supplier_id = #{supplierId} and m.type=#{type}
+
+    </select>
+
+</mapper>

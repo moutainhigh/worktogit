@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.RolePermissionDao">
+    <resultMap id="RolePermissionMap" type="com.lwxf.industry4.webapp.domain.entity.system.RolePermission">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="module_key" property="moduleKey" jdbcType="VARCHAR" />
+        <result column="menu_key" property="menuKey" jdbcType="VARCHAR" />
+        <result column="operations" property="operations" jdbcType="VARCHAR" />
+        <result column="is_show" property="show" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="RolePermissionDtoMap" type="com.lwxf.industry4.webapp.domain.dto.rolePermission.RolePermissionDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="module_key" property="moduleKey" jdbcType="VARCHAR" />
+        <result column="menu_key" property="menuKey" jdbcType="VARCHAR" />
+        <result column="operations" property="operations" jdbcType="VARCHAR" />
+        <result column="is_show" property="show" jdbcType="TINYINT" />
+        <result column="menu_name" property="menuName" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, role_id, module_key, menu_key, operations,is_show
+</sql>
+
+    <select id="selectById" resultMap="RolePermissionMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   role_permission
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="RolePermissionMap">
+SELECT <include refid="columns" />
+FROM   role_permission
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="roleId != null">
+    AND role_id = #{roleId}
+</if>
+<if test="moduleKey != null">
+    AND module_key = #{moduleKey}
+</if>
+<if test="menuKey != null">
+    AND menu_key = #{menuKey}
+</if>
+<if test="operations != null">
+    AND operations = #{operations}
+</if>
+<if test="show!=null">
+    AND is_show = #{show}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+role_permission(id, role_id, module_key, menu_key, operations,is_show)
+         VALUES(#{id}, #{roleId}, #{moduleKey}, #{menuKey}, #{operations},#{show})
+</insert>
+
+    <update id="updateByMapContext" />
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   role_permission
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="selectRolePermissionList" resultMap="RolePermissionMap">
+        select <include refid="columns"/>
+        from role_permission
+        where role_id = #{roleId} and is_show = '1'
+    </select>
+
+    <select id="selectRolePermissionDtoList" resultMap="RolePermissionDtoMap">
+        select p.*,m.name as menu_name
+        from role_permission p,menus m
+        where p.role_id = #{roleId} and p.menu_key = m.key
+    </select>
+
+    <delete id="deleteByRoleId">
+        delete from role_permission where role_id = #{id}
+    </delete>
+
+    <select id="findByMenusKey" resultMap="RolePermissionMap">
+        select <include refid="columns"/> from role_permission where menu_key = #{key} OR module_key = #{key}
+    </select>
+
+    <delete id="deleteEmployeePermissionByRoleId" parameterType="String">
+        delete from employee_permission where employee_id in (select id from company_employee where role_id = #{roleId})
+    </delete>
+
+    <insert id="insertEmployeePermission" useGeneratedKeys="false">
+       INSERT INTO
+employee_permission(id, employee_id, module_key, menu_key, operations,is_show)
+         VALUES(#{id}, #{roleId}, #{moduleKey}, #{menuKey}, #{operations},#{show})
+    </insert>
+
+    <select id="findAll" resultMap="RolePermissionMap">
+        select <include refid="columns"/> from role_permission
+    </select>
+
+    <delete id="deleteByKey">
+        delete from role_permission where menu_key = #{key} OR module_key = #{key}
+    </delete>
+
+    <select id="findAllDianzhuRolePer" resultMap="RolePermissionMap">
+        select <include refid="columns"/> from role_permission  where role_id='4gyhf60biadn'
+    </select>
+    <select id="findOneByRoleIdAndMenukey" resultMap="RolePermissionMap">
+        select <include refid="columns"/> from role_permission  where role_id=#{roleId} and module_key=#{menukey}
+    </select>
+
+    <insert id="addList">
+        insert into role_permission (id, role_id, module_key, menu_key, operations,is_show) values
+        <foreach collection="list"  separator="," item="rolePermission" >
+            (#{rolePermission.id},#{rolePermission.roleId},#{rolePermission.moduleKey},#{rolePermission.menuKey},#{rolePermission.operations},#{rolePermission.show})
+        </foreach>
+    </insert>
+</mapper>

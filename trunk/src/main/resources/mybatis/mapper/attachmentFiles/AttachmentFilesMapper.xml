@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.attachmentFiles.impl.AttachmentFilesDao">
+    <resultMap id="AttachmentFilesMap" type="com.lwxf.industry4.webapp.domain.entity.attachmentFiles.AttachmentFiles">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="full_path" property="fullPath" jdbcType="VARCHAR" />
+        <result column="mime" property="mime" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="original_mime" property="originalMime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="original_id" property="originalId" jdbcType="CHAR" />
+        <result column="category" property="category" jdbcType="TINYINT" />
+        <result column="function_type" property="functionType" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+        <result column="reserve5" property="reserve5" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, path, full_path, mime, name, original_mime, status, creator, created, original_id, category, function_type, reserve1, reserve2, reserve3, reserve4, reserve5
+</sql>
+
+    <select id="selectById" resultMap="AttachmentFilesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   attachment_files
+WHERE  id = #{id}
+</select>
+
+
+    <select id="selectByFilter" resultMap="AttachmentFilesMap">
+SELECT <include refid="columns" />
+FROM   attachment_files
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="path != null">
+    AND path = #{path}
+</if>
+<if test="fullPath != null">
+    AND full_path = #{fullPath}
+</if>
+<if test="mime != null">
+    AND mime = #{mime}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="originalMime != null">
+    AND original_mime = #{originalMime}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="originalId != null">
+    AND original_id = #{originalId}
+</if>
+<if test="category != null">
+    AND category = #{category}
+</if>
+<if test="functionType != null">
+    AND function_type = #{functionType}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+<if test="reserve5 != null">
+    AND reserve5 = #{reserve5}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+attachment_files(id, path, full_path, mime, name, original_mime, status, creator, created, original_id, category, function_type, reserve1, reserve2, reserve3, reserve4, reserve5)
+          VALUES(#{id}, #{path}, #{fullPath}, #{mime}, #{name}, #{originalMime}, #{status}, #{creator}, #{created}, #{originalId}, #{category}, #{functionType}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4}, #{reserve5})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE attachment_files
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('path') and path != null">
+    path = #{path},
+</if>
+    <if test="_parameter.containsKey('fullPath') and fullPath != null">
+    full_path = #{fullPath},
+</if>
+    <if test="_parameter.containsKey('mime') and mime != null">
+    mime = #{mime},
+</if>
+    <if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('originalMime') and originalMime != null">
+    original_mime = #{originalMime},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('originalId')">
+    original_id = #{originalId},
+</if>
+    <if test="_parameter.containsKey('category') and category != null">
+    category = #{category},
+</if>
+    <if test="_parameter.containsKey('functionType')">
+    function_type = #{functionType},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4},
+</if>
+    <if test="_parameter.containsKey('reserve5')">
+    reserve5 = #{reserve5}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   attachment_files
+WHERE  id = #{id}
+</delete>
+    <delete id="deleteByOriginalId" parameterType="String">
+DELETE FROM   attachment_files
+WHERE  original_id = #{originalId}
+</delete>
+</mapper>

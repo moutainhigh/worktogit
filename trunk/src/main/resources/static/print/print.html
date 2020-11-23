@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible">
+		<title></title>
+
+		<style type="text/css">
+			* {
+				margin: 0px;
+				padding: 0px;
+				font-family: "arial";
+			}
+			
+			a {
+				color: #000000;
+				text-decoration: none;
+			}
+			
+			ul,
+			ol {
+				list-style: none;
+			}
+			
+			.background {
+				background: #EEEEEE;
+			}
+			
+			.print {
+				width: 100%;
+				max-width: 1300px;
+				text-align: center;
+				margin: 100px auto;
+				font-size: 0px;
+				position: relative;
+			}
+			
+			.print ul {
+				display: inline-block;
+			}
+			
+			.print ul li {
+				width: 360px;
+				float: left;
+				padding: 10px;
+			}
+			
+			.print ul li .center {
+				position: relative;
+				padding: 15px;
+				background: white;
+				border-radius: 6px;
+				text-align: left;
+				height: 240px;
+				font-family: arial;
+			}
+			
+			.print ul li .center p {
+				font-size: 13px;
+				line-height: 20px;
+			}
+			
+			.print ul li .center p span {
+				width: 160px;
+				float: right;
+			}
+			
+			.print ul li .center p.type {
+				font-size: 14px;
+			}
+			
+			.print ul li .center .bottom {
+				position: absolute;
+				width: 100%;
+				bottom: 15px;
+				left: 15px;
+				font-size: 13px;
+			}
+			
+			.barcode {
+				width: 100%;
+				display: inline-block;
+				font-size: 18px;
+				margin-bottom: 10px;
+			}
+			
+			.barcode span {
+				display: block;
+				float: left;
+			}
+			
+			.barcode span.barcodeNo {
+				width: 40px;
+			}
+			
+			.barcode span.type {
+				width: 20px;
+				float: right;
+			}
+			
+			.barcode span.typeName {
+				line-height: 52px;
+				float: right;
+				margin-right: 30px;
+				margin-left: 6px;
+			}
+			
+			.barcode span.barcodeImg {
+				margin-left: 10px;
+				width: 200px;
+				height: 40px;
+			}
+			
+			.barcode span.barcodeImg img {
+				display: block;
+				width: 100%;
+			}
+			
+			.barcode span.barcodeImg p {
+				font-size: 12px;
+			}
+			
+			.print .print_head {
+				margin-bottom: 30px;
+			}
+			
+			.print .print_head h3 {
+				font-size: 20px;
+			}
+			
+			.print .print_head h6 {
+				font-size: 14px;
+			}
+			
+			.print button {
+				display: block;
+				background: cornflowerblue;
+				border: none;
+				color: white;
+				font-size: 14px;
+				padding: 6px 10px;
+				border-radius: 6px;
+				margin: 20px auto;
+				cursor: pointer;
+			}
+			
+			.print button:hover {
+				background: #3373e4;
+			}
+		</style>
+
+	</head>
+
+	<body class="background">
+
+		<div class="print">
+
+			<div class="print_head">
+				<h3>打印预览</h3>
+				<h6>请使用ie浏览器打印112</h6>
+				<p id="print_course"></p>
+			</div>
+
+			<ul id="print"></ul>
+
+			<button id="printbutton" onclick="clickPrint()">批量打印</button>
+
+		</div>
+
+
+
+<script type="text/javascript" charset="UTF-8">
+
+console.log('1212')
+
+	var windowUrl = window.location.href;
+
+	if(windowUrl.indexOf("?") == -1) {
+console.log('99')
+	}else{
+		console.log('1000')
+		
+		var labelData = JSON.parse(decodeURI(windowUrl.split("?")[1]))
+
+	for(var i = 0; i < labelData.length; i++) {
+
+		var obj = '<li><div class="center"><div class="barcode"><span class="barcodeNo">包裹编号</span><span class="barcodeImg"><img src="img/barcode.jpg"/><p>' + labelData[i].barcode + '</p></span></div><p class="type"><b>品名：' + labelData[i].typeName + '</b></p><p>所属订单：' + labelData[i].orderNo + '</p><p>经销商：' + labelData[i].dealerName + '</p> <p>经销商地址：' + labelData[i].dealerAddress + '</p>	<p>终端客户：' + labelData[i].customerName + '</p><p>客户地址：' + labelData[i].address + '</p>	<p>备注：' + labelData[i].notes + '</p>	<div class="bottom">乐造4.0 家居行业移动ERP管理系统 0371-88880863</div></div>	</li>';
+
+		document.getElementById("print").innerHTML += obj
+	}
+	}
+
+	
+
+	function clickPrint() {
+
+		document.getElementById("printbutton").disabled = true
+
+		var len = labelData.length;
+		var labIndex = 0;
+		var set = null
+
+		if(len == 0) {
+			return false
+		}
+
+		print(labIndex)
+
+		set = setInterval(function() {
+
+			if(labIndex >= len - 1) {
+				document.getElementById("printbutton").disabled = false
+				clearInterval(set)
+				
+			} else {
+				labIndex++
+				print(labIndex)
+			}
+
+		}, 5000)
+
+	}
+	
+	
+/*	function onprint (i) {
+		var labelObj = new Object();
+		labelObj = labelData[i];
+	
+	    
+	
+		
+	}
+*/
+
+
+
+	function print(i) {
+
+		var labelObj = new Object();
+		labelObj = labelData[i];
+
+		var TSCObj;
+		TSCObj = new ActiveXObject("TSCActiveX.TSCLIB"); //引入插件
+		//TSCObj.ActiveXabout();//打印机信息  
+		TSCObj.ActiveXopenport("TSC TTP-244 Pro"); //打印机端口
+						
+		//TSCObj.ActiveXsetup("标签宽度","标签高度","打印速度","打印浓度（0-15）","感应器类别字串型，0 表示使用垂直間距感測器(gap sensor)， 1 表示使用黑標感測器(black mark senso)","Gap/Black mark垂直间距(mm)","Gap/Black mark偏移距离(mm)");
+		TSCObj.ActiveXsetup("80", "60", "5", "8", "0", "2", "0"); //设置初始参数
+		TSCObj.ActiveXsendcommand("SET TEAR ON");
+		//TSCObj.ActiveXformfeed(); // 多出一张纸
+		//TSCObj.ActiveXnobackfeed(); // 去掉打印机回送，加快速度
+		TSCObj.ActiveXclearbuffer();
+		
+		/*ActiveXwindowsfont 可以输出汉字，但是必须是系统中存在的字体。 
+		  ActiveXwindowsfont(a,b,c,d,e,f,g,h)  
+		    说明：使用Windows TTF字体打印文字。  
+		    参数：  
+		    a：整数类型，文字X方向起始点，以点表示。   
+		    b：整数类型，文字Y方向起始点，以点表示。  
+		    c：整数类型，字体高度，以点表示。  
+		    d：整数类型，旋转角度，逆时针方向旋转。0-旋转0°，90-旋转90°，180-旋转180°，270-旋转270°。  
+		    e：整数类型，字体外形。0：标签；1：斜体；2：粗体；3：粗斜体。  
+		    f：整数类型，下划线，0：无下划线；1：加下划线。  
+		    g：字符串类型，字体名称。如：Arial，Times new Roman。  
+		    h：字符串类型，打印文字内容.
+		*/
+		
+		/*TSCObj.ActiveXwindowsfont(650, 20, 55, 270, 0, 0, "微软雅黑", "上海红田");
+		TSCObj.ActiveXwindowsfont(600, 20, 20, 270, 0, 0, "微软雅黑", "SHANGEHAI REDFIELD");*/
+		TSCObj.ActiveXwindowsfont(36, 20, 40, 0, 0, 0, "arial", "包裹"); //打印文本
+		TSCObj.ActiveXwindowsfont(36, 60, 40, 0, 0, 0, "arial", "编号"); //打印文				
+		TSCObj.ActiveXwindowsfont(36, 100, 36, 0, 2, 0, "arial", "品名:" + labelObj.typeName);
+		/*TSCObj.ActiveXwindowsfont(36, 166, 30, 0, 0, 0, "arial", "入库时间:" + labelObj.delivered + "");*/
+		TSCObj.ActiveXwindowsfont(36, 140, 30, 0, 0, 0, "arial", "所属订单:" + labelObj.orderNo + "");
+		TSCObj.ActiveXwindowsfont(36, 170, 30, 0, 0, 0, "arial", "经销商:" + labelObj.dealerName + "");
+	/*	TSCObj.ActiveXwindowsfont(300, 170, 30, 0, 0, 0, "arial", "经销商电话:" + labelObj.dealerTel + "");*/
+		TSCObj.ActiveXwindowsfont(36, 200, 30, 0, 0, 0, "arial", "经销商地址:" + labelObj.dealerAddress + "");
+		TSCObj.ActiveXwindowsfont(36, 230, 30, 0, 0, 0, "arial", "终端客户:" + labelObj.customerName + "");
+		/*TSCObj.ActiveXwindowsfont(300, 260, 30, 0, 0, 0, "arial", "客户电话:" + labelObj.customerTel + "");*/
+		
+		
+		if ( labelObj.address.length>18) {
+
+	    	TSCObj.ActiveXwindowsfont(36, 260, 30, 0, 0, 0, "arial", "客户地址:" + labelObj.address.slice(0,18) + "");
+	    	TSCObj.ActiveXwindowsfont(36, 290, 30, 0, 0, 0, "arial",  labelObj.address.slice(18) + "");
+	    	TSCObj.ActiveXwindowsfont(36, 320, 30, 0, 0, 0, "arial", "备注:" + labelObj.notes + "");
+	    	
+	    }else{
+	    	TSCObj.ActiveXwindowsfont(36, 260, 30, 0, 0, 0, "arial", "客户地址:" + labelObj.address + "");
+	    	TSCObj.ActiveXwindowsfont(36, 290, 30, 0, 0, 0, "arial", "备注:" + labelObj.notes + "");
+	    }
+
+		
+		TSCObj.ActiveXwindowsfont(36, 416, 30, 0, 0, 0, "arial", "乐造4.0 家居行业移动ERP管理系统 0371-88880863");
+
+		//var cmd = 'QRCODE 条码X方向起始点,条码Y方向起始点,纠错级别,二维码高度,A(A和M),旋转角度,M2（分为类型1和类型2）,S1 (s1-s8,默认s7),\"你好\"';  
+
+		TSCObj.ActiveXbarcode("130", "20", "128", "50", "1", "0", "2", "2", labelObj.barcode); //打印机内建条形码
+		TSCObj.ActiveXsendcommand("QRCODE 450,290,Q,4,A,0,M2,S3,\"https://www.baidu.com\"");///打印机内建二维码
+/*
+		 	var command = "PUTPCX 10,200,\"UL.PCX\"";
+			TSCObj.ActiveXsendcommand(command); */
+			TSCObj.ActiveXdownloadpcx("D:\UL.PCX","UL.PCX");
+			TSCObj.ActiveXsendcommand ("PUTPCX 20,20,\"UL.PCX\""); 
+			TSCObj.ActiveXprintlabel("1", "1");
+			TSCObj.ActiveXcloseport(); //关闭端口
+	}
+</script>
+
+	</body>
+
+</html>

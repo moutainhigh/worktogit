@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.design.DesignSchemeFilesDao">
+    <resultMap id="DesignSchemeFilesMap" type="com.lwxf.industry4.webapp.domain.entity.design.DesignSchemeFiles">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="resource_id" property="resourceId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="full_path" property="fullPath" jdbcType="VARCHAR" />
+        <result column="mime" property="mime" jdbcType="VARCHAR" />
+        <result column="original_mime" property="originalMime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="file_type" property="fileType" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, resource_id, name, path, full_path, mime, original_mime, status, creator, created, `type`,file_type
+</sql>
+
+    <select id="selectById" resultMap="DesignSchemeFilesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   design_scheme_files
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DesignSchemeFilesMap">
+        SELECT <include refid="columns" />
+        FROM   design_scheme_files
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="resourceId != null">
+                AND resource_id = #{resourceId}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="path != null">
+                AND path = #{path}
+            </if>
+            <if test="fullPath != null">
+                AND full_path = #{fullPath}
+            </if>
+            <if test="mime != null">
+                AND mime = #{mime}
+            </if>
+            <if test="originalMime != null">
+                AND original_mime = #{originalMime}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="fileType != null">
+                AND file_type = #{fileType}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+design_scheme_files(id, resource_id, name, path, full_path, mime, original_mime, status, creator, created, `type`, file_type)
+             VALUES(#{id}, #{resourceId}, #{name}, #{path}, #{fullPath}, #{mime}, #{originalMime}, #{status}, #{creator}, #{created}, #{type}, #{fileType})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE design_scheme_files
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('resourceId') and resourceId != null">
+                resource_id = #{resourceId},
+            </if>
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('path') and path != null">
+                path = #{path},
+            </if>
+            <if test="_parameter.containsKey('fullPath') and fullPath != null">
+                full_path = #{fullPath},
+            </if>
+            <if test="_parameter.containsKey('mime') and mime != null">
+                mime = #{mime},
+            </if>
+            <if test="_parameter.containsKey('originalMime') and originalMime != null">
+                original_mime = #{originalMime},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('fileType') and fileType != null">
+                file_type = #{fileType}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   design_scheme_files
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByPath" resultType="java.lang.String">
+        select id from design_scheme_files where full_path in
+        <foreach collection="list" open="(" item="path" close=")" separator=",">
+            #{path}
+        </foreach>
+    </select>
+
+    <update id="updateAllTempByDesignId">
+        update design_scheme_files set status = 0 where resource_id = #{id} and type = 1
+    </update>
+
+    <update id="updateFilesList" >
+        update design_scheme_files set status =1 where id in
+        <foreach collection='filesList'  item="fileId"  open="("   separator="," close=")">
+            #{fileId}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteBySchemeId">
+        delete from design_scheme_files
+        where resource_id = #{schemeId}
+    </delete>
+
+
+    <select id="findBySchemeId" resultMap="DesignSchemeFilesMap">
+        select
+        <include refid="columns"/>
+        from design_scheme_files
+        where resource_id = #{schemeId}
+    </select>
+
+    <select id="findByResouceId" resultType="java.lang.String">
+        select path
+        from design_scheme_files
+        where resource_id = #{resourceId}
+    </select>
+
+    <select id="findListByResourceIdAndType" resultMap="DesignSchemeFilesMap">
+        select <include refid="columns"/> from design_scheme_files where `type` = #{type} and resource_id = #{id}
+    </select>
+</mapper>

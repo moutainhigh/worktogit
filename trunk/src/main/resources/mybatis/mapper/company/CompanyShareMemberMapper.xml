@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.CompanyShareMemberDao">
+    <resultMap id="CompanyShareMemberMap" type="com.lwxf.industry4.webapp.domain.entity.company.CompanyShareMember">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="identity" property="identity" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="CompanyShareMemberDtoMap" type="com.lwxf.industry4.webapp.domain.dto.company.companyShareMember.CompanyShareMemberDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="identity" property="identity" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="companyName" property="companyName" jdbcType="CHAR" />
+        <result column="userName" property="userName" jdbcType="CHAR" />
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="userId" property="userId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, company_id, user_id, identity, created, status,name,phone
+</sql>
+    <sql id="columnDtos">
+         c.identity, c.created, c.status,co.name companyName,c.userName,c.sex,c.mobile,c.userId,c.name,c.phone
+    </sql>
+    <select id="selectById" resultMap="CompanyShareMemberMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   company_share_member
+WHERE  id = #{id}
+</select>
+
+    <select id="findShareMemberList" resultMap="CompanyShareMemberDtoMap">
+        SELECT <include refid="columnDtos"/> from
+            (SELECT s.company_id,s.user_id,s.identity,s.created,s.status,u.name userName,u.sex,u.mobile
+             from company_share_member s
+             LEFT JOIN user u on s.user_id=u.id )c
+        LEFT JOIN company co on c.company_id=co.id
+        where c.company_id=#{companyId} and c.identity=2
+    </select>
+    <!--根据用户id查询-->
+    <select id="findShareMemberByCUID" resultMap="CompanyShareMemberMap">
+        select <include refid="columns"/> from company_share_member where user_id=#{userId} and company_id=#{companyId}
+    </select>
+    <!--安装工列表-->
+    <select id="selectByFilter" resultMap="CompanyShareMemberDtoMap">
+SELECT <include refid="columnDtos" />
+FROM  (SELECT s.*,u.name userName,u.sex,u.mobile,u.id userId
+        from company_share_member s
+        LEFT JOIN user u on s.user_id=u.id )c
+        LEFT JOIN company co on c.company_id=co.id
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    c.id = #{id}
+</if>
+<if test="companyId != null">
+    AND c.company_id = #{companyId}
+</if>
+<if test="userId != null">
+    AND c.user_id = #{userId}
+</if>
+<if test="identity != null">
+    AND c.identity = #{identity}
+</if>
+<if test="created != null">
+    AND c.created = #{created}
+</if>
+<if test="status != null">
+    AND c.status = #{status}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+company_share_member(id, company_id, user_id, identity, created, status,name,phone)
+              VALUES(#{id}, #{companyId}, #{userId}, #{identity}, #{created}, #{status},#{name},#{phone})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE company_share_member
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('name') and status != null">
+        name = #{name},
+    </if>
+    <if test="_parameter.containsKey('phone') and status != null">
+        phone = #{phone}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   company_share_member
+WHERE  id = #{id}
+</delete>
+
+    <select id="findDesigner" resultType="java.util.Map">
+        SELECT
+        u.id,u.name,u.avatar,asm.user_id as designer,asm.company_id,
+        IFNULL(asm.score,"")as score,
+        IFNULL(asm.numbers,"")as numbers,
+        IFNULL(asm.reservations_count,"")as reservations_count,
+        IFNULL(asm.min_quotations,"")as min_quotations,
+        IFNULL(asm.max_quotations,"")as max_quotations
+        from company_share_member asm,user u
+        where asm.user_id = u.id
+        and asm.status = 2
+        and asm.identity = 1
+        and asm.company_id = #{FCompanyId}
+UNION
+        SELECT
+        u.id,u.name,u.avatar,asm.user_id as designer,asm.company_id,
+        IFNULL(asm.score,"")as score,
+        IFNULL(asm.numbers,"")as numbers,
+        IFNULL(asm.reservations_count,"")as reservations_count,
+        IFNULL(asm.min_quotations,"")as min_quotations,
+        IFNULL(asm.max_quotations,"")as max_quotations
+        from company_share_member asm,user u
+        where asm.user_id = u.id
+        and asm.status = 2
+        and asm.identity = 1
+        and asm.company_id = #{BCompanyId}
+    </select>
+
+
+
+    <select id="findByDesigner" resultType="java.util.Map">
+        select
+        u.name,u.avatar,asm.coverage,asm.score,asm.numbers,asm.reservations_count,count(a.id) as attentions
+        from company_share_member asm
+        left join user u on u.id = asm.user_id
+        left join user_attention a on a.resource_id = #{designer}
+		and resource_type = 1
+        where asm.company_id = #{companyId}
+        and asm.user_id = #{designer}
+        and asm.identity = 1
+        and asm.status = 2
+
+    </select>
+
+    <select id="findByOrderId" resultMap="CompanyShareMemberDtoMap">
+        select
+        *
+        from company_share_member asm
+
+        where asm.id in  (select  company_share_member_id from company_member_order where custome_order_id=#{orderId})
+
+
+    </select>
+
+    <select id="findByCidAndNameAndType" resultMap="CompanyShareMemberMap">
+        select <include refid="columns"/> from company_share_member where name=#{name} and company_id=#{companyId} and identity=#{identity}
+    </select>
+
+</mapper>

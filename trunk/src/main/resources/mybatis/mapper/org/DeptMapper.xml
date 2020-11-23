@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.org.DeptDao">
+    <resultMap id="DeptMap" type="com.lwxf.industry4.webapp.domain.entity.org.Dept">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="key" property="key" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="CHAR"/>
+        <result column="company_Id" property="companyId" jdbcType="CHAR"/>
+        <result column="branch_id" property="branchId"/>
+    </resultMap>
+    <resultMap id="EmployeeDeptDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeDeptDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="CHAR" />
+        <result column="userName" property="userName" jdbcType="CHAR" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="roleName" property="roleName" jdbcType="CHAR" />
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+        <result column="email" property="email"/>
+        <result column="birthday" property="birthday"/>
+        <result column="userStatus" property="userStatus" jdbcType="TINYINT"/>
+        <result column="enable_login_pc" property="enableLoginPc" jdbcType="TINYINT"/>
+        <result column="enable_login_wx" property="enableLoginWx" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="columns">
+id, name, `key`, notes, parent_id, company_Id,branch_id
+</sql>
+    <sql id="AScolumns">
+d.id, d.name, d.`key`, d.notes, d.parent_id, d.company_Id,d.branch_id
+</sql>
+    <sql id="EmployeeDeptDtoColumns">
+dp.id, dp.company_id, dp.user_id, dp.role_id, dp.created, dp.status, dp.no,u.name userName,u.mobile mobile,dp.roleName,u.sex,u.birthday,u.email,dp.branch_id
+    </sql>
+    <select id="selectById" resultMap="DeptMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM dept
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="DeptMap">
+        SELECT
+        <include refid="columns"/>
+        FROM dept
+        <where>
+            <trim prefixOverrides="AND">
+
+                <if test="id != null">
+                    id = #{id}
+                </if>
+                <if test="name != null">
+                    AND name = #{name}
+                </if>
+                <if test="key != null">
+                    AND `key` = #{key}
+                </if>
+                <if test="notes != null">
+                    AND notes = #{notes}
+                </if>
+                <if test="parentId != null">
+                    AND parent_id = #{parentId}
+                </if>
+                <if test="companyId != null">
+                    AND company_Id = #{companyId}
+                </if>
+                <if test="branchId != null">
+                    AND branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+  dept(id, name, `key`, notes, parent_id, company_Id,branch_id)
+VALUES(#{id}, #{name}, #{key}, #{notes}, #{parentId}, #{companyId},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE dept
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('name') and name != null">
+                    name = #{name},
+                </if>
+                <if test="_parameter.containsKey('key') and key != null">
+                    `key` = #{key},
+                </if>
+                <if test="_parameter.containsKey('notes')">
+                    notes = #{notes},
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dept
+WHERE  id = #{id}
+</delete>
+
+    <select id="findDeptByNameAndParentId" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept where name = #{name}
+        <if test="parentId!=null">
+            and parent_id = #{parentId}
+        </if>
+        <if test="branchId != null">
+            AND branch_id = #{branchId}
+        </if>
+    </select>
+
+    <select id="findDeptByKey" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept where `key` = #{key} and branch_id = #{branchId}
+    </select>
+
+    <select id="selectDeptByCompanyIdAndParentId" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept where company_Id = #{companyId} and
+        <if test="parentId==null">
+            parent_id is null
+        </if>
+        <if test="parentId!=null">
+            parent_id = #{parentId}
+        </if>
+    </select>
+
+    <select id="selectByEmpId" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept
+        where id =
+        (select dept_id
+        from dept_member
+        where employee_id = #{empId} )
+        limit 1
+    </select>
+
+
+    <select id="findOneByKeyOrNameAndCompanyId" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="name != null">
+                    name = #{name}
+                </if>
+                <if test="key != null">
+                    `key` = #{key}
+                </if>
+                <if test="parentId != null">
+                     AND parent_id = #{parentId}
+                </if>
+                AND company_Id = #{companyId}
+            </trim>
+        </where>
+
+    </select>
+
+    <select id="findListByCompanyId" resultMap="DeptMap" parameterType="String">
+        select
+        <include refid="columns"/>
+        from dept
+        WHERE company_Id = #{companyId}
+    </select>
+    <select id="findAll" resultMap="DeptMap">
+        select
+        <include refid="columns"/>
+        from dept
+        where company_Id = #{companyId}
+    </select>
+
+    <select id="findOneByUserId" resultMap="EmployeeDeptDtoMap">
+        select dp.id, dp.company_id, dp.user_id, dp.role_id, dp.created, dp.status, dp.no,u.name userName,u.mobile mobile,dp.roleName,u.sex,u.birthday,u.email,
+        u.state userStatus, u.enable_login_wx, u.enable_login_pc
+        from user u RIGHT join
+        (select ce.*,r.name roleName from role r RIGHT JOIN
+        company_employee ce
+        on r.id = ce.role_id ) dp on u.id = dp.user_id
+        where u.id = #{id}
+    </select>
+
+
+    <select id="findListByParentId" resultMap="DeptMap">
+        select <include refid="columns"/> from dept
+        where parent_id = #{id}
+    </select>
+
+    <select id="findListByEmployeeId" resultMap="DeptMap">
+        select <include refid="AScolumns"/> from dept d left join dept_member m on d.id = m.dept_id
+        where m.employee_id = #{id}
+    </select>
+    <select id="findListByCompanyIdAndParent" resultMap="DeptMap">
+        select <include refid="columns"/> from dept
+        where company_id = #{companyId} and parent_id is null
+    </select>
+
+    <select id="findListByUserId" resultMap="DeptMap">
+        select d.* from dept d
+        left join dept_member m on d.id = m.dept_id
+        left join company_employee ce on m.employee_id = ce.id
+        where ce.user_id = #{currUserId}
+    </select>
+    <select id="findAllDeptByBranchId" resultMap="DeptMap">
+        select d.* from dept d
+        where d.branch_id = #{branchId}
+    </select>
+</mapper>

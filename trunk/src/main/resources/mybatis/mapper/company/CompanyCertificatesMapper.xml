@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.CompanyCertificatesDao">
+    <resultMap id="CompanyCertificatesMap" type="com.lwxf.industry4.webapp.domain.entity.company.CompanyCertificates">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="certificates_num" property="certificatesNum" jdbcType="VARCHAR" />
+        <result column="term_of_validity" property="termOfValidity" jdbcType="TIMESTAMP" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="CompanyCertificatesDtoMap" type="com.lwxf.industry4.webapp.domain.dto.company.CompanyCertificatesDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="certificates_num" property="certificatesNum" jdbcType="VARCHAR" />
+        <result column="term_of_validity" property="termOfValidity" jdbcType="TIMESTAMP" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="columns">
+id, company_id, type, name, certificates_num, term_of_validity, created, creator, status
+</sql>
+
+    <select id="selectById" resultMap="CompanyCertificatesMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   company_certificates
+        WHERE  id = #{id}
+    </select>
+    <select id="findByCid" resultMap="CompanyCertificatesDtoMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   company_certificates
+        WHERE  company_id = #{cid}
+    </select>
+
+    <select id="selectByFilter" resultMap="CompanyCertificatesMap">
+        SELECT <include refid="columns" />
+        FROM   company_certificates
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="certificatesNum != null">
+                AND certificates_num = #{certificatesNum}
+            </if>
+            <if test="termOfValidity != null">
+                AND term_of_validity = #{termOfValidity}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+company_certificates(id, company_id, type, name, certificates_num, term_of_validity, created, creator, status)
+              VALUES(#{id}, #{companyId}, #{type}, #{name}, #{certificatesNum}, #{termOfValidity}, #{created}, #{creator}, #{status})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE company_certificates
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('companyId')">
+                company_id = #{companyId},
+            </if>
+            <if test="_parameter.containsKey('type')">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('name')">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('certificatesNum')">
+                certificates_num = #{certificatesNum},
+            </if>
+            <if test="_parameter.containsKey('termOfValidity')">
+                term_of_validity = #{termOfValidity},
+            </if>
+            <if test="_parameter.containsKey('created')">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('creator')">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('status')">
+                status = #{status}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   company_certificates
+WHERE  id = #{id}
+</delete>
+
+</mapper>

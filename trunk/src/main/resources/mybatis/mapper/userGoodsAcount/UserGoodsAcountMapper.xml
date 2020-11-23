@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.userGoodsAcount.UserGoodsAcountDao">
+    <resultMap id="UserGoodsAcountMap" type="com.lwxf.industry4.webapp.domain.entity.userGoodsAcount.UserGoodsAcount">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dealer_id" property="dealerId" jdbcType="VARCHAR" />
+        <result column="dealer_goods_cost_year" property="dealerGoodsCostYear" jdbcType="DECIMAL" />
+        <result column="dealer_discount_year" property="dealerDiscountYear" jdbcType="DECIMAL" />
+        <result column="dealer_year" property="dealerYear" jdbcType="VARCHAR" />
+        <result column="vip_cost" property="vipCost" jdbcType="INTEGER" />
+        <result column="vip_cost_limit" property="vipCostLimit" jdbcType="INTEGER" />
+        <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, dealer_id, dealer_goods_cost_year, dealer_discount_year, dealer_year, vip_cost, vip_cost_limit, creat_time, update_time, reserve1, reserve2, reserve3, reserve4
+</sql>
+
+    <select id="selectById" resultMap="UserGoodsAcountMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   user_goods_acount
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="UserGoodsAcountMap">
+SELECT <include refid="columns" />
+FROM   user_goods_acount
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="dealerId != null">
+    AND dealer_id = #{dealerId}
+</if>
+<if test="dealerGoodsCostYear != null">
+    AND dealer_goods_cost_year = #{dealerGoodsCostYear}
+</if>
+<if test="dealerDiscountYear != null">
+    AND dealer_discount_year = #{dealerDiscountYear}
+</if>
+<if test="dealerYear != null">
+    AND dealer_year = #{dealerYear}
+</if>
+<if test="vipCost != null">
+    AND vip_cost = #{vipCost}
+</if>
+<if test="vipCostLimit != null">
+    AND vip_cost_limit = #{vipCostLimit}
+</if>
+<if test="creatTime != null">
+    AND creat_time = #{creatTime}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+user_goods_acount(id, dealer_id, dealer_goods_cost_year, dealer_discount_year, dealer_year, vip_cost, vip_cost_limit, creat_time, update_time, reserve1, reserve2, reserve3, reserve4)
+           VALUES(#{id}, #{dealerId}, #{dealerGoodsCostYear}, #{dealerDiscountYear}, #{dealerYear}, #{vipCost}, #{vipCostLimit}, #{creatTime}, #{updateTime}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE user_goods_acount
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('dealerId')">
+    dealer_id = #{dealerId},
+</if>
+    <if test="_parameter.containsKey('dealerGoodsCostYear')">
+    dealer_goods_cost_year = #{dealerGoodsCostYear},
+</if>
+    <if test="_parameter.containsKey('dealerDiscountYear')">
+    dealer_discount_year = #{dealerDiscountYear},
+</if>
+    <if test="_parameter.containsKey('dealerYear')">
+    dealer_year = #{dealerYear},
+</if>
+    <if test="_parameter.containsKey('vipCost')">
+    vip_cost = #{vipCost},
+</if>
+    <if test="_parameter.containsKey('vipCostLimit')">
+    vip_cost_limit = #{vipCostLimit},
+</if>
+    <if test="_parameter.containsKey('creatTime')">
+    creat_time = #{creatTime},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_goods_acount
+WHERE  id = #{id}
+</delete>
+
+</mapper>

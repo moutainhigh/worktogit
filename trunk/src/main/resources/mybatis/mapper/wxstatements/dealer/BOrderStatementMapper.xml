@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.statements.dealer.BOrderStatementDao">
+
+    <select id="findOrderStatementByWeek"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByWeekDto">
+        <if test="countType != null and countType != '' and countType =='0'.toString()">
+            select
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2))) as tues,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3))) as wed,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4))) as thur,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5))) as fri,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6))) as sat,
+            (select count(*) from custom_order where company_id=#{companyId} and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7))) as sun
+        </if>
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            select sum(r.mon) as mon,sum(r.tues) as tues,sum(r.wed) as wed,sum(r.thur) as thur,sum(r.fri) as fri,sum(r.sat) as sat,sum(r.sun) as sun  from (
+            select
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1)) and delivery_date is null) as mon,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-2)) and delivery_date is null) as tues,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-3)) and delivery_date is null) as wed,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-4)) and delivery_date is null) as thur,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-5)) and delivery_date is null) as fri,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-6)) and delivery_date is null) as sat,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-7)) and delivery_date is null) as sun
+            UNION ALL
+            select
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-1)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as mon,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-2)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as tues,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-3)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as wed,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-4)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as thur,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-5)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as fri,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-6)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as sat,
+            (select count(*) from custom_order where company_id=#{companyId} and estimated_delivery_date <![CDATA[ <]]> (select subdate(curdate(),date_format(curdate(),'%w')-7)) and delivery_date <![CDATA[ >]]>estimated_delivery_date) as sun
+            ) r
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            select
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as mon,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as tues,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as wed,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as thur,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as fri,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as sat,
+            (select count(*) from custom_order where company_id=#{companyId} and status=6 and date_format(created,'%Y-%m-%d') = (select subdate(curdate(),if(date_format(curdate(),'%w')=0,7,date_format(curdate(),'%w'))-1))) as sun
+        </if>
+    </select>
+
+
+    <select id="findOrderStatementByMonth"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByMonthDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+       select
+       (select count(*) from custom_order where company_id=#{companyId} and   date_format(created,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d'))  as point1,
+       (select count(*) from custom_order where company_id=#{companyId} and   date_format(created,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')) as point2,
+       (select count(*) from custom_order where company_id=#{companyId} and   date_format(created,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')) as point3,
+       (select count(*) from custom_order where company_id=#{companyId} and   date_format(created,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+       select
+       (select count(*) from custom_order where company_id=#{companyId}  and  date_format(estimated_delivery_date,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(estimated_delivery_date,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d')
+       and (estimated_delivery_date < delivery_date or delivery_date is null)  )  as point1,
+       (select count(*) from custom_order where company_id=#{companyId}  and  date_format(estimated_delivery_date,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(estimated_delivery_date,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')
+        and (estimated_delivery_date < delivery_date or delivery_date is null) ) as point2,
+       (select count(*) from custom_order where company_id=#{companyId}  and date_format(estimated_delivery_date,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(estimated_delivery_date,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')
+        and (estimated_delivery_date < delivery_date or delivery_date is null) ) as point3,
+       (select count(*) from custom_order where company_id=#{companyId}  and  date_format(estimated_delivery_date,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(estimated_delivery_date,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')
+        and (estimated_delivery_date < delivery_date or delivery_date is null) ) as point4
+       ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+      select
+       (select count(*) from custom_order where company_id=#{companyId} and status=6 and  date_format(created,'%Y-%m-%d') >= date_format(#{oneTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{twoTime},'%Y-%m-%d'))  as point1,
+       (select count(*) from custom_order where company_id=#{companyId} and status=6 and  date_format(created,'%Y-%m-%d') >= date_format(#{twoTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d')   < date_format(#{threeTime},'%Y-%m-%d')) as point2,
+       (select count(*) from custom_order where company_id=#{companyId} and status=6 and  date_format(created,'%Y-%m-%d') >= date_format(#{threeTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') < date_format(#{fourTime},'%Y-%m-%d')) as point3,
+       (select count(*) from custom_order where company_id=#{companyId} and status=6 and  date_format(created,'%Y-%m-%d') >= date_format(#{fourTime},'%Y-%m-%d') and date_format(created,'%Y-%m-%d') <= date_format(#{fiveTime},'%Y-%m-%d')) as point4
+       ]]>
+        </if>
+    </select>
+
+
+    <select id="findOrderStatementByQuarter"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByQuarterDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and  month(created)=#{firstMonth}) as month1,
+            (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and  month(created)=#{secondMonth}) as month2,
+            (select count(*) from custom_order where  company_id=#{companyId}   and  YEAR(created)=YEAR(NOW()) and  month(created)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and  month(created)=#{firstMonth}
+            and (estimated_delivery_date < delivery_date or delivery_date is null)) as month1,
+            (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(created)=#{secondMonth}
+            and (estimated_delivery_date < delivery_date or delivery_date is null)) as month2,
+            (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(created)=#{thirdMonth}
+            and (estimated_delivery_date < delivery_date or delivery_date is null)) as month3
+            ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+            select
+            (select count(*) from custom_order where  company_id=#{companyId} and status=6  and YEAR(created)=YEAR(NOW()) and month(created)=#{firstMonth}) as month1,
+            (select count(*) from custom_order where  company_id=#{companyId} and status=6   and YEAR(created)=YEAR(NOW()) and month(created)=#{secondMonth}) as month2,
+            (select count(*) from custom_order where  company_id=#{companyId} and status=6   and YEAR(created)=YEAR(NOW()) and month(created)=#{thirdMonth}) as month3
+            ]]>
+        </if>
+    </select>
+
+
+    <select id="findOrderStatementByYear"  resultType="com.lwxf.industry4.webapp.domain.dto.statement.CountByYearDto">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=1) as jan,
+        (select count(*) from custom_order where  company_id=#{companyId}  and YEAR(created)=YEAR(NOW()) and month(created)=2) as feb,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=3) as mar,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=4) as apr,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=5) as may,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=6) as jun,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=7) as jul,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=8) as aug,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=9) as sept,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=10) as oct,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=11) as nov,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(created)=YEAR(NOW()) and month(created)=12) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=1
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as jan,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=2
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as feb,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=3
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as mar,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=4
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as apr,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=5
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as may,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=6
+       and (estimated_delivery_date < delivery_date or delivery_date is null) ) as jun,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=7
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as jul,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=8
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as aug,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=9
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as sept,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=10
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as oct,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=11
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as nov,
+        (select count(*) from custom_order where  company_id=#{companyId}   and YEAR(estimated_delivery_date)=YEAR(NOW()) and month(estimated_delivery_date)=12
+        and (estimated_delivery_date < delivery_date or delivery_date is null)) as dece
+        ]]>
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            <![CDATA[
+        select
+         (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=1) as jan,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=2) as feb,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=3) as mar,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=4) as apr,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=5) as may,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=6) as jun,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=7) as jul,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=8) as aug,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=9) as sept,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=10) as oct,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=11) as nov,
+        (select count(*) from custom_order where  company_id=#{companyId} and status=6 and YEAR(created)=YEAR(NOW()) and month(created)=12) as dece
+        ]]>
+        </if>
+    </select>
+
+
+    <select id="findOrderStatements"  resultType="com.lwxf.industry4.webapp.domain.dto.aftersale.DateNum">
+        <if test="countType != null and countType != ''and countType =='0'.toString()">
+            select
+            (select count(*)  from
+            custom_order
+            <where><trim prefixOverrides="AND">
+                and company_id=#{companyId}
+                <if test="date != null">
+                    and date_format(created,'%Y-%m-%d')  =  date_format(#{date},'%Y-%m-%d')
+                </if>
+            </trim></where>
+            )as count
+        </if>
+        <if test="countType != null and countType != ''and countType =='1'.toString()">
+
+            select (
+            select count(*)
+            from
+            custom_order
+            <where><trim prefixOverrides="AND">
+                and company_id=#{company_id}
+                <if test="date != null">
+                    and date_format(estimated_delivery_date,'%Y-%m-%d')  =  date_format(#{date},'%Y-%m-%d')
+                </if>
+                    and (estimated_delivery_date <![CDATA[ < ]]> delivery_date or delivery_date is null)
+            </trim></where>
+            ) as count
+
+        </if>
+        <if test="countType != null and countType != ''and countType =='2'.toString()">
+            select
+            (select count(*)  from
+            custom_order
+            <where><trim prefixOverrides="AND">
+                and company_id=#{companyId} and status=6
+                <if test="date != null">
+                    and date_format(created,'%Y-%m-%d')  =  date_format(#{date},'%Y-%m-%d')
+                </if>
+            </trim></where>
+            )as count
+        </if>
+    </select>
+
+    <select id="findOrderStatementType"  resultType="com.lwxf.mybatis.utils.MapContext">
+        <if test="countType != null and countType != '' and countType =='0'.toString()">
+        <![CDATA[
+        select
+                (select count(*)
+                count
+        from
+            order_product
+        where series=0 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'shiMuDingZhi' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=1 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'shiMuTeGong' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=2 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'kangNai' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=3 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'meiKe' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=4 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'moYa'
+        ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='1'.toString()">
+            <![CDATA[
+        select
+                (select count(*)
+                count
+        from
+            order_product
+        where series=0 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+            and (estimated_delivery_date < delivery_date or delivery_date is null)
+        )
+        )
+        as
+        'shiMuDingZhi' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=1 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+            and (estimated_delivery_date < delivery_date or delivery_date is null)
+        )
+        )
+        as
+        'shiMuTeGong' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=2 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+            and (estimated_delivery_date < delivery_date or delivery_date is null)
+        )
+        )
+        as
+        'kangNai' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=3 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+            and (estimated_delivery_date < delivery_date or delivery_date is null)
+        )
+        )
+        as
+        'meiKe' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=4 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(estimated_delivery_date ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+            and (estimated_delivery_date < delivery_date or delivery_date is null)
+        )
+        )
+        as
+        'moYa'
+        ]]>
+        </if>
+        <if test="countType != null and countType != '' and countType =='2'.toString()">
+            <![CDATA[
+        select
+                (select count(*)
+                count
+        from
+            order_product
+        where series=0 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+             and status=6
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'shiMuDingZhi' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=1 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+             and status=6
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'shiMuTeGong' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=2 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+             and status=6
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'kangNai' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=3 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and status=6
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'meiKe' ,
+        (select count(*)
+                count
+        from
+            order_product
+        where series=4 and
+            custom_order_id in (  select id from custom_order where company_id=#{companyId}
+            and status=6
+            and date_format(created ,'%Y-%m-%d') >= date_format(#{startTime} ,'%Y-%m-%d')
+            and date_format(created ,'%Y-%m-%d') <= date_format(#{endTime} ,'%Y-%m-%d')
+        )
+        )
+        as
+        'moYa'
+        ]]>
+        </if>
+    </select>
+
+</mapper>

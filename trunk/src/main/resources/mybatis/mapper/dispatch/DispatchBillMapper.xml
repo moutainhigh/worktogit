@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dispatch.DispatchBillDao">
+    <resultMap id="DispatchBillMap" type="com.lwxf.industry4.webapp.domain.entity.dispatch.DispatchBill">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="plan_date" property="planDate" jdbcType="DATE"/>
+        <result column="actual_date" property="actualDate" jdbcType="TIMESTAMP"/>
+        <result column="consignee" property="consignee" jdbcType="VARCHAR"/>
+        <result column="consignee_tel" property="consigneeTel" jdbcType="CHAR"/>
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="VARCHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+        <result column="delivererTel" property="delivererTel" jdbcType="CHAR"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="count" property="count"/>
+        <result column="company_id" property="companyId"/>
+        <result column="freight_type" property="freightType"/>
+        <result column="freight" property="freight"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+    </resultMap>
+    <resultMap id="DispatchBillMapDto" type="com.lwxf.industry4.webapp.domain.dto.dispatch.DispatchBillDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="plan_date" property="planDate" jdbcType="DATE"/>
+        <result column="actual_date" property="actualDate" jdbcType="TIMESTAMP"/>
+        <result column="consignee" property="consignee" jdbcType="VARCHAR"/>
+        <result column="consignee_tel" property="consigneeTel" jdbcType="CHAR"/>
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="VARCHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="consignorName" property="consignorName" jdbcType="VARCHAR"/>
+        <result column="logisticsName" property="logisticsName" jdbcType="VARCHAR"/>
+        <result column="deliverer_name" property="delivererName" jdbcType="CHAR"/>
+        <result column="delivererTel" property="delivererTel" jdbcType="CHAR"/>
+        <result column="cityName" property="cityName"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="count" property="count"/>
+        <result column="company_id" property="companyId"/>
+        <result column="companyName" property="companyName"/>
+        <result column="freight_type" property="freightType"/>
+        <result column="freight" property="freight"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+    </resultMap>
+    <resultMap id="FinishedStockDtoMap" type="com.lwxf.industry4.webapp.domain.dto.warehouse.FinishedStockDto">
+        <result column="productType" property="productType"/>
+        <result column="finishedItemNum" property="finishedItemNum"/>
+    </resultMap>
+    <resultMap id="DispatchBillPlanItemMapDto" type="com.lwxf.industry4.webapp.domain.dto.dispatch.DispatchBillPlanItemDto">
+        <result column="dispatchBillPlanId" property="dispatchBillPlanId"/>
+        <result column="orderNo" property="orderNo"/>
+        <result column="dispatchBillId" property="dispatchBillId"/>
+        <result column="orderId" property="orderId"/>
+        <result column="finishedStockItemId" property="finishedStockItemId"/>
+        <result column="created" property="created"/>
+        <result column="companyName" property="companyName"/>
+        <result column="finishedStockId" property="finishedStockId"/>
+        <result column="dispatchBillItemId" property="dispatchBillItemId"/>
+        <result column="barcode" property="barcode"/>
+        <result column="customerName" property="customerName"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <resultMap id="DispatchBillItemMap" type="com.lwxf.industry4.webapp.domain.dto.dispatch.DispatchBillItemDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="dispatch_bill_id" property="dispatchBillId" jdbcType="CHAR"/>
+        <result column="finished_stock_item_id" property="finishedStockItemId" jdbcType="CHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="barcode" property="barcode"/>
+        <result column="type" property="type"/>
+        <result column="customerName" property="customerName"/>
+        <result column="dealerName" property="dealerName"/>
+        <result column="customOrderNo" property="customOrderNo"/>
+    </resultMap>
+
+    <resultMap id="dispatchPrintDto" type="com.lwxf.industry4.webapp.domain.dto.printTable.DispatchPrintTableDto">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="plan_date" property="planDate" jdbcType="DATE"/>
+        <result column="actual_date" property="actualDate" jdbcType="DATE"/>
+        <result column="consignee" property="consignee" jdbcType="VARCHAR"/>
+        <result column="consignee_tel" property="consigneeTel" jdbcType="CHAR"/>
+        <result column="city_area_id" property="cityAreaId" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="logistics_company_id" property="logisticsCompanyId" jdbcType="VARCHAR"/>
+        <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="creator" property="creator" jdbcType="CHAR"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="deliverer" property="deliverer" jdbcType="CHAR"/>
+        <result column="delivererTel" property="delivererTel" jdbcType="CHAR"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="creatorName" property="creatorName"/>
+        <result column="delivererName" property="delivererName"/>
+        <result column="company_id" property="companyId"/>
+        <result column="freight_type" property="freightType"/>
+        <result column="freight" property="freight"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+    </resultMap>
+
+    <sql id="columns">
+id, no, plan_date, actual_date, consignee, consignee_tel, city_area_id, address, logistics_company_id, logistics_no, status, creator, created,notes,deliverer,deliverer_tel,branch_id,count,company_id,freight_type,freight,logistics_mode
+</sql>
+
+    <sql id="columnDtos">
+d.id, d.no, d.plan_date, d.actual_date, d.consignee, d.consignee_tel, d.city_area_id, d.address, d.logistics_company_id, d.logistics_no, d.status, d.creator, d.created,d.notes,d.deliverer,d.deliverer_tel,l.name logisticsName,u.name consignorName,a.merger_name cityName,d.branch_id,d.count,d.company_id,d.logistics_mode
+</sql>
+
+    <sql id="columnItemDtos">
+d.id, d.dispatch_bill_id, d.finished_stock_item_id, d.status,item.type,item.barcode,c2.name dealerName,c3.name customerName,f.order_no customOrderNo
+</sql>
+    <sql id="columnItems">
+id, dispatch_bill_id, finished_stock_item_id, status
+</sql>
+    <select id="selectById" resultMap="DispatchBillMap" parameterType="String">
+        SELECT
+        <include refid="columns"/>
+        FROM dispatch_bill
+        WHERE id = #{id}
+    </select>
+
+    <select id="findDispatchsByOrderId" resultMap="DispatchBillMapDto">
+        select db.id,db.no,db.logistics_no,db.status,u.name as consignorName,lc.name as logisticsName,db.actual_date as created
+        from finished_stock fs
+        left join finished_stock_item fsItem on fs.id = fsItem.finished_stock_id
+        left join dispatch_bill_item dbItem on fsItem.id = dbItem.finished_stock_item_id
+        left join dispatch_bill db on db.id = dbItem.dispatch_bill_id
+        left join user u on u.id = db.creator
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        where fs.order_id = #{orderId} and fsItem.is_shipped = true
+        order by db.created desc
+    </select>
+
+    <select id="findDispatchsBillById" resultMap="DispatchBillMapDto">
+        select
+        lc.name as logisticsName, db.logistics_no,db.actual_date,db.status
+        from logistics_company lc
+        LEFT JOIN dispatch_bill db on lc.id = db.logistics_company_id
+        where db.id = #{dispatchId}
+    </select>
+    <select id="findDispathcBillList" resultMap="DispatchBillPlanItemMapDto">
+        select co.no orderNo,c.name companyName,u.name customerName,co.id orderId,fsi.barcode,
+        dbpi.status,dbpi.dispatch_bill_plan_id dispatchBillPlanId,db.created,db.id dispatchBillId,
+        fsi.id finishedStockItemId,dbi.id dispatchBillItemId,fs.id finishedStockId
+        from dispatch_bill db
+        right join dispatch_bill_item dbi on dbi.dispatch_bill_id=db.id
+        right join finished_stock_item fsi on dbi.finished_stock_item_id = fsi.id
+        right join  dispatch_bill_plan_item dbpi on dbpi.finished_stock_item_id=fsi.id
+        left join finished_stock fs on fsi.finished_stock_id = fs.id
+        left join custom_order co on fs.order_id = co.id
+        left join company c on co.company_id = c.id
+        left join user u on co.customer_id = u.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="dealerName != null">
+                    c.name like '%${dealerName}%'
+                </if>
+                <if test="customerName != null">
+                    and u.name like '%${customerName}%'
+                </if>
+                <if test="mergerName != null">
+                    and co.city_area_id in ( SELECT id from city_area where merger_name like '%${mergerName}%')
+                </if>
+                <if test="orderNo != null">
+                    and fs.order_no like upper('%${orderNo}%')
+                </if>
+                <if test="status !=null">
+                    and dbpi.status = #{status}
+                </if>
+                <if test="startTime != null">
+                    and date_format(db.actual_date,'%Y-%m-%d') &gt;= #{startTime}
+                </if>
+                <if test="endTime != null">
+                    and date_format(db.actual_date,'%Y-%m-%d') &lt; #{endTime}
+                </if>
+                <if test="today != null">
+                    and to_days(db.actual_date) = to_days(now())
+                </if>
+                <if test="thisMonth != null">
+                    and DATE_FORMAT( db.actual_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+                </if>
+                <if test="branchId!=null">
+                    and db.branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectByFilter" resultMap="DispatchBillMapDto">
+        SELECT
+        DISTINCT <include refid="columnDtos"/>,co.name companyName
+        from dispatch_bill d
+        left join dispatch_bill_item dbItem on d.id = dbItem.dispatch_bill_id
+        left join logistics_company l on d.logistics_company_id = l.id
+        left join company co on co.id=d.company_id
+        left join user u on d.creator = u.id
+        left join city_area a on d.city_area_id = a.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id != null">
+                    d.id = #{id}
+                </if>
+                <if test="orderId != null">
+                    AND fs.order_id = #{orderId}
+                </if>
+                <if test="orderNo != null">
+                    AND dbItem.product_id in (select op.id from order_product op
+                    left join custom_order co1 on co1.id=op.custom_order_id
+                   where co1.no like upper(CONCAT('%',#{orderNo},'%')))
+                </if>
+                <if test="no != null">
+                    AND d.no like upper(CONCAT('%',#{no},'%'))
+                </if>
+                <if test="planDate != null">
+                    AND d.plan_date = #{planDate}
+                </if>
+                <if test="actualDate != null">
+                    AND d.actual_date = #{actualDate}
+                </if>
+                <if test="consignee != null">
+                    AND d.consignee = #{consignee}
+                </if>
+                <if test="consigneeTel != null">
+                    AND d.consignee_tel = #{consigneeTel}
+                </if>
+                <if test="cityAreaId != null">
+                    AND d.city_area_id = #{cityAreaId}
+                </if>
+                <if test="address != null">
+                    AND d.address = #{address}
+                </if>
+                <if test="logisticsCompanyId != null">
+                    AND d.logistics_company_id like CONCAT('%',#{logisticsCompanyId},'%')
+                </if>
+                <if test="logisticsNo != null">
+                    AND d.logistics_no like CONCAT('%',#{logisticsNo},'%')
+                </if>
+                <if test="status != null">
+                    AND d.status = #{status}
+                </if>
+                <if test="creator != null">
+                    AND d.creator = #{creator}
+                </if>
+                <if test="creatorName != null">
+                    AND d.creator in (select id from user where name like '%${creatorName}%')
+                </if>
+                <if test="created != null">
+                    AND d.created = #{created}
+                </if>
+                <if test="startTime != null">
+                    <![CDATA[   and DATE_FORMAT(d.actual_date, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+                </if>
+                <if test="endTime != null">
+                    <![CDATA[   and DATE_FORMAT(d.actual_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endTime}, '%Y-%m-%d')   ]]>
+                </if>
+                <if test="notes != null">
+                    AND d.notes = #{notes}
+                </if>
+                <if test="deliverer != null">
+                    AND d.deliverer = #{deliverer}
+                </if>
+                <if test="delivererTel != null">
+                    AND d.delivererTel = #{delivererTel}
+                </if>
+                <if test="branchId!=null">
+                    and d.branch_id = #{branchId}
+                </if>
+                <if test="companyName!=null">
+                    and d.company_id in (select id from company where name like '%${companyName}%')
+                </if>
+            </trim>
+        </where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dispatch_bill(id, no, plan_date, actual_date, consignee, consignee_tel, city_area_id, address, logistics_company_id, logistics_no, status, creator, created,notes,deliverer,deliverer_tel,branch_id,count,company_id,freight_type,freight,logistics_mode)
+       VALUES(#{id},#{no}, #{planDate}, #{actualDate}, #{consignee}, #{consigneeTel}, #{cityAreaId}, #{address}, #{logisticsCompanyId}, #{logisticsNo}, #{status}, #{creator}, #{created},#{notes},#{deliverer},#{delivererTel},#{branchId},#{count},#{companyId},#{freightType},#{freight},#{logisticsMode})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE dispatch_bill
+        <set>
+            <trim suffixOverrides=",">
+                <if test="_parameter.containsKey('planDate') and planDate != null">
+                    plan_date = #{planDate},
+                </if>
+                <if test="_parameter.containsKey('actualDate')">
+                    actual_date = #{actualDate},
+                </if>
+                <if test="_parameter.containsKey('logisticsCompanyId')">
+                    logistics_company_id = #{logisticsCompanyId},
+                </if>
+                <if test="_parameter.containsKey('logisticsNo')">
+                    logistics_no = #{logisticsNo},
+                </if>
+                <if test="_parameter.containsKey('status') and status != null">
+                    status = #{status},
+                </if>
+                <if test="_parameter.containsKey('address') and address != null">
+                    address = #{address},
+                </if>
+                <if test="_parameter.containsKey('consignee') and consignee != null">
+                    consignee = #{consignee},
+                </if>
+                <if test="_parameter.containsKey('notes') and notes != null">
+                    notes = #{notes},
+                </if>
+                <if test="_parameter.containsKey('consigneeTel') and consigneeTel != null">
+                    consignee_tel = #{consigneeTel},
+                </if>
+                <if test="_parameter.containsKey('count') and consigneeTel != null">
+                    count = #{count},
+                </if>
+                <if test="_parameter.containsKey('companyId') and consigneeTel != null">
+                    company_id = #{companyId},
+                </if>
+                <if test="_parameter.containsKey('freightType') and freightType != null">
+                    freight_type = #{freightType},
+                </if>
+                <if test="_parameter.containsKey('freight') and freight != null">
+                    freight = #{freight},
+                </if>
+                <if test="_parameter.containsKey('logisticsMode') and logisticsMode != null">
+                    logistics_mode = #{logisticsMode}
+                </if>
+            </trim>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dispatch_bill
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByDispatchId" resultMap="DispatchBillItemMap">
+        select
+        d.id, d.dispatch_bill_id, d.finished_stock_item_id, d.status,item.type,item.barcode,IFNULL(c2.name,c4.name) dealerName,IFNULL(c3.name,aa.customer_name) customerName,f.order_no customOrderNo
+        from dispatch_bill_item d
+        left join finished_stock_item item on d.finished_stock_item_id = item.id
+        left join finished_stock f on item.finished_stock_id = f.id
+        left join custom_order o on f.order_id = o.id
+        left join aftersale_apply aa on f.order_id = aa.id
+        left join company c2 on o.company_id = c2.id
+        left join company c4 on aa.company_id = c4.id
+        left join company_customer c3 on c3.id = o.customer_id
+        where
+        d.dispatch_bill_id = #{id}
+    </select>
+    <select id="findItemListById" resultMap="DispatchBillItemMap">
+        select
+        <include refid="columnItems"/>
+        from dispatch_bill_item where dispatch_bill_id = #{id}
+    </select>
+
+    <select id="findYSHItemCount" resultType="java.lang.Integer">
+        select count(0) from
+        dispatch_bill d
+        right join dispatch_bill_item item on d.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+        where d.status = 3 and f.order_id = #{orderId}
+    </select>
+    <select id="findTimeByOrderId" resultType="java.lang.String">
+        select min(created) as listTime
+        from dispatch_list
+        where order_id = #{orderId}
+        limit 1
+    </select>
+    <select id="findTodayCount" resultType="integer">
+        select count(*) from dispatch_bill_item  dbi
+        where
+          dbi.dispatch_bill_id in (select id from dispatch_bill where to_days(created) = to_days(now()))
+    </select>
+
+    <select id="findDispatchListByOrderId" resultMap="DispatchBillMap">
+        SELECT d.id FROM dispatch_bill d
+        left join dispatch_bill_item item on d.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+         WHERE f.order_id=#{orderId}
+    </select>
+    <select id="findFactoryDispatchsByOrderId" resultType="java.util.Map">
+      select DISTINCT
+      db.id,db.logistics_no as no,db.actual_date,lc.name as logisticsName
+      from dispatch_bill db
+        left join dispatch_bill_item item on db.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+      left join logistics_company lc on lc.id = db.logistics_company_id
+      where f.order_id = #{orderId}
+    </select>
+    <select id="findDispatchList" resultType="java.util.Map">
+        select
+            db.id dispatchBillId,db.no,db.actual_date,db.notes,u.name delivererName,lc.name as logisticsName,db.logistics_no
+        from dispatch_bill db
+        left join logistics_company lc on lc.id = db.logistics_company_id
+        left join user u on db.deliverer=u.id
+        left join dispatch_bill_item item on db.id = item.dispatch_bill_id
+        left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+        left join finished_stock f on fsItem.finished_stock_id = f.id
+        where f.order_id = #{resultOrderId}
+    </select>
+    <select id="findDispatchListByFinishedItemId" resultType="java.util.Map">
+        select
+            db.id dispatchBillId,db.no,db.actual_date,db.notes,u.name delivererName,lc.name as logisticsName,db.logistics_no
+        from dispatch_bill db
+                 left join logistics_company lc on lc.id = db.logistics_company_id
+                 left join user u on db.deliverer=u.id
+                 left join dispatch_bill_item item on db.id = item.dispatch_bill_id
+                 left join finished_stock_item fsItem on item.finished_stock_item_id = fsItem.id
+                 left join finished_stock f on fsItem.finished_stock_id = f.id
+        where
+            fsItem.id in
+              <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+                       #{id}
+              </foreach>
+        group by db.id
+    </select>
+
+
+    <select id="findFinishedItemTypeByDispatchId" resultMap="FinishedStockDtoMap">
+        select count(*) finishedItemNum,fitem.type  productType
+        from dispatch_bill d
+          left join dispatch_bill_item item on d.id = item.dispatch_bill_id
+        left join finished_stock_item fitem on item.finished_stock_item_id = fitem.id
+        where
+              d.id=#{dispatchBillId}
+              and
+        fitem.id in
+        <foreach collection="itemids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY fitem.type
+
+    </select>
+
+    <select id="findDispatchPrintInfo" resultMap="dispatchPrintDto">
+        select d.*,u.name creatorName,uu.name delivererName
+        from dispatch_bill d
+        left join user u on u.id = d.creator
+        left join user uu on uu.id = d.deliverer
+        where d.id = #{id}
+    </select>
+
+    <!--订单详情物流信息(只展示一个产品信息，通过订单id跳转到物流管理，查看订单下所有物流信息) -->
+    <select id="findDispatchInfoForOrder" resultType="com.lwxf.mybatis.utils.MapContext">
+        select op.custom_order_id orderId,b.value productType,lc.name logisticsCompanyName,db.logistics_no logisticsCompanyNo,u.name delivererName,db.deliverer_tel delivererTel,db.actual_date delivered
+        from order_product op
+          left join basecode b on op.type=b.code and b.type='orderProductType'
+        left join produce_order po on po.order_product_id=op.id
+        left join dispatch_bill_item dbi on dbi.product_id= op.id
+          left join dispatch_bill db on dbi.dispatch_bill_id = db.id
+          left join logistics_company lc on lc.id=db.logistics_company_id
+        left join user u on db.deliverer = u.id
+        where op.custom_order_id = #{orderId}
+      limit 1
+    </select>
+    <select id="findDispatchPrintInfoById" resultMap="DispatchBillMapDto">
+        select d.id,d.no,d.consignee,d.consignee_tel,d.city_area_id,d.address,d.logistics_no,d.status,d.deliverer,d.deliverer_tel,u.name as deliverer_name,d.actual_date,l.name as logisticsName,c.name companyName,d.logistics_company_id,d.freight_type,d.freight,d.logistics_mode,d.notes
+        from dispatch_bill d
+          left join company c on d.company_id=c.id
+         left join user u on d.deliverer = u.id
+        left join logistics_company l on l.id = d.logistics_company_id
+        where d.id=#{dispatchBillId}
+    </select>
+
+
+    <select id="findDispatchsInfoByOrderId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select lc.name logisticsCompanyName,db.logistics_no logisticsCompanyNo,u.name delivererName,db.deliverer_tel delivererTel,db.actual_date delivered
+        from dispatch_bill db
+        left join logistics_company lc on lc.id=db.logistics_company_id
+        left join user u on db.deliverer = u.id
+        where db.id in
+        (select dispatch_bill_id from dispatch_bill_item  where order_produce_id in
+        (select id from produce_order  where custom_order_id = #{orderId}))
+    </select>
+    <select id="findListByTimeAndBranchId" resultMap="DispatchBillItemMap">
+        select
+        <include refid="columns"/>
+        from dispatch_bill
+        where
+        branch_id=#{branchId}  and status=#{status}
+        and <![CDATA[ DATE_FORMAT(actual_date,'%Y-%m-%d')<=DATE_FORMAT(#{date},'%Y-%m-%d')]]>
+    </select>
+</mapper>

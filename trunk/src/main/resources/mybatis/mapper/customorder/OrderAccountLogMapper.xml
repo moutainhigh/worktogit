@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.OrderAccountLogDao">
+    <resultMap id="OrderAccountLogMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.OrderAccountLog">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="original_price" property="originalPrice" jdbcType="DECIMAL" />
+        <result column="present_price" property="presentPrice" jdbcType="DECIMAL" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="preferential_price" property="preferentialPrice" jdbcType="DECIMAL" />
+        <result column="classification" property="classification" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="OrderAccountLogDtoMap" type="com.lwxf.industry4.webapp.domain.dto.customorder.OrderAccountLogDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="original_price" property="originalPrice" jdbcType="DECIMAL" />
+        <result column="present_price" property="presentPrice" jdbcType="DECIMAL" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="preferential_price" property="preferentialPrice" jdbcType="DECIMAL" />
+        <result column="classification" property="classification" jdbcType="TINYINT" />
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+    <sql id="columns">
+id, order_id, notes, original_price, present_price, creator, created, type, preferential_price, classification
+</sql>
+    <sql id="columnDtos">
+o.id, o.order_id, o.notes, o.original_price, o.present_price, o.creator, o.created, o.type, o.preferential_price, o.classification,u.name creatorName
+</sql>
+
+    <select id="selectById" resultMap="OrderAccountLogMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   order_account_log
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="OrderAccountLogMap">
+        SELECT <include refid="columns" />
+        FROM   order_account_log
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="orderId != null">
+                AND order_id = #{orderId}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="originalPrice != null">
+                AND original_price = #{originalPrice}
+            </if>
+            <if test="presentPrice != null">
+                AND present_price = #{presentPrice}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="preferentialPrice != null">
+                AND preferential_price = #{preferentialPrice}
+            </if>
+            <if test="classification != null">
+                AND classification = #{classification}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+order_account_log(id, order_id, notes, original_price, present_price, creator, created, type, preferential_price, classification)
+           VALUES(#{id}, #{orderId}, #{notes}, #{originalPrice}, #{presentPrice}, #{creator}, #{created}, #{type}, #{preferentialPrice}, #{classification})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE order_account_log
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('orderId') and orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('originalPrice') and originalPrice != null">
+                original_price = #{originalPrice},
+            </if>
+            <if test="_parameter.containsKey('presentPrice') and presentPrice != null">
+                present_price = #{presentPrice},
+            </if>
+            <if test="_parameter.containsKey('creator') and creator != null">
+                creator = #{creator},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('preferentialPrice') and preferentialPrice != null">
+                preferential_price = #{preferentialPrice},
+            </if>
+            <if test="_parameter.containsKey('classification') and classification != null">
+                classification = #{classification}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   order_account_log
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByOrderId" resultMap="OrderAccountLogDtoMap">
+        select <include refid="columnDtos"/> from order_account_log o left join user u on o.creator = u.id where o.order_id = #{orderId}
+    </select>
+    <select id="findTimeByOrderId" resultType="java.lang.String">
+        select min(begin_time) as beginTime
+        from  custom_order_process
+         where order_id = #{orderId}
+         limit 1
+    </select>
+
+    <delete id="deleteByOrderId">
+        delete from order_account_log where order_id = #{orderId}
+    </delete>
+</mapper>

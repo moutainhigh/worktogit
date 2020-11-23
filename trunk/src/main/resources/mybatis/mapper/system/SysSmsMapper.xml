@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.SysSmsDao">
+    <resultMap id="SysSmsMap" type="com.lwxf.industry4.webapp.domain.entity.system.SysSms">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="node_type" property="nodeType" jdbcType="TINYINT" />
+        <result column="sms_template_id" property="smsTemplateId" jdbcType="CHAR" />
+        <result column="sms_status" property="smsStatus" jdbcType="TINYINT" />
+        <result column="wx_template_id" property="wxTemplateId" jdbcType="CHAR" />
+        <result column="wx_status" property="wxStatus" jdbcType="TINYINT" />
+        <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+
+    <resultMap id="SysSmsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.system.SysSmsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="node_type" property="nodeType" jdbcType="TINYINT" />
+        <result column="sms_template_id" property="smsTemplateId" jdbcType="CHAR" />
+        <result column="sms_status" property="smsStatus" jdbcType="TINYINT" />
+        <result column="wx_template_id" property="wxTemplateId" jdbcType="CHAR" />
+        <result column="wx_status" property="wxStatus" jdbcType="TINYINT" />
+        <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="node_type_name" property="nodeTypeName" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, node_type, sms_template_id, sms_status, wx_template_id, wx_status, order_num, status, remark,id
+</sql>
+
+    <sql id = "dtoColumns">
+        ss.id, ss.name, ss.node_type, ss.sms_template_id, ss.sms_status, ss.wx_template_id, ss.wx_status, ss.order_num, ss.status, ss.remark,
+        bc.value node_type_name
+    </sql>
+
+    <select id="selectById" resultMap="SysSmsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   sys_sms
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="SysSmsMap">
+SELECT <include refid="columns" />
+FROM   sys_sms
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="nodeType != null">
+    AND node_type = #{nodeType}
+</if>
+<if test="smsTemplateId != null">
+    AND sms_template_id = #{smsTemplateId}
+</if>
+<if test="smsStatus != null">
+    AND sms_status = #{smsStatus}
+</if>
+<if test="wxTemplateId != null">
+    AND wx_template_id = #{wxTemplateId}
+</if>
+<if test="wxStatus != null">
+    AND wx_status = #{wxStatus}
+</if>
+<if test="orderNum != null">
+    AND order_num = #{orderNum}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="remark != null">
+    AND remark = #{remark}
+</if>
+</trim></where>
+
+</select>
+
+    <!-- 条件查询sysSmsDto列表 -->
+    <select id="selectDtoByFilter" resultMap="SysSmsDtoMap">
+        SELECT <include refid="dtoColumns" />
+        FROM   sys_sms ss
+        LEFT JOIN basecode bc ON bc.type = "smsNodeType" AND bc.code = ss.node_type
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                ss.id = #{id}
+            </if>
+            <if test="name != null">
+                AND ss.name = #{name}
+            </if>
+            <if test="nodeType != null">
+                AND ss.node_type = #{nodeType}
+            </if>
+        </trim></where>
+    </select>
+
+    <!-- id查询sysSmsDto -->
+    <select id="selectDtoById" resultMap="SysSmsDtoMap">
+        SELECT <include refid="dtoColumns" />
+        FROM   sys_sms ss
+        LEFT JOIN basecode bc ON bc.type = "smsNodeType" AND bc.code = ss.node_type
+        WHERE ss.id = #{id}
+    </select>
+
+    <select id="count" resultType="integer">
+        SELECT COUNT(*) FROM sys_sms
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+sys_sms(id, name, node_type, sms_template_id, sms_status, wx_template_id, wx_status, order_num, status, remark,branch_id)
+ VALUES(#{id}, #{name}, #{nodeType}, #{smsTemplateId}, #{smsStatus}, #{wxTemplateId}, #{wxStatus}, #{orderNum}, #{status}, #{remark},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE sys_sms
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('nodeType') and nodeType != null">
+    node_type = #{nodeType},
+</if>
+    <if test="_parameter.containsKey('smsTemplateId')">
+    sms_template_id = #{smsTemplateId},
+</if>
+    <if test="_parameter.containsKey('smsStatus')">
+    sms_status = #{smsStatus},
+</if>
+    <if test="_parameter.containsKey('wxTemplateId')">
+    wx_template_id = #{wxTemplateId},
+</if>
+    <if test="_parameter.containsKey('wxStatus')">
+    wx_status = #{wxStatus},
+</if>
+    <if test="_parameter.containsKey('orderNum')">
+    order_num = #{orderNum},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('remark')">
+    remark = #{remark},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+        branch_id = #{branchId}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   sys_sms
+WHERE  id = #{id}
+</delete>
+
+</mapper>

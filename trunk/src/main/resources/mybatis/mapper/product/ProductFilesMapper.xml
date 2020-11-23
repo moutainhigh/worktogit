@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductFilesDao">
+    <resultMap id="ProductFilesMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductFiles">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="full_path" property="fullPath" jdbcType="VARCHAR" />
+        <result column="mime" property="mime" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="CHAR" />
+        <result column="original_mime" property="originalMime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="belong_id" property="belongId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, path, full_path, mime, name, product_id, original_mime, status, creator, created, type, belong_id
+</sql>
+
+    <select id="selectById" resultMap="ProductFilesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_files
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProductFilesMap">
+SELECT <include refid="columns" />
+FROM   product_files
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="path != null">
+    AND path = #{path}
+</if>
+<if test="fullPath != null">
+    AND full_path = #{fullPath}
+</if>
+<if test="mime != null">
+    AND mime = #{mime}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="productId != null">
+    AND product_id = #{productId}
+</if>
+<if test="originalMime != null">
+    AND original_mime = #{originalMime}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="belongId != null">
+    AND belong_id = #{belongId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_files(id, path, full_path, mime, name, product_id, original_mime, status, creator, created, type, belong_id)
+       VALUES(#{id}, #{path}, #{fullPath}, #{mime}, #{name}, #{productId}, #{originalMime}, #{status}, #{creator}, #{created}, #{type}, #{belongId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_files
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('status') and status != null">
+    status = #{status}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_files
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByType" resultMap="ProductFilesMap">
+        select <include refid="columns"/> from product_files where product_id = #{productId} and type = #{type}
+    </select>
+
+    <select id="findOneByProductIdAndId" resultMap="ProductFilesMap">
+        select <include refid="columns"/> from product_files where product_id = #{productId} and id = #{fileId}
+    </select>
+
+    <select id="findOneByProductIdAndType" resultMap="ProductFilesMap">
+        select <include refid="columns"/> from product_files where product_id = #{productId} and type = #{type}
+    </select>
+</mapper>

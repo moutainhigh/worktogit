@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.system.SysMessageDao">
+    <resultMap id="SysMessageMap" type="com.lwxf.industry4.webapp.domain.entity.system.SysMessage">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="dept_ids" property="deptIds" jdbcType="VARCHAR" />
+        <result column="reciver_ids" property="reciverIds" jdbcType="VARCHAR" />
+        <result column="reciver_count" property="reciverCount" jdbcType="INTEGER" />
+        <result column="read_count" property="readCount" jdbcType="INTEGER" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, type, title, content, status, dept_ids, reciver_ids, reciver_count, read_count, creator, created, branch_id
+</sql>
+
+    <select id="selectById" resultMap="SysMessageMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   sys_message
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="SysMessageMap">
+SELECT <include refid="columns" />
+FROM   sys_message
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="title != null">
+    AND title = #{title}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="deptIds != null">
+    AND dept_ids = #{deptIds}
+</if>
+<if test="reciverIds != null">
+    AND reciver_ids = #{reciverIds}
+</if>
+<if test="reciverCount != null">
+    AND reciver_count = #{reciverCount}
+</if>
+<if test="readCount != null">
+    AND read_count = #{readCount}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+sys_message(id, type, title, content, status, dept_ids, reciver_ids, reciver_count, read_count, creator, created, branch_id)
+     VALUES(#{id}, #{type}, #{title}, #{content}, #{status}, #{deptIds}, #{reciverIds}, #{reciverCount}, #{readCount}, #{creator}, #{created}, #{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE sys_message
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('type')">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('title')">
+    title = #{title},
+</if>
+    <if test="_parameter.containsKey('content')">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('status')">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('deptIds')">
+    dept_ids = #{deptIds},
+</if>
+    <if test="_parameter.containsKey('reciverIds')">
+    reciver_ids = #{reciverIds},
+</if>
+    <if test="_parameter.containsKey('reciverCount')">
+    reciver_count = #{reciverCount},
+</if>
+    <if test="_parameter.containsKey('readCount')">
+    read_count = #{readCount},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   sys_message
+WHERE  id = #{id}
+</delete>
+
+</mapper>

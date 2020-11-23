@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.chatrecord.ChatRecordDao">
+    <resultMap id="ChatRecordMap" type="com.lwxf.industry4.webapp.domain.entity.chatrecord.ChatRecord">
+        <result column="chat_type" property="chatType" jdbcType="CHAR" />
+        <result column="chat_time" property="chatTime" jdbcType="TIMESTAMP" />
+        <result column="chat_content" property="chatContent" jdbcType="VARCHAR" />
+        <result column="chat_username" property="chatUsername" jdbcType="VARCHAR" />
+        <result column="chat_user_id" property="chatUserId" jdbcType="VARCHAR" />
+        <result column="chat_depat_id" property="chatDepatId" jdbcType="VARCHAR" />
+        <result column="chat_depat_name" property="chatDepatName" jdbcType="VARCHAR" />
+        <result column="chat_insert_time" property="chatInsertTime" jdbcType="TIMESTAMP" />
+        <result column="chat_is_send" property="chatIsSend" jdbcType="CHAR" />
+        <result column="chat_is_Read" property="chatIsRead" jdbcType="CHAR" />
+        <result column="chat_content_type" property="chatContentType" jdbcType="VARCHAR" />
+        <result column="chat_reserve1" property="chatReserve1" jdbcType="VARCHAR" />
+        <result column="chat_reserve2" property="chatReserve2" jdbcType="VARCHAR" />
+        <result column="chat_reserve3" property="chatReserve3" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+chat_type, chat_time, chat_content, chat_username, chat_user_id, chat_depat_id, chat_depat_name, chat_insert_time, chat_is_send, chat_is_Read, chat_content_type, chat_reserve1, chat_reserve2, chat_reserve3
+</sql>
+
+    <select id="selectById" resultMap="ChatRecordMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   chat_record
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ChatRecordMap">
+SELECT <include refid="columns" />
+FROM   chat_record
+<where><trim prefixOverrides="AND">
+<if test="chatType != null">
+    chat_type = #{chatType}
+</if>
+<if test="chatTime != null">
+    AND chat_time = #{chatTime}
+</if>
+<if test="chatContent != null">
+    AND chat_content = #{chatContent}
+</if>
+<if test="chatUsername != null">
+    AND chat_username = #{chatUsername}
+</if>
+<if test="chatUserId != null">
+    AND chat_user_id = #{chatUserId}
+</if>
+<if test="chatDepatId != null">
+    AND chat_depat_id = #{chatDepatId}
+</if>
+<if test="chatDepatName != null">
+    AND chat_depat_name = #{chatDepatName}
+</if>
+<if test="chatInsertTime != null">
+    AND chat_insert_time = #{chatInsertTime}
+</if>
+<if test="chatIsSend != null">
+    AND chat_is_send = #{chatIsSend}
+</if>
+<if test="chatIsRead != null">
+    AND chat_is_Read = #{chatIsRead}
+</if>
+<if test="chatContentType != null">
+    AND chat_content_type = #{chatContentType}
+</if>
+<if test="chatReserve1 != null">
+    AND chat_reserve1 = #{chatReserve1}
+</if>
+<if test="chatReserve2 != null">
+    AND chat_reserve2 = #{chatReserve2}
+</if>
+<if test="chatReserve3 != null">
+    AND chat_reserve3 = #{chatReserve3}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+chat_record(chat_type, chat_time, chat_content, chat_username, chat_user_id, chat_depat_id, chat_depat_name, chat_insert_time, chat_is_send, chat_is_Read, chat_content_type, chat_reserve1, chat_reserve2, chat_reserve3)
+     VALUES(#{chatType}, #{chatTime}, #{chatContent}, #{chatUsername}, #{chatUserId}, #{chatDepatId}, #{chatDepatName}, #{chatInsertTime}, #{chatIsSend}, #{chatIsRead}, #{chatContentType}, #{chatReserve1}, #{chatReserve2}, #{chatReserve3})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE chat_record
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('chatType')">
+    chat_type = #{chatType},
+</if>
+    <if test="_parameter.containsKey('chatTime')">
+    chat_time = #{chatTime},
+</if>
+    <if test="_parameter.containsKey('chatContent')">
+    chat_content = #{chatContent},
+</if>
+    <if test="_parameter.containsKey('chatUsername')">
+    chat_username = #{chatUsername},
+</if>
+    <if test="_parameter.containsKey('chatUserId')">
+    chat_user_id = #{chatUserId},
+</if>
+    <if test="_parameter.containsKey('chatDepatId')">
+    chat_depat_id = #{chatDepatId},
+</if>
+    <if test="_parameter.containsKey('chatDepatName')">
+    chat_depat_name = #{chatDepatName},
+</if>
+    <if test="_parameter.containsKey('chatInsertTime')">
+    chat_insert_time = #{chatInsertTime},
+</if>
+    <if test="_parameter.containsKey('chatIsSend')">
+    chat_is_send = #{chatIsSend},
+</if>
+    <if test="_parameter.containsKey('chatIsRead')">
+    chat_is_Read = #{chatIsRead},
+</if>
+    <if test="_parameter.containsKey('chatContentType')">
+    chat_content_type = #{chatContentType},
+</if>
+    <if test="_parameter.containsKey('chatReserve1')">
+    chat_reserve1 = #{chatReserve1},
+</if>
+    <if test="_parameter.containsKey('chatReserve2')">
+    chat_reserve2 = #{chatReserve2},
+</if>
+    <if test="_parameter.containsKey('chatReserve3')">
+    chat_reserve3 = #{chatReserve3}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="Long">
+DELETE FROM   chat_record
+WHERE  id = #{id}
+</delete>
+
+</mapper>

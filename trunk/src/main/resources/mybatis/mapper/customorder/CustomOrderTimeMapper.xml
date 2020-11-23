@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderTimeDao">
+    <resultMap id="CustomOrderTimeMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderTime">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="produce_type" property="produceType" jdbcType="TINYINT" />
+        <result column="product_type" property="productType" jdbcType="TINYINT" />
+        <result column="product_series" property="productSeries" jdbcType="TINYINT" />
+        <result column="order_time" property="orderTime" jdbcType="INTEGER" />
+        <result column="produce_time" property="produceTime" jdbcType="INTEGER" />
+        <result column="deliver_time" property="deliverTime" jdbcType="INTEGER" />
+        <result column="all_cost" property="allCost" jdbcType="INTEGER" />
+        <result column="order_type" property="orderType" jdbcType="TINYINT" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="receive_time" property="receiveTime" jdbcType="INTEGER" />
+        <result column="order_remind" property="orderRemind" jdbcType="INTEGER" />
+        <result column="audit_time" property="auditTime" jdbcType="INTEGER" />
+        <result column="input_time" property="inputTime" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="columns">
+id, produce_type, product_type, product_series, order_time, produce_time, deliver_time, all_cost, order_type, branch_id,receive_time,order_remind,audit_time,input_time
+</sql>
+
+    <select id="selectById" resultMap="CustomOrderTimeMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   custom_order_time
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CustomOrderTimeMap">
+SELECT <include refid="columns" />
+FROM   custom_order_time
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="produceType != null">
+    AND produce_type = #{produceType}
+</if>
+<if test="productType != null">
+    AND product_type = #{productType}
+</if>
+<if test="productSeries != null">
+    AND product_series = #{productSeries}
+</if>
+<if test="orderTime != null">
+    AND order_time = #{orderTime}
+</if>
+<if test="produceTime != null">
+    AND produce_time = #{produceTime}
+</if>
+<if test="deliverTime != null">
+    AND deliver_time = #{deliverTime}
+</if>
+<if test="allCost != null">
+    AND all_cost = #{allCost}
+</if>
+<if test="orderType != null">
+    AND order_type = #{orderType}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+</trim></where>
+
+</select>
+    <select id="selectList" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT cot.*,b1.value productName,b2.value seriesName,b3.value produceName
+        FROM   custom_order_time cot
+        left join basecode b1 on b1.type='orderProductType' and b1.code=cot.product_type
+        left join basecode b2 on b2.type='orderProductSeries' and b2.code=cot.product_series
+        left join basecode b3 on b3.type='produceOrderType' and b3.code=cot.produce_type
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                cot.id = #{id}
+            </if>
+            <if test="produceType != null">
+                AND cot.produce_type = #{produceType}
+            </if>
+            <if test="productType != null">
+                AND cot.product_type = #{productType}
+            </if>
+            <if test="productSeries != null">
+                AND cot.product_series = #{productSeries}
+            </if>
+            <if test="orderTime != null">
+                AND cot.order_time = #{orderTime}
+            </if>
+            <if test="produceTime != null">
+                AND cot.produce_time = #{produceTime}
+            </if>
+            <if test="deliverTime != null">
+                AND cot.deliver_time = #{deliverTime}
+            </if>
+            <if test="allCost != null">
+                AND cot.all_cost = #{allCost}
+            </if>
+            <if test="orderType != null">
+                AND cot.order_type = #{orderType}
+            </if>
+            <if test="branchId != null">
+                AND cot.branch_id = #{branchId}
+            </if>
+            <if test="productName != null">
+                AND b1.value like '%${productName}%'
+            </if>
+            <if test="produceName != null">
+                AND b3.value like '%${produceName}%'
+            </if>
+            <if test="seriesName != null">
+                AND b2.value like '%${seriesName}%'
+            </if>
+        </trim></where>
+ order by product_type,product_series
+
+    </select>
+    <select id="findBySeries" resultMap="CustomOrderTimeMap">
+        SELECT cot.*
+        FROM   custom_order_time cot
+ where cot.branch_id=#{branchId} and cot.product_series=#{productSeries}
+
+    </select>
+    <select id="findByTypeAndSeries" resultMap="CustomOrderTimeMap">
+        SELECT <include refid="columns" />
+        FROM   custom_order_time
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="produceType != null">
+                AND produce_type = #{produceType}
+            </if>
+            <if test="productType != null">
+                AND product_type = #{productType}
+            </if>
+            <if test="productSeries != null">
+                AND product_series = #{productSeries}
+            </if>
+            <if test="orderTime != null">
+                AND order_time = #{orderTime}
+            </if>
+            <if test="produceTime != null">
+                AND produce_time = #{produceTime}
+            </if>
+            <if test="deliverTime != null">
+                AND deliver_time = #{deliverTime}
+            </if>
+            <if test="allCost != null">
+                AND all_cost = #{allCost}
+            </if>
+            <if test="orderType != null">
+                AND order_type = #{orderType}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </trim></where>
+limit 1
+    </select>
+
+
+
+    <select id="findMaxByOrderId" resultMap="CustomOrderTimeMap">
+        SELECT <include refid="columns" />
+        FROM   custom_order_time
+       where product_type in (select order_product_type from custom_order where id=#{orderId})
+       order by all_cost desc limit 1
+
+    </select>
+
+    <select id="findFirstByProductId" resultMap="CustomOrderTimeMap">
+        SELECT <include refid="columns" />
+        FROM   custom_order_time
+        where
+        <if test="productType != null">
+            product_type =#{productType}
+        </if>
+        <if test="productSeries != null">
+            and product_series=#{productSeries}
+        </if>
+        <if test="productId != null">
+            and produce_type
+            in (select type from produce_order where order_product_id=#{productId})
+        </if>
+        <if test="branchId != null">
+            AND branch_id = #{branchId}
+        </if>
+
+        order by all_cost desc limit 1
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+custom_order_time(id, produce_type, product_type, product_series, order_time, produce_time, deliver_time, all_cost, order_type, branch_id,receive_time,order_remind,audit_time,input_time)
+           VALUES(#{id}, #{produceType}, #{productType}, #{productSeries}, #{orderTime}, #{produceTime}, #{deliverTime}, #{allCost}, #{orderType}, #{branchId},#{receiveTime},#{orderRemind},#{auditTime},#{inputTime})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE custom_order_time
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('produceType')">
+    produce_type = #{produceType},
+</if>
+    <if test="_parameter.containsKey('productType')">
+    product_type = #{productType},
+</if>
+    <if test="_parameter.containsKey('productSeries')">
+    product_series = #{productSeries},
+</if>
+    <if test="_parameter.containsKey('orderTime')">
+    order_time = #{orderTime},
+</if>
+    <if test="_parameter.containsKey('produceTime')">
+    produce_time = #{produceTime},
+</if>
+    <if test="_parameter.containsKey('deliverTime')">
+    deliver_time = #{deliverTime},
+</if>
+    <if test="_parameter.containsKey('allCost')">
+    all_cost = #{allCost},
+</if>
+    <if test="_parameter.containsKey('orderType')">
+    order_type = #{orderType},
+</if>
+    <if test="_parameter.containsKey('receiveTime')">
+        receive_time = #{receiveTime},
+</if>
+    <if test="_parameter.containsKey('orderRemind')">
+        order_remind = #{orderRemind},
+    </if>
+    <if test="_parameter.containsKey('auditTime')">
+        audit_time = #{auditTime},
+    </if>
+    <if test="_parameter.containsKey('inputTime')">
+        input_time = #{inputTime},
+    </if>
+    <if test="_parameter.containsKey('branchId')">
+        branch_id = #{branchId}
+    </if>
+
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   custom_order_time
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.financing.FundsDao">
+    <resultMap id="FundsMap" type="com.lwxf.industry4.webapp.domain.entity.financing.Funds">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="way" property="way" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="parent_id" property="parentId" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="FundsDtoMap" type="com.lwxf.industry4.webapp.domain.dto.financing.FundsDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="way" property="way" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="parent_id" property="parentId" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, name, grade, way, notes, status, parent_id, branch_id, creator, created,type
+</sql>
+
+    <select id="selectById" resultMap="FundsMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   funds
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="FundsMap">
+SELECT <include refid="columns" />
+FROM   funds
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="grade != null">
+    AND grade = #{grade}
+</if>
+<if test="way != null">
+    AND way = #{way}
+</if>
+    <if test="type != null">
+        AND type = #{type}
+    </if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="parentId != null">
+    AND parent_id = #{parentId}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+ funds(id, name, grade, way, notes, status, parent_id, branch_id, creator, created,type)
+VALUES(#{id}, #{name}, #{grade}, #{way}, #{notes}, #{status}, #{parentId}, #{branchId}, #{creator}, #{created},#{type})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE funds
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('grade') and grade != null">
+    grade = #{grade},
+</if>
+    <if test="_parameter.containsKey('way') and way != null">
+    way = #{way},
+</if>
+    <if test="_parameter.containsKey('type') and way != null">
+        type = #{type},
+    </if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('parentId')">
+    parent_id = #{parentId},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   funds
+WHERE  id = #{id}
+</delete>
+    <select id="findFundsList" resultMap="FundsDtoMap">
+        SELECT <include refid="columns" />
+        FROM   funds
+        <where><trim prefixOverrides="AND">
+             status = '0'
+            <if test="id != null">
+                AND  id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="grade != null">
+                AND grade = #{grade}
+            </if>
+            <if test="way != null">
+                AND way = #{way}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+        </trim></where>
+    </select>
+    <select id="findByParentId" resultMap="FundsDtoMap">
+        SELECT <include refid="columns" />
+        FROM   funds
+        <where><trim prefixOverrides="AND">
+            status = '0'
+            <if test="id != null">
+                AND  id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="grade != null">
+                AND grade = #{grade}
+            </if>
+            <if test="way != null">
+                AND way = #{way}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </trim></where>
+
+    </select>
+
+</mapper>

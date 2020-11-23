@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderDesignDao">
+    <resultMap id="CustomOrderDesignMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderDesign">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="examine_time" property="examineTime" jdbcType="TIMESTAMP" />
+        <result column="examine_user" property="examineUser" jdbcType="CHAR" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="door_model" property="doorModel" jdbcType="VARCHAR" />
+        <result column="body_color" property="bodyColor" jdbcType="VARCHAR" />
+        <result column="body_edge_size" property="bodyEdgeSize" jdbcType="VARCHAR" />
+        <result column="ground_cabinet_h" property="groundCabinetH" jdbcType="VARCHAR" />
+        <result column="ground_cabinet_d" property="groundCabinetD" jdbcType="VARCHAR" />
+        <result column="cabinet_h" property="cabinetH" jdbcType="VARCHAR" />
+        <result column="cabinet_d" property="cabinetD" jdbcType="VARCHAR" />
+        <result column="mesa" property="mesa" jdbcType="VARCHAR" />
+        <result column="handle_model" property="handleModel" jdbcType="VARCHAR" />
+        <result column="hinge_model" property="hingeModel" jdbcType="VARCHAR" />
+        <result column="slide_way_model" property="slideWayModel" jdbcType="VARCHAR" />
+        <result column="lightbox_floor" property="lightboxFloor" jdbcType="VARCHAR" />
+        <result column="led_model" property="ledModel" jdbcType="VARCHAR" />
+        <result column="seasoning_basket" property="seasoningBasket" jdbcType="VARCHAR" />
+        <result column="hoisting_code" property="hoistingCode" jdbcType="VARCHAR" />
+        <result column="skirting" property="skirting" jdbcType="VARCHAR" />
+        <result column="water_tank" property="waterTank" jdbcType="VARCHAR" />
+        <result column="faucet" property="faucet" jdbcType="VARCHAR" />
+        <result column="other" property="other" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="CustomOrderDesignMapDto" type="com.lwxf.industry4.webapp.domain.dto.customorder.CustomOrderDesignDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_product_id" property="orderProductId" jdbcType="CHAR" />
+        <result column="designer" property="designer" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="examine_time" property="examineTime" jdbcType="TIMESTAMP" />
+        <result column="examine_user" property="examineUser" jdbcType="CHAR" />
+        <result column="door_color" property="doorColor" jdbcType="VARCHAR" />
+        <result column="door_model" property="doorModel" jdbcType="VARCHAR" />
+        <result column="body_color" property="bodyColor" jdbcType="VARCHAR" />
+        <result column="body_edge_size" property="bodyEdgeSize" jdbcType="VARCHAR" />
+        <result column="ground_cabinet_h" property="groundCabinetH" jdbcType="VARCHAR" />
+        <result column="ground_cabinet_d" property="groundCabinetD" jdbcType="VARCHAR" />
+        <result column="cabinet_h" property="cabinetH" jdbcType="VARCHAR" />
+        <result column="cabinet_d" property="cabinetD" jdbcType="VARCHAR" />
+        <result column="mesa" property="mesa" jdbcType="VARCHAR" />
+        <result column="handle_model" property="handleModel" jdbcType="VARCHAR" />
+        <result column="hinge_model" property="hingeModel" jdbcType="VARCHAR" />
+        <result column="slide_way_model" property="slideWayModel" jdbcType="VARCHAR" />
+        <result column="lightbox_floor" property="lightboxFloor" jdbcType="VARCHAR" />
+        <result column="led_model" property="ledModel" jdbcType="VARCHAR" />
+        <result column="seasoning_basket" property="seasoningBasket" jdbcType="VARCHAR" />
+        <result column="hoisting_code" property="hoistingCode" jdbcType="VARCHAR" />
+        <result column="skirting" property="skirting" jdbcType="VARCHAR" />
+        <result column="water_tank" property="waterTank" jdbcType="VARCHAR" />
+        <result column="faucet" property="faucet" jdbcType="VARCHAR" />
+        <result column="other" property="other" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="statusName" property="statusName"/>
+    </resultMap>
+    <sql id="columns">
+id, order_product_id, designer, created, notes, status, custom_order_id, start_time, end_time, examine_time, examine_user, door_color, door_model, body_color, body_edge_size, ground_cabinet_h, ground_cabinet_d, cabinet_h, cabinet_d, mesa, handle_model, hinge_model, slide_way_model, lightbox_floor, led_model, seasoning_basket, hoisting_code, skirting, water_tank, faucet, other, name
+</sql>
+
+    <sql id="columnDtos">
+        d.*,u.name designName,u.mobile designMobile,b.value statusName
+    </sql>
+
+    <select id="selectById" resultMap="CustomOrderDesignMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   custom_order_design
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CustomOrderDesignMap">
+        SELECT <include refid="columns" />
+        FROM   custom_order_design
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="orderProductId != null">
+                AND order_product_id = #{orderProductId}
+            </if>
+            <if test="designer != null">
+                AND designer = #{designer}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="customOrderId != null">
+                AND custom_order_id = #{customOrderId}
+            </if>
+            <if test="startTime != null">
+                AND start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND end_time = #{endTime}
+            </if>
+            <if test="examineTime != null">
+                AND examine_time = #{examineTime}
+            </if>
+            <if test="examineUser != null">
+                AND examine_user = #{examineUser}
+            </if>
+            <if test="doorColor != null">
+                AND door_color = #{doorColor}
+            </if>
+            <if test="doorModel != null">
+                AND door_model = #{doorModel}
+            </if>
+            <if test="bodyColor != null">
+                AND body_color = #{bodyColor}
+            </if>
+            <if test="bodyEdgeSize != null">
+                AND body_edge_size = #{bodyEdgeSize}
+            </if>
+            <if test="groundCabinetH != null">
+                AND ground_cabinet_h = #{groundCabinetH}
+            </if>
+            <if test="groundCabinetD != null">
+                AND ground_cabinet_d = #{groundCabinetD}
+            </if>
+            <if test="cabinetH != null">
+                AND cabinet_h = #{cabinetH}
+            </if>
+            <if test="cabinetD != null">
+                AND cabinet_d = #{cabinetD}
+            </if>
+            <if test="mesa != null">
+                AND mesa = #{mesa}
+            </if>
+            <if test="handleModel != null">
+                AND handle_model = #{handleModel}
+            </if>
+            <if test="hingeModel != null">
+                AND hinge_model = #{hingeModel}
+            </if>
+            <if test="slideWayModel != null">
+                AND slide_way_model = #{slideWayModel}
+            </if>
+            <if test="lightboxFloor != null">
+                AND lightbox_floor = #{lightboxFloor}
+            </if>
+            <if test="ledModel != null">
+                AND led_model = #{ledModel}
+            </if>
+            <if test="seasoningBasket != null">
+                AND seasoning_basket = #{seasoningBasket}
+            </if>
+            <if test="hoistingCode != null">
+                AND hoisting_code = #{hoistingCode}
+            </if>
+            <if test="skirting != null">
+                AND skirting = #{skirting}
+            </if>
+            <if test="waterTank != null">
+                AND water_tank = #{waterTank}
+            </if>
+            <if test="faucet != null">
+                AND faucet = #{faucet}
+            </if>
+            <if test="other != null">
+                AND other = #{other}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="createdNow!=null">
+                AND to_days(created) = to_days(now())
+            </if>
+            <if test="endTimeNow!=null">
+                AND to_days(end_time) = to_days(now())
+            </if>
+        </trim></where>
+
+    </select>
+
+    <select id="selectByOrderId" resultMap="CustomOrderDesignMapDto">
+        select
+        cod.id,cod.no,u.name as designName,u.mobile as designMobile,cod.created,cod.status,cod.end_time,cod.custom_order_id
+        from custom_order_design cod
+        left join user u on u.id = cod.designer
+        where custom_order_id = #{orderId}
+        order by cod.created desc
+    </select>
+
+
+    <delete id="deleteByOrderId" parameterType="string">
+        delete from
+        custom_order_design
+        where custom_order_id = #{orderId}
+    </delete>
+
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+custom_order_design(id, order_product_id, designer, created, notes, status, custom_order_id, start_time, end_time, examine_time, examine_user, door_color, door_model, body_color, body_edge_size, ground_cabinet_h, ground_cabinet_d, cabinet_h, cabinet_d, mesa, handle_model, hinge_model, slide_way_model, lightbox_floor, led_model, seasoning_basket, hoisting_code, skirting, water_tank, faucet, other, name)
+             VALUES(#{id}, #{orderProductId}, #{designer}, #{created}, #{notes}, #{status}, #{customOrderId}, #{startTime}, #{endTime}, #{examineTime}, #{examineUser}, #{doorColor}, #{doorModel}, #{bodyColor}, #{bodyEdgeSize}, #{groundCabinetH}, #{groundCabinetD}, #{cabinetH}, #{cabinetD}, #{mesa}, #{handleModel}, #{hingeModel}, #{slideWayModel}, #{lightboxFloor}, #{ledModel}, #{seasoningBasket}, #{hoistingCode}, #{skirting}, #{waterTank}, #{faucet}, #{other}, #{name})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE custom_order_design
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('designer') and designer != null">
+                designer = #{designer},
+            </if>
+            <if test="_parameter.containsKey('created') and created != null">
+                created = #{created},
+            </if>
+            <if test="_parameter.containsKey('notes')">
+                notes = #{notes},
+            </if>
+            <if test="_parameter.containsKey('status') and status != null">
+                status = #{status},
+            </if>
+            <if test="_parameter.containsKey('startTime')">
+                start_time = #{startTime},
+            </if>
+            <if test="_parameter.containsKey('endTime')">
+                end_time = #{endTime},
+            </if>
+            <if test="_parameter.containsKey('examineTime')">
+                examine_time = #{examineTime},
+            </if>
+            <if test="_parameter.containsKey('examineUser')">
+                examine_user = #{examineUser},
+            </if>
+            <if test="_parameter.containsKey('doorColor')">
+                door_color = #{doorColor},
+            </if>
+            <if test="_parameter.containsKey('doorModel')">
+                door_model = #{doorModel},
+            </if>
+            <if test="_parameter.containsKey('bodyColor')">
+                body_color = #{bodyColor},
+            </if>
+            <if test="_parameter.containsKey('bodyEdgeSize')">
+                body_edge_size = #{bodyEdgeSize},
+            </if>
+            <if test="_parameter.containsKey('groundCabinetH')">
+                ground_cabinet_h = #{groundCabinetH},
+            </if>
+            <if test="_parameter.containsKey('groundCabinetD')">
+                ground_cabinet_d = #{groundCabinetD},
+            </if>
+            <if test="_parameter.containsKey('cabinetH')">
+                cabinet_h = #{cabinetH},
+            </if>
+            <if test="_parameter.containsKey('cabinetD')">
+                cabinet_d = #{cabinetD},
+            </if>
+            <if test="_parameter.containsKey('mesa')">
+                mesa = #{mesa},
+            </if>
+            <if test="_parameter.containsKey('handleModel')">
+                handle_model = #{handleModel},
+            </if>
+            <if test="_parameter.containsKey('hingeModel')">
+                hinge_model = #{hingeModel},
+            </if>
+            <if test="_parameter.containsKey('slideWayModel')">
+                slide_way_model = #{slideWayModel},
+            </if>
+            <if test="_parameter.containsKey('lightboxFloor')">
+                lightbox_floor = #{lightboxFloor},
+            </if>
+            <if test="_parameter.containsKey('ledModel')">
+                led_model = #{ledModel},
+            </if>
+            <if test="_parameter.containsKey('seasoningBasket')">
+                seasoning_basket = #{seasoningBasket},
+            </if>
+            <if test="_parameter.containsKey('hoistingCode')">
+                hoisting_code = #{hoistingCode},
+            </if>
+            <if test="_parameter.containsKey('skirting')">
+                skirting = #{skirting},
+            </if>
+            <if test="_parameter.containsKey('waterTank')">
+                water_tank = #{waterTank},
+            </if>
+            <if test="_parameter.containsKey('faucet')">
+                faucet = #{faucet},
+            </if>
+            <if test="_parameter.containsKey('other')">
+                other = #{other},
+            </if>
+            <if test="_parameter.containsKey('name')">
+                name = #{name}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   custom_order_design
+WHERE  id = #{id}
+</delete>
+
+    <select id="findOneByDesignId" resultMap="CustomOrderDesignMapDto">
+         select
+        cod.*,u.name as designName,u.mobile as designMobile
+        from custom_order_design cod
+        left join user u on u.id = cod.designer
+        where cod.id = #{designId}
+        order by cod.created desc
+    </select>
+
+    <select id="findListByOrderId" resultMap="CustomOrderDesignMapDto">
+        select <include refid="columnDtos"/> from custom_order_design d
+        left join user u on d.designer = u.id
+        left join basecode b on b.code = d.status
+        where d.custom_order_id =#{_parameter}
+        and b.type = 'orderDesignStatus'
+    </select>
+
+    <select id="findTimeByOrderId"  resultType="java.lang.String">
+        SELECT min(created) as created
+        from custom_order_design
+        where custom_order_id = #{orderId}
+        limit 1
+    </select>
+
+    <select id="findConfirmedByOrderId" resultMap="CustomOrderDesignMap">
+        select <include refid="columns"/> from custom_order_design where custom_order_id = #{id}
+    </select>
+    <select id="findByOrderIdAndStatus" resultType="java.util.Map">
+        select
+        cod.id,cod.no,cod.end_time,u.name as designerName
+        from custom_order_design cod
+        left join user u on u.id = cod.designer
+        where cod.custom_order_id = #{orderId}
+        and cod.status = #{status}
+        limit 1
+    </select>
+
+    <select id="findListByFilter" resultMap="CustomOrderDesignMapDto">
+        select <include refid="columnDtos"/> from custom_order_design d left join user u on d.designer = u.id
+        left join custom_order o on d.custom_order_id = o.id
+        left join basecode b on b.code = d.status
+        <where><trim prefixOverrides="and">
+            b.type = 'orderDesignStatus'
+            <if test="orderNo!=null">
+                and o.no like '%${orderNo}%'
+            </if>
+            <if test="no!=null">
+                and d.no like '%${no}%'
+            </if>
+            <if test="branchId !=null">
+                and o.branch_id =#{branchId}
+            </if>
+        </trim></where>
+    </select>
+
+    <select id="findOneByProductId" resultMap="CustomOrderDesignMapDto">
+        select d.id, d.order_product_id, d.designer, d.created, d.notes, d.status, d.custom_order_id, d.start_time, d.end_time,
+               d.examine_time, d.examine_user, d.door_color, d.door_model, d.body_color, d.body_edge_size, d.ground_cabinet_h,
+               d.ground_cabinet_d, d.cabinet_h, d.cabinet_d, d.mesa, d.handle_model, d.hinge_model, d.slide_way_model, d.lightbox_floor,
+               d.led_model, d.seasoning_basket, d.hoisting_code, d.skirting, d.water_tank, d.faucet, d.other, d.name ,u.name designName,u.mobile designMobile,b.name statusName
+        from custom_order_design d left join user u on d.designer = u.id
+        left join basecode b on b.code = d.status
+        where d.order_product_id=#{orderProductId}
+    </select>
+
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.design.DesignStyleDao">
+    <resultMap id="DesignStyleMap" type="com.lwxf.industry4.webapp.domain.entity.design.DesignStyle">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="is_disabled" property="disabled" jdbcType="BIT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, is_disabled, notes
+</sql>
+    <sql id="Bcolumns">
+id, name
+</sql>
+
+    <select id="selectById" resultMap="DesignStyleMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   design_style
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DesignStyleMap">
+SELECT <include refid="columns" />
+FROM   design_style
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="disabled != null">
+    AND is_disabled = #{disabled}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+design_style(id, name, is_disabled, notes,branch_id)
+      VALUES(#{id}, #{name}, #{disabled}, #{notes},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE design_style
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('disabled') and disabled != null">
+    is_disabled = ${disabled},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   design_style
+WHERE  id = #{id}
+</delete>
+
+    <select id="findAllDesignStyle" resultMap="DesignStyleMap">
+        select
+        <include refid="columns"></include>
+        from design_style where is_disabled = 1
+    </select>
+
+    <select id="findListByFilter" resultMap="DesignStyleMap">
+        select <include refid="columns"/> from design_style
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="disabled != null">
+                AND is_disabled = #{disabled}
+            </if>
+            <if test="notes != null">
+                AND notes = #{notes}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </trim></where>
+    </select>
+
+    <select id="selectOneByName" resultMap="DesignStyleMap">
+        select <include refid="columns"/> from design_style where name = #{name} and branch_id=#{branchId}
+    </select>
+
+</mapper>

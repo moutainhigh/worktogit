@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.productattribute.ProductAttributeKeyDao">
+    <resultMap id="ProductAttributeKeyMap" type="com.lwxf.industry4.webapp.domain.entity.productattribute.ProductAttributeKey">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="attribute_name" property="attributeName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="BIT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="del_flag" property="delFlag" jdbcType="BIT" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="ProductAttributeKeyDtoMap" type="com.lwxf.industry4.webapp.domain.dto.productattribute.ProductAttributeKeyDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="attribute_name" property="attributeName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="BIT" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="updator" property="updator" jdbcType="CHAR" />
+        <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+        <result column="del_flag" property="delFlag" jdbcType="BIT" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="columns">
+id, branch_id, attribute_name, status, creator, created, updator, updated, del_flag, sort, type
+</sql>
+
+    <select id="selectById" resultMap="ProductAttributeKeyMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_attribute_key
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProductAttributeKeyMap">
+SELECT <include refid="columns" />
+FROM   product_attribute_key
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+<if test="attributeName != null">
+    AND attribute_name = #{attributeName}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="updator != null">
+    AND updator = #{updator}
+</if>
+<if test="updated != null">
+    AND updated = #{updated}
+</if>
+<if test="delFlag != null">
+    AND del_flag = #{delFlag}
+</if>
+<if test="sort != null">
+    AND sort = #{sort}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+</trim></where>
+
+</select>
+
+    <select id="findListBybranchId" resultMap="ProductAttributeKeyDtoMap">
+        SELECT <include refid="columns" />
+        FROM   product_attribute_key
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+            <if test="attributeName != null">
+                AND attribute_name like '%${attributeName}%'
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="updator != null">
+                AND updator = #{updator}
+            </if>
+            <if test="updated != null">
+                AND updated = #{updated}
+            </if>
+            <if test="delFlag != null">
+                AND del_flag = #{delFlag}
+            </if>
+            <if test="sort != null">
+                AND sort = #{sort}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </trim></where>
+      order by sort asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_attribute_key(id, branch_id, attribute_name, status, creator, created, updator, updated, del_flag, sort, type)
+               VALUES(#{id}, #{branchId}, #{attributeName}, #{status}, #{creator}, #{created}, #{updator}, #{updated}, #{delFlag}, #{sort}, #{type})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_attribute_key
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId},
+</if>
+    <if test="_parameter.containsKey('attributeName')">
+    attribute_name = #{attributeName},
+</if>
+    <if test="_parameter.containsKey('status')">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('creator')">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('updator')">
+    updator = #{updator},
+</if>
+    <if test="_parameter.containsKey('updated')">
+    updated = #{updated},
+</if>
+    <if test="_parameter.containsKey('delFlag')">
+    del_flag = #{delFlag},
+</if>
+    <if test="_parameter.containsKey('sort')">
+    sort = #{sort},
+</if>
+    <if test="_parameter.containsKey('type')">
+    type = #{type}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_attribute_key
+WHERE  id = #{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.user.UserNotifyDao">
+    <resultMap id="UserNotifyMap" type="com.lwxf.industry4.webapp.domain.entity.user.UserNotify">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="grouping" property="grouping" jdbcType="TINYINT" />
+        <result column="is_readed" property="readed" jdbcType="BIT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="top_time" property="topTime" jdbcType="TIMESTAMP" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="link_path" property="linkPath" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="sender" property="sender" jdbcType="CHAR" />
+    </resultMap>
+
+    <resultMap id="UserNotifyMapDto" type="com.lwxf.industry4.webapp.domain.dto.user.UserNotifyDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="grouping" property="grouping" jdbcType="TINYINT" />
+        <result column="is_readed" property="readed" jdbcType="BIT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="top_time" property="topTime" jdbcType="TIMESTAMP" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="link_path" property="linkPath" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="sender" property="sender" jdbcType="CHAR" />
+        <result column="userName" property="userName" jdbcType="VARCHAR" />
+        <result column="userAvatar" property="userAvatar" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <sql id="columns">
+id, company_id, user_id, grouping, is_readed, created, top_time, content, link_path, name, type, sender
+</sql>
+    <sql id="Bcolumns">
+un.id, un.user_id,u.name as userName,u.avatar as userAvatar, un.is_readed, un.created,un.content, un.link_path
+</sql>
+
+    <select id="selectAllByFilter" resultMap="UserNotifyMapDto">
+        select
+        <include refid="Bcolumns"/>
+        from user_notify un
+        left join user u on u.id = un.user_id
+        <where><trim prefixOverrides="AND">
+            <if test="userId != null">
+                un.user_id = #{userId}
+            </if>
+            <if test="readed != null">
+                AND is_readed = #{readed}
+            </if>
+        </trim></where>
+        order by is_readed asc, created desc
+    </select>
+
+
+
+    <select id="selectById" resultMap="UserNotifyMap" parameterType="String">
+        SELECT <include refid="columns" />
+        FROM   user_notify
+        WHERE  id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="UserNotifyMap">
+        SELECT <include refid="columns" />
+        FROM   user_notify
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="grouping != null">
+                AND grouping = #{grouping}
+            </if>
+            <if test="readed != null">
+                AND is_readed = #{readed}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="topTime != null">
+                AND top_time = #{topTime}
+            </if>
+            <if test="content != null">
+                AND content = #{content}
+            </if>
+            <if test="linkPath != null">
+                AND link_path = #{linkPath}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="sender != null">
+                AND sender = #{sender}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO
+user_notify(id, company_id, user_id, grouping, is_readed, created, top_time, content, link_path, name, type, sender)
+     VALUES(#{id}, #{companyId}, #{userId}, #{grouping}, #{readed}, #{created}, #{topTime}, #{content}, #{linkPath}, #{name}, #{type}, #{sender})
+</insert>
+
+    <update id="updateByMapContext">
+        UPDATE user_notify
+        <set><trim suffixOverrides=",">
+            <if test="_parameter.containsKey('readed') and readed != null">
+                is_readed = #{readed},
+            </if>
+            <if test="_parameter.containsKey('topTime') and topTime != null">
+                top_time = #{topTime},
+            </if>
+            <if test="_parameter.containsKey('content') and content != null">
+                content = #{content},
+            </if>
+            <if test="_parameter.containsKey('linkPath')">
+                link_path = #{linkPath},
+            </if>
+            <if test="_parameter.containsKey('name') and name != null">
+                name = #{name},
+            </if>
+            <if test="_parameter.containsKey('type') and type != null">
+                type = #{type},
+            </if>
+            <if test="_parameter.containsKey('sender') and sender != null">
+                sender = #{sender}
+            </if>
+        </trim></set>
+        WHERE  id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   user_notify
+WHERE  id = #{id}
+</delete>
+
+</mapper>

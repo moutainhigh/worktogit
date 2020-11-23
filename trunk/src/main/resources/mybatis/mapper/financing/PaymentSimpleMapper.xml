@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.financing.PaymentSimpleDao">
+    <resultMap id="PaymentSimpleMap" type="com.lwxf.industry4.webapp.domain.entity.financing.PaymentSimple">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="funds" property="funds" jdbcType="INTEGER" />
+        <result column="ways" property="ways" jdbcType="INTEGER" />
+        <result column="bank" property="bank" jdbcType="CHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="payment_date" property="paymentDate" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="funds_name" property="fundsName" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="CHAR" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="income_bank" property="incomeBank" jdbcType="CHAR" />
+        <result column="outcome_bank" property="outcomeBank" jdbcType="CHAR" />
+        <result column="dept_id" property="deptId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="PaymentSimpleDtoMap" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="funds" property="funds" jdbcType="INTEGER" />
+        <result column="ways" property="ways" jdbcType="INTEGER" />
+        <result column="bank" property="bank" jdbcType="INTEGER" />
+        <result column="waysName" property="waysName" jdbcType="VARCHAR" />
+        <result column="bankName" property="bankName" jdbcType="VARCHAR" />
+        <result column="incomeBankName" property="incomeBankName" jdbcType="VARCHAR" />
+        <result column="outcomeBankName" property="outcomeBankName" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+        <result column="payment_date" property="paymentDate" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="dept_id" property="deptId" jdbcType="CHAR" />
+        <collection property="paymentSimpleFundsList" column="id"
+                    select="com.lwxf.industry4.webapp.domain.dao.financing.PaymentSimpleFundsDao.selectDtoListByPid"></collection>
+    </resultMap>
+    <resultMap id="PaymentSimpleListDtoForApp" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleListDtoForApp">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="funds" property="funds" jdbcType="INTEGER" />
+        <result column="ways" property="ways" jdbcType="INTEGER" />
+        <result column="bank" property="bank" jdbcType="INTEGER" />
+        <result column="funds_name" property="fundsName" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="PaymentSimpleStatementByFunds" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleStatementByFunds">
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="funds" property="funds" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="PaymentSimpleStatementByDate" type="com.lwxf.industry4.webapp.domain.dto.financing.PaymentSimpleStatementByDate">
+        <result column="income" property="income" jdbcType="DECIMAL" />
+        <result column="outcome" property="outcome" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="columns">
+id, type, funds, amount, note, payment_date, creator, created,ways,bank,income_bank,outcome_bank,branch_id,dept_id
+</sql>
+    <sql id="columnsDto">
+     ps.id, ps.type, ps.funds,ps.bank,b.name as bankName,b1.value as waysName,ps.ways,ps.amount, ps.note, ps.payment_date, ps.creator,ps.created,ps.funds_name,u.name,ps.income_bank,ps.outcome_bank as operator_name
+</sql>
+
+    <select id="selectById" resultMap="PaymentSimpleMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   payment_simple
+WHERE  id = #{id}
+</select>
+    <select id="selectDtoById" resultMap="PaymentSimpleDtoMap" parameterType="String">
+        SELECT ps.id, ps.type, ps.funds,u.name as operatorName,bank.name as bankName,ib.name as incomeBankName,ob.name as outcomeBankName,
+        IFNULL((select value from basecode where code = ps.ways and type='payment_simple_ways'),'') as waysName,
+        ps.ways,ps.amount, ps.note, ps.payment_date, ps.creator,ps.created,ps.funds_name,u.name as operator_name
+        FROM   payment_simple ps
+        left join user u on u.id=ps.operator
+        left join bank_account bank on bank.id = ps.bank
+        left join bank_account ib on  ib.id = ps.income_bank
+        left join bank_account ob on ob.id = ps.outcome_bank
+        WHERE  ps.id = #{id}
+    </select>
+
+    <select id="selectByFilter" resultMap="PaymentSimpleMap">
+SELECT <include refid="columns" />
+FROM   payment_simple
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="funds != null">
+    AND funds = #{funds}
+</if>
+<if test="amount != null">
+    AND amount = #{amount}
+</if>
+<if test="note != null">
+    AND note = #{note}
+</if>
+<if test="paymentDate != null">
+    AND payment_date = #{paymentDate}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="branchId != null">
+    AND branchId = #{branchId}
+</if>
+</trim></where>
+
+</select>
+
+    <select id="selectDtoByFilter" resultMap="PaymentSimpleDtoMap">
+        SELECT ps.id, ps.type, ps.funds,u.name as operatorName,bank.name as bankName,ib.name as incomeBankName,ob.name as outcomeBankName,
+        IFNULL((select value from basecode where code = ps.ways and type='payment_simple_ways'),'') as waysName,
+        ps.ways,ps.amount, ps.note, ps.payment_date, ps.creator,ps.created,ps.funds_name,u.name as operator_name
+        FROM   payment_simple ps
+        left join user u on u.id=ps.operator
+        left join bank_account bank on bank.id = ps.bank
+        left join bank_account ib on  ib.id = ps.income_bank
+        left join bank_account ob on ob.id = ps.outcome_bank
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                ps.id = #{id}
+            </if>
+            <if test="type != null">
+                AND ps.type = #{type}
+            </if>
+            <if test="funds != null">
+                AND ps.funds = #{funds}
+            </if>
+            <if test="bank != null">
+                AND ps.bank = #{bank}
+            </if>
+            <if test="branchId != null">
+                AND ps.branch_id = #{branchId}
+            </if>
+            <if test="beginTime!=null and beginTime!=''">
+                <![CDATA[   and DATE_FORMAT(ps.created, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                <![CDATA[  and DATE_FORMAT(ps.created, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </trim></where>
+        order by ${order} ${sort}
+    </select>
+
+    <select id="selectDtoListByFilterForApp" resultMap="PaymentSimpleListDtoForApp">
+        SELECT  created,type,funds_name
+        FROM   payment_simple
+        <where><trim prefixOverrides="AND">
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="funds != null">
+                AND funds = #{funds}
+            </if>
+            <if test="amount != null">
+                AND amount = #{amount}
+            </if>
+            <if test="paymentDate != null">
+                AND payment_date = #{paymentDate}
+            </if>
+            <if test="created != null">
+                AND created = #{created}
+            </if>
+            <if test="branchId != null">
+                AND branchId = #{branchId}
+            </if>
+        </trim></where>
+
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+payment_simple(id, type, funds, amount, note, payment_date, creator, created,operator,ways,branch_id,bank,income_bank,outcome_bank,dept_id)
+        VALUES(#{id}, #{type}, #{funds}, #{amount}, #{note}, #{paymentDate}, #{creator}, #{created},#{operator},${ways},#{branchId},#{bank},#{incomeBank},#{outcomeBank},#{deptId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE payment_simple
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('type') and type != null">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('funds') and funds != null">
+    funds = #{funds},
+</if>
+    <if test="_parameter.containsKey('amount') and amount != null">
+    amount = #{amount},
+</if>
+<if test="_parameter.containsKey('note')">
+    note = #{note},
+</if>
+    <if test="_parameter.containsKey('paymentDate')">
+    payment_date = #{paymentDate},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   payment_simple
+WHERE  id = #{id}
+</delete>
+
+    <select id="getUserForPaymentSimple" resultType="java.util.HashMap">
+        select u.name,u.id from company_employee ce
+        left join user u on ce.user_id = u.id
+        where ce.role_id = #{roleId}
+    </select>
+
+    <select id="selectCurrentDayListByFilterForApp" resultMap="PaymentSimpleListDtoForApp">
+        SELECT  id,created,type,funds,funds_name,amount
+        FROM   payment_simple
+        where  to_days(created) = to_days(now()) order by created  desc
+    </select>
+
+    <select id="countPaymentSimpleForApp" resultType="java.util.HashMap">
+        select
+        IFNULL((select sum(da.balance) from company c ,dealer_account da where c.id=da.company_id and da.type=4),0) as balance,
+        IFNULL((select sum(amount) from payment_simple where type=1 and TO_DAYS(created)=TO_DAYS(now())),0) as income,
+        IFNULL((select sum(amount) from payment_simple where type=2 and TO_DAYS(created)=TO_DAYS(now())),0) as outlay
+    </select>
+
+    <select id="countPaymentForPageIndex" resultType="com.lwxf.mybatis.utils.MapContext">
+          select
+          ifnull((select count(*) from payment_simple where type=1 and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d') and branch_id=#{branchId}),0) as today_income_count,
+          ifnull((select sum(amount) from payment_simple where type=1 and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d') and branch_id=#{branchId}),0) as today_income_amount,
+          ifnull((select count(*) from payment_simple where type=2 and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d') and branch_id=#{branchId}),0) as today_outcome_count,
+          ifnull((select sum(amount) from payment_simple where type=2 and DATE_FORMAT(created,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d') and branch_id=#{branchId}),0) as today_outcome_amount
+    </select>
+    <select id="findFundsList" resultMap="PaymentSimpleMap">
+        select a.* from (SELECT  id,funds,funds_name,type,amount,SUM(amount) sumAmount
+        FROM   payment_simple
+        where branch_id=#{branchId} and type=#{type} and funds is not null group by funds)a where a.sumAmount>0
+    </select>
+    <select id="findCountByFundsAndDeptId" resultType="com.lwxf.mybatis.utils.MapContext">
+        SELECT  IFNULL(SUM(amount),0 )sumAmount
+                         FROM   payment_simple
+                         where dept_id=#{deptId} and type=#{type} and funds=#{funds}
+    </select>
+</mapper>

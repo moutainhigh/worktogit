@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.product.ProductCategoryDao">
+    <resultMap id="ProductCategoryMap" type="com.lwxf.industry4.webapp.domain.entity.product.ProductCategory">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="key" property="key" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+id, name, `key`, notes, type,branch_id
+</sql>
+
+    <select id="selectById" resultMap="ProductCategoryMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   product_category
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ProductCategoryMap">
+SELECT <include refid="columns" />
+FROM   product_category
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="key != null">
+    AND `key` = #{key}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+    <if test="type != null">
+        AND type = #{type}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+product_category(id, name, `key`, notes, type,branch_id)
+          VALUES(#{id}, #{name}, #{key}, #{notes}, #{type},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE product_category
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('key') and key != null">
+    `key` = #{key},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+        type = #{type}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   product_category
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findAllByBranchId" resultMap="ProductCategoryMap">
+        select <include refid="columns"/> from product_category
+        <if test="_parameter!=null">
+            where branch_id = #{_parameter}
+        </if>
+    </select>
+
+    <select id="selectProductCategoryByFilter" resultMap="ProductCategoryMap">
+        select <include refid="columns"/> from product_category
+        <where>
+            <trim prefixOverrides="AND">
+            <if test="name != null">
+                name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="key != null">
+                AND `key` = #{key}
+            </if>
+                <if test="type != null">
+                  AND  type = #{type}
+                </if>
+                <if test="branchId != null">
+                    AND  branch_id = #{branchId}
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="selectProductCategoryByName" resultMap="ProductCategoryMap">
+        select <include refid="columns"/> from product_category where name = #{name} and branch_id=#{branchId}
+    </select>
+</mapper>

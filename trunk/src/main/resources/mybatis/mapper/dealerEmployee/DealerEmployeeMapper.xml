@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.dealerEmployee.DealerEmployeeDao">
+    <resultMap id="DealerEmployeeMap" type="com.lwxf.industry4.webapp.domain.entity.dealerEmployee.DealerEmployee">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="position_type" property="positionType" jdbcType="VARCHAR" />
+        <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+        <result column="working_date" property="workingDate" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+        <result column="dealer_company_id" property="dealerCompanyId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id,name, phone, position_type, position_name, working_date, reserve1, reserve2, reserve3, reserve4,dealer_company_id
+</sql>
+
+    <select id="selectById" resultMap="DealerEmployeeMap" parameterType="Long">
+SELECT <include refid="columns" />
+FROM   dealer_employee
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DealerEmployeeMap">
+SELECT <include refid="columns" />
+FROM   dealer_employee
+<where><trim prefixOverrides="AND">
+    <if test="id != null">
+        id = #{id}
+    </if>
+<if test="name != null">
+    name = #{name}
+</if>
+<if test="phone != null">
+    AND phone = #{phone}
+</if>
+<if test="positionType != null">
+    AND position_type = #{positionType}
+</if>
+<if test="positionName != null">
+    AND position_name = #{positionName}
+</if>
+<if test="workingDate != null">
+    AND working_date = #{workingDate}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+<if test="reserve4 != null">
+    AND dealer_company_id = #{dealerCompanyId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dealer_employee(id,name, phone, position_type, position_name, working_date, reserve1, reserve2, reserve3, reserve4,dealer_company_id,created)
+         VALUES(#{id},#{name}, #{phone}, #{positionType}, #{positionName}, #{workingDate}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4},#{dealerCompanyId},now())
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE dealer_employee
+<set><trim suffixOverrides=",">
+    created = now(),
+<if test="_parameter.containsKey('name')">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('phone')">
+    phone = #{phone},
+</if>
+    <if test="_parameter.containsKey('positionType')">
+    position_type = #{positionType},
+</if>
+    <if test="_parameter.containsKey('positionName')">
+    position_name = #{positionName},
+</if>
+    <if test="_parameter.containsKey('workingDate')">
+    working_date = #{workingDate},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dealer_employee
+WHERE  id = #{id}
+</delete>
+
+</mapper>

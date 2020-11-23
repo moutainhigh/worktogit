@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.customorder.CustomOrderLogDao">
+    <resultMap id="CustomOrderLogMap" type="com.lwxf.industry4.webapp.domain.entity.customorder.CustomOrderLog">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="stage" property="stage" jdbcType="TINYINT" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+    </resultMap>
+
+    <resultMap id="CustomOrderLogMapDto" type="com.lwxf.industry4.webapp.domain.dto.customorder.CustomOrderLogDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="stage" property="stage" jdbcType="TINYINT" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="creator" property="creator" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="custom_order_id" property="customOrderId" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="columns">
+id, stage, content, creator, created, notes, custom_order_id,name,path
+</sql>
+
+    <select id="selectById" resultMap="CustomOrderLogMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   custom_order_log
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CustomOrderLogMap">
+SELECT <include refid="columns" />
+FROM   custom_order_log
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="stage != null">
+    AND stage = #{stage}
+</if>
+<if test="content != null">
+    AND content = #{content}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+    <if test="name != null">
+    AND name = #{name}
+</if>
+    <if test="path != null">
+    AND path = #{path}
+</if>
+<if test="customOrderId != null">
+    AND custom_order_id = #{customOrderId}
+</if>
+    <if test="companyId != null">
+        AND company_id = #{companyId}
+    </if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+custom_order_log(id, stage, content, creator, created, notes, custom_order_id,name,path,company_id)
+          VALUES(#{id}, #{stage}, #{content}, #{creator}, #{created}, #{notes}, #{customOrderId},#{name},#{path},#{companyId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE custom_order_log
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('stage') and stage != null">
+    stage = #{stage},
+</if>
+    <if test="_parameter.containsKey('content') and content != null">
+    content = #{content},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('name')">
+        name = #{name},
+</if>
+    <if test="_parameter.containsKey('path')">
+        path = #{path},
+</if>
+    <if test="_parameter.containsKey('customOrderId') and customOrderId != null">
+    custom_order_id = #{customOrderId}
+</if>
+    <if test="_parameter.containsKey('companyId') and companyId != null">
+        company_id = #{companyId}
+    </if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   custom_order_log
+WHERE  id = #{id}
+</delete>
+
+    <select id="findByOrderIdAndState" resultMap="CustomOrderLogMapDto">
+        select
+        col.id,u.name as creator, col.created,col.name,col.path
+        from custom_order_log col
+        left join user u on u.id = col.creator
+        WHERE
+        col.custom_order_id = #{orderId}
+        and col.stage = #{stage}
+        order by col.created desc
+    </select>
+
+    <select id="findByOrderId" resultMap="CustomOrderLogMapDto">
+        select *
+        from custom_order_log col
+        <where><trim prefixOverrides="AND">
+            <if test="stage != null">
+                AND col.stage <![CDATA[ != ]]> #{stage}
+            </if>
+            <if test="orderId != null">
+                AND col.custom_order_id = #{orderId}
+            </if>
+        </trim></where>
+        order by col.stage desc, col.created desc
+    </select>
+
+    <select id="findMessageOrderInfo" resultType="map">
+        select
+            co.no orderNo,co.id orderId,co.created orderCreated,col.content,u.name operateName,col.created operateTime,
+               cc.name,cc.community
+        from custom_order_log col
+                 left join user u on u.id = col.creator
+        left join custom_order co on col.custom_order_id = co.id
+        left join company_customer cc on co.customer_id=cc.id
+        WHERE
+           col.company_id=#{companyId}
+        order by col.created desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.org.DeptMemberDao">
+    <resultMap id="DeptMemberMap" type="com.lwxf.industry4.webapp.domain.entity.org.DeptMember">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="dept_id" property="deptId" jdbcType="CHAR" />
+        <result column="employee_id" property="employeeId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="CompanyEmployeeDtoMap" type="com.lwxf.industry4.webapp.domain.dto.companyEmployee.CompanyEmployeeDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="CHAR" />
+        <result column="userName" property="userName" jdbcType="CHAR" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="roleName" property="roleName" jdbcType="CHAR" />
+        <result column="birthday" property="birthday"/>
+        <result column="email" property="email"/>
+    </resultMap>
+    <resultMap id="EmployeeDeptDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeDeptDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_id" property="companyId" jdbcType="CHAR" />
+        <result column="user_id" property="userId" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="no" property="no" jdbcType="CHAR" />
+        <result column="userName" property="userName" jdbcType="CHAR" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="roleName" property="roleName" jdbcType="CHAR" />
+        <result column="birthday" property="birthday"/>
+        <result column="email" property="email"/>
+    </resultMap>
+    <sql id="columns">
+id, dept_id, employee_id
+</sql>
+    <sql id="companyEmployeeColumns">
+dp.id, dp.company_id, dp.user_id, dp.role_id, dp.created, dp.status, dp.no,u.name userName,u.mobile mobile,dp.roleName,u.sex,u.email,u.birthday
+    </sql>
+    <select id="selectById" resultMap="DeptMemberMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   dept_member
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="DeptMemberMap">
+SELECT <include refid="columns" />
+FROM   dept_member
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="deptId != null">
+    AND dept_id = #{deptId}
+</if>
+<if test="employeeId != null">
+    AND employee_id = #{employeeId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+dept_member(id, dept_id, employee_id)
+     VALUES(#{id}, #{deptId}, #{employeeId})
+</insert>
+
+    <update id="updateByMapContext" />
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   dept_member
+WHERE  id = #{id}
+</delete>
+
+
+    <select id="findListByDeptIdAndCompanyId" resultMap="CompanyEmployeeDtoMap">
+          select <include refid="companyEmployeeColumns"/> from user u RIGHT join
+          (select dp.*,r.name roleName from role r RIGHT JOIN
+          (select ce.* from dept_member dp RIGHT join company_employee ce on dp.employee_id = ce.id
+          <where>
+              <trim prefixOverrides="AND">
+                  <if test="id!=null">
+                  dp.dept_id = #{id}
+                  </if>
+                  <if test="companyId!=null">
+                  AND ce.company_id = #{companyId}
+                  </if>
+              </trim>
+          </where>
+        ) dp
+          on r.id = dp.role_id ) dp on u.id = dp.user_id
+    </select>
+
+    <select id="selectByDeptId" resultMap="DeptMemberMap">
+        select <include refid="columns"/> from dept_member where dept_id = #{id}
+    </select>
+
+    <select id="findListByDeptIdAndNameAndCompanyId" resultMap="EmployeeDeptDtoMap">
+        select <include refid="companyEmployeeColumns"/> from user u RIGHT join
+        (select dp.*,r.name roleName from role r RIGHT JOIN
+        (select ce.* from dept_member dp RIGHT join company_employee ce on dp.employee_id = ce.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="id!=null">
+                    dp.dept_id = #{id}
+                </if>
+                <if test="companyId!=null">
+                    AND ce.company_id = #{companyId}
+                </if>
+                <if test="no!=null">
+                    AND ce.no like CONCAT('%',#{no},'%')
+                </if>
+                <if test="status!=null">
+                    AND ce.status = #{status}
+                </if>
+                <if test="roleId!=null">
+                    AND ce.role_id = #{roleId}
+                </if>
+            </trim>
+        </where>
+        ) dp
+        on r.id = dp.role_id ) dp on u.id = dp.user_id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="name!=null">
+                    u.name like CONCAT('%',#{name},'%')
+                </if>
+                <if test="mobile!=null">
+                    AND u.mobile = #{mobile}
+                </if>
+            </trim>
+        </where>
+        order by dp.created desc
+    </select>
+
+    <select id="findListByEmployeeId" resultMap="CompanyEmployeeDtoMap">
+        select <include refid="companyEmployeeColumns"/> from user u RIGHT join
+        (select dp.*,r.name roleName from role r RIGHT JOIN
+        (select ce.* from dept_member dp RIGHT join company_employee ce on dp.employee_id = ce.id
+        where ce.id = #{employeeId}
+        ) dp
+        on r.id = dp.role_id ) dp on u.id = dp.user_id
+    </select>
+
+
+    <delete id="deleteByDeptIdAndEmployeeId">
+        delete from dept_member
+        <where>
+            <trim suffixOverrides="AND">
+                <if test="id!=null">
+                    dept_id = #{id}
+                </if>
+                <if test="employeeId!=null">
+                   AND employee_id = #{employeeId}
+                </if>
+            </trim>
+        </where>
+    </delete>
+
+
+    <select id="findOneByDeptIdAndEmployeeId" resultMap="DeptMemberMap">
+        select <include refid="columns"/> from dept_member
+        where dept_id = #{id}
+        AND employee_id = #{employeeId}
+    </select>
+    <select id="findDeptMemberListByEmployeeId" resultMap="DeptMemberMap">
+        select d.id dept_id from dept d
+        where d.id in
+        (select dept_id from dept_member dm left join dept d on dm.dept_id = d.id where dm.employee_id = #{employeeId})
+        or
+        d.parent_id in
+        (select dept_id from dept_member dm left join dept d on dm.dept_id = d.id where dm.employee_id = #{employeeId})
+    </select>
+    <select id="findDeptNameByEmployeeId" resultType="string">
+        select d.name deptName
+        from dept_member dm
+        left join dept d on dm.dept_id = d.id
+        where  dm.employee_id = #{employeeId}
+    </select>
+    <select id="selectUserIdByDeptId" resultType="list">
+        select ce.user_id userId
+        from dept_member dm
+        right join company_employee ce on dm.employee_id = ce.id
+        where  dm.dept_id = #{deptId}
+    </select>
+
+    <select id="findEmployeeNameByDeptId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select u.name name,ce.user_id id
+        from dept_member dm
+                 right join company_employee ce on dm.employee_id = ce.id
+        left join user u on ce.user_id = u.id
+        where  dm.dept_id = #{deptId} and u.state = 1
+    </select>
+    <select id="findEmployeeByDeptId" resultType="com.lwxf.mybatis.utils.MapContext">
+        select u.name title,ce.user_id userId
+        from dept_member dm
+                 right join company_employee ce on dm.employee_id = ce.id
+        left join user u on ce.user_id = u.id
+        where  dm.dept_id = #{deptId} and u.state = 1
+    </select>
+    <select id="findEmployeeListGroupByDept" resultType="com.lwxf.mybatis.utils.MapContext">
+        select dt.name deptName,count(dm.id) count
+        from dept_member dm
+        left join dept dt on dm.dept_id=dt.id
+        left join company_employee ce on dm.employee_id=ce.id
+        where  ce.company_id=#{currBranchId} and ce.status='0'
+        group by dm.dept_id
+        order by count desc
+    </select>
+    <select id="findEmployeeDtoByDeptId" resultMap="CompanyEmployeeDtoMap">
+        select dp.id, dp.company_id, dp.user_id, dp.role_id, dp.created, dp.status, dp.no,u.name userName,u.mobile mobile,dp.roleName,u.sex,u.email,u.birthday,dp.companyName
+        from
+            (select dp.*,r.name roleName from role r RIGHT JOIN
+              (select ce.*,c2.name companyName from dept_member dp RIGHT join company_employee ce on dp.employee_id = ce.id
+                  left join company c2 on ce.company_id = c2.id
+                     where dp.dept_id = #{deptId}
+                       ) dp
+                         on r.id = dp.role_id ) dp
+                left join user u
+                          on u.id = dp.user_id
+    </select>
+
+    <select id="findEmployeeDtoByDeptIdAndRoleId" resultMap="CompanyEmployeeDtoMap">
+        select dp.id, dp.company_id, dp.user_id, dp.role_id, dp.created, dp.status, dp.no,u.name userName,u.mobile mobile,dp.roleName,u.sex,u.email,u.birthday,dp.companyName
+        from
+            (select dp.*,r.name roleName from role r RIGHT JOIN
+                (select ce.*,c2.name companyName from dept_member dp RIGHT join company_employee ce on dp.employee_id = ce.id
+                   left join company c2 on ce.company_id = c2.id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="deptId!=null">
+                    dp.dept_id=#{deptId}
+                </if>
+            </trim>
+        </where>
+                          ) dp
+                           on r.id = dp.role_id
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="receiverRole!=null">
+                    AND r.id = #{receiverRole}
+                </if>
+                <if test="placeOrderRole!=null">
+                    AND r.id = #{placeOrderRole}
+                </if>
+            </trim>
+        </where>) dp
+                left join user u
+                          on u.id = dp.user_id
+    </select>
+</mapper>

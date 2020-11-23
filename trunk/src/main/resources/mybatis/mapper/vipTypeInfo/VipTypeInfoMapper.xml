@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.vipTypeInfo.VipTypeInfoDao">
+    <resultMap id="VipTypeInfoMap" type="com.lwxf.industry4.webapp.domain.entity.vipTypeInfo.VipTypeInfo">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="vip_level" property="vipLevel" jdbcType="VARCHAR" />
+        <result column="vip_name" property="vipName" jdbcType="VARCHAR" />
+        <result column="vip_cost" property="vipCost" jdbcType="DECIMAL" />
+        <result column="vip_use_limit" property="vipUseLimit" jdbcType="INTEGER" />
+        <result column="vip_discount_ratio" property="vipDiscountRatio" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, vip_level, vip_name, vip_cost, vip_use_limit, vip_discount_ratio, update_time, insert_time, reserve1, reserve2, reserve3, reserve4
+</sql>
+
+    <select id="selectById" resultMap="VipTypeInfoMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   vip_type_info
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="VipTypeInfoMap">
+SELECT <include refid="columns" />
+FROM   vip_type_info
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="vipLevel != null">
+    AND vip_level = #{vipLevel}
+</if>
+<if test="vipName != null">
+    AND vip_name = #{vipName}
+</if>
+<if test="vipCost != null">
+    AND vip_cost = #{vipCost}
+</if>
+<if test="vipUseLimit != null">
+    AND vip_use_limit = #{vipUseLimit}
+</if>
+<if test="vipDiscountRatio != null">
+    AND vip_discount_ratio = #{vipDiscountRatio}
+</if>
+<if test="updateTime != null">
+    AND update_time = #{updateTime}
+</if>
+<if test="insertTime != null">
+    AND insert_time = #{insertTime}
+</if>
+<if test="reserve1 != null">
+    AND reserve1 = #{reserve1}
+</if>
+<if test="reserve2 != null">
+    AND reserve2 = #{reserve2}
+</if>
+<if test="reserve3 != null">
+    AND reserve3 = #{reserve3}
+</if>
+<if test="reserve4 != null">
+    AND reserve4 = #{reserve4}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+vip_type_info(id, vip_level, vip_name, vip_cost, vip_use_limit, vip_discount_ratio, update_time, insert_time, reserve1, reserve2, reserve3, reserve4)
+       VALUES(#{id}, #{vipLevel}, #{vipName}, #{vipCost}, #{vipUseLimit}, #{vipDiscountRatio}, #{updateTime}, #{insertTime}, #{reserve1}, #{reserve2}, #{reserve3}, #{reserve4})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE vip_type_info
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('vipLevel')">
+    vip_level = #{vipLevel},
+</if>
+    <if test="_parameter.containsKey('vipName')">
+    vip_name = #{vipName},
+</if>
+    <if test="_parameter.containsKey('vipCost')">
+    vip_cost = #{vipCost},
+</if>
+    <if test="_parameter.containsKey('vipUseLimit')">
+    vip_use_limit = #{vipUseLimit},
+</if>
+    <if test="_parameter.containsKey('vipDiscountRatio')">
+    vip_discount_ratio = #{vipDiscountRatio},
+</if>
+    <if test="_parameter.containsKey('updateTime')">
+    update_time = #{updateTime},
+</if>
+    <if test="_parameter.containsKey('insertTime')">
+    insert_time = #{insertTime},
+</if>
+    <if test="_parameter.containsKey('reserve1')">
+    reserve1 = #{reserve1},
+</if>
+    <if test="_parameter.containsKey('reserve2')">
+    reserve2 = #{reserve2},
+</if>
+    <if test="_parameter.containsKey('reserve3')">
+    reserve3 = #{reserve3},
+</if>
+    <if test="_parameter.containsKey('reserve4')">
+    reserve4 = #{reserve4}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   vip_type_info
+WHERE  id = #{id}
+</delete>
+
+</mapper>

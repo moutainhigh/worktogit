@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.EmployeeEducationExperienceDao">
+    <resultMap id="EmployeeEducationExperienceMap" type="com.lwxf.industry4.webapp.domain.entity.company.EmployeeEducationExperience">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="TINYINT" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="curriculum" property="curriculum" jdbcType="VARCHAR" />
+        <result column="achievement" property="achievement" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="EmployeeEducationExperienceDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dept.EmployeeEducationExperienceDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="company_employee_id" property="companyEmployeeId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="TINYINT" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="curriculum" property="curriculum" jdbcType="VARCHAR" />
+        <result column="achievement" property="achievement" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, company_employee_id, name, level, major, start_time, end_time, curriculum, achievement
+</sql>
+
+    <select id="selectById" resultMap="EmployeeEducationExperienceMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   employee_education_experience
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="EmployeeEducationExperienceMap">
+SELECT <include refid="columns" />
+FROM   employee_education_experience
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="companyEmployeeId != null">
+    AND company_employee_id = #{companyEmployeeId}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="level != null">
+    AND level = #{level}
+</if>
+<if test="major != null">
+    AND major = #{major}
+</if>
+<if test="startTime != null">
+    AND start_time = #{startTime}
+</if>
+<if test="endTime != null">
+    AND end_time = #{endTime}
+</if>
+<if test="curriculum != null">
+    AND curriculum = #{curriculum}
+</if>
+<if test="achievement != null">
+    AND achievement = #{achievement}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+employee_education_experience(id, company_employee_id, name, level, major, start_time, end_time, curriculum, achievement)
+                       VALUES(#{id}, #{companyEmployeeId}, #{name}, #{level}, #{major}, #{startTime}, #{endTime}, #{curriculum}, #{achievement})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE employee_education_experience
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('level') and level != null">
+    level = #{level},
+</if>
+    <if test="_parameter.containsKey('major')">
+    major = #{major},
+</if>
+    <if test="_parameter.containsKey('startTime')">
+    start_time = #{startTime},
+</if>
+    <if test="_parameter.containsKey('endTime')">
+    end_time = #{endTime},
+</if>
+    <if test="_parameter.containsKey('curriculum')">
+    curriculum = #{curriculum},
+</if>
+    <if test="_parameter.containsKey('achievement')">
+    achievement = #{achievement}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   employee_education_experience
+WHERE  id = #{id}
+</delete>
+
+    <select id="findListByEid" resultMap="EmployeeEducationExperienceDtoMap">
+        select <include refid="columns"/> from employee_education_experience where company_employee_id = #{eid}
+    </select>
+
+</mapper>

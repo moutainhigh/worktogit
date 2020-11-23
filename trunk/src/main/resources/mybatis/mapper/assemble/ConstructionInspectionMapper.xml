@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.assemble.ConstructionInspectionDao">
+    <resultMap id="ConstructionInspectionMap" type="com.lwxf.industry4.webapp.domain.entity.assemble.ConstructionInspection">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="dispatch_list_id" property="dispatchListId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="result" property="result" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="checker" property="checker" jdbcType="CHAR" />
+        <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+        <result column="reviewer" property="reviewer" jdbcType="CHAR" />
+        <result column="review_time" property="reviewTime" jdbcType="TIMESTAMP" />
+        <result column="review_result" property="reviewResult" jdbcType="TINYINT" />
+        <result column="review_notes" property="reviewNotes" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ConstructionInspectionDtoMap" type="com.lwxf.industry4.webapp.domain.dto.dispatchList.ConstructionInspectionDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="order_id" property="orderId" jdbcType="CHAR" />
+        <result column="dispatch_list_id" property="dispatchListId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="result" property="result" jdbcType="TINYINT" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="checker" property="checker" jdbcType="CHAR" />
+        <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+        <result column="reviewer" property="reviewer" jdbcType="CHAR" />
+        <result column="review_time" property="reviewTime" jdbcType="TIMESTAMP" />
+        <result column="review_result" property="reviewResult" jdbcType="TINYINT" />
+        <result column="review_notes" property="reviewNotes" jdbcType="VARCHAR" />
+        <result column="checkerName" property="checkerName" jdbcType="VARCHAR" />
+        <result column="reviewerName" property="reviewerName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, order_id, dispatch_list_id, name, result, notes, checker, check_time, reviewer, review_time, review_result, review_notes
+</sql>
+    <sql id="columnDtos">
+        ci.id, ci.order_id, ci.dispatch_list_id, ci.name, ci.result, ci.notes, ci.checker, ci.check_time, ci.reviewer, ci.review_time, ci.review_result, ci.review_notes
+    </sql>
+
+    <select id="selectById" resultMap="ConstructionInspectionMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   construction_inspection
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ConstructionInspectionMap">
+SELECT <include refid="columns" />
+FROM   construction_inspection
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="orderId != null">
+    AND order_id = #{orderId}
+</if>
+<if test="dispatchListId != null">
+    AND dispatch_list_id = #{dispatchListId}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="result != null">
+    AND result = #{result}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="checker != null">
+    AND checker = #{checker}
+</if>
+<if test="checkTime != null">
+    AND check_time = #{checkTime}
+</if>
+<if test="reviewer != null">
+    AND reviewer = #{reviewer}
+</if>
+<if test="reviewTime != null">
+    AND review_time = #{reviewTime}
+</if>
+<if test="reviewResult != null">
+    AND review_result = #{reviewResult}
+</if>
+<if test="reviewNotes != null">
+    AND review_notes = #{reviewNotes}
+</if>
+</trim></where>
+
+</select>
+<select id="findConstructionByDispatchId" resultMap="ConstructionInspectionDtoMap">
+    select <include refid="columnDtos"/>, ci.checkerName,us.name reviewerName from (select ci.* ,u.name checkerName,u.id uid from construction_inspection ci left join  user u on ci.checker=u.id)ci
+    left join user us on ci.reviewer=us.id
+    where ci.dispatch_list_id=#{dispatchListId}
+</select>
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+construction_inspection(id, order_id, dispatch_list_id, name, result, notes, checker, check_time, reviewer, review_time, review_result, review_notes)
+                 VALUES(#{id}, #{orderId}, #{dispatchListId}, #{name}, #{result}, #{notes}, #{checker}, #{checkTime}, #{reviewer}, #{reviewTime}, #{reviewResult}, #{reviewNotes})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE construction_inspection
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('orderId') and orderId != null">
+    order_id = #{orderId},
+</if>
+    <if test="_parameter.containsKey('dispatchListId') and dispatchListId != null">
+    dispatch_list_id = #{dispatchListId},
+</if>
+    <if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('result') and result != null">
+    result = #{result},
+</if>
+    <if test="_parameter.containsKey('notes')">
+    notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('checker')">
+    checker = #{checker},
+</if>
+    <if test="_parameter.containsKey('checkTime')">
+    check_time = #{checkTime},
+</if>
+    <if test="_parameter.containsKey('reviewer')">
+    reviewer = #{reviewer},
+</if>
+    <if test="_parameter.containsKey('reviewTime')">
+    review_time = #{reviewTime},
+</if>
+    <if test="_parameter.containsKey('reviewResult')">
+    review_result = #{reviewResult},
+</if>
+    <if test="_parameter.containsKey('reviewNotes')">
+    review_notes = #{reviewNotes}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   construction_inspection
+WHERE  id = #{id}
+</delete>
+
+</mapper>

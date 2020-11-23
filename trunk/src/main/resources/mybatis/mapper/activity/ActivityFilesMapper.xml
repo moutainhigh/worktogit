@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.activity.ActivityFilesDao">
+    <resultMap id="ActivityFilesMap" type="com.lwxf.industry4.webapp.domain.entity.activity.ActivityFiles">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="activity_id" property="activityId" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="full_path" property="fullPath" jdbcType="VARCHAR" />
+        <result column="mime" property="mime" jdbcType="VARCHAR" />
+        <result column="original_mime" property="originalMime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="columns">
+id, activity_id, name, path, full_path, mime, original_mime, status, created, creator, type
+</sql>
+
+    <select id="selectById" resultMap="ActivityFilesMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   activity_files
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="ActivityFilesMap">
+SELECT <include refid="columns" />
+FROM   activity_files
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="activityId != null">
+    AND activity_id = #{activityId}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="path != null">
+    AND path = #{path}
+</if>
+<if test="fullPath != null">
+    AND full_path = #{fullPath}
+</if>
+<if test="mime != null">
+    AND mime = #{mime}
+</if>
+<if test="originalMime != null">
+    AND original_mime = #{originalMime}
+</if>
+<if test="status != null">
+    AND status = #{status}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="creator != null">
+    AND creator = #{creator}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+activity_files(id, activity_id, name, path, full_path, mime, original_mime, status, created, creator, type)
+        VALUES(#{id}, #{activityId}, #{name}, #{path}, #{fullPath}, #{mime}, #{originalMime}, #{status}, #{created}, #{creator}, #{type})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE activity_files
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('activityId') and activityId != null">
+    activity_id = #{activityId},
+</if>
+    <if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('path') and path != null">
+    path = #{path},
+</if>
+    <if test="_parameter.containsKey('fullPath') and fullPath != null">
+    full_path = #{fullPath},
+</if>
+    <if test="_parameter.containsKey('mime') and mime != null">
+    mime = #{mime},
+</if>
+    <if test="_parameter.containsKey('originalMime') and originalMime != null">
+    original_mime = #{originalMime},
+</if>
+    <if test="_parameter.containsKey('status') and status != null">
+    status = #{status},
+</if>
+    <if test="_parameter.containsKey('created') and created != null">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('creator') and creator != null">
+    creator = #{creator},
+</if>
+    <if test="_parameter.containsKey('type') and type != null">
+    type = #{type}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   activity_files
+WHERE  id = #{id}
+</delete>
+
+
+
+    <select id="findByActivityId" resultMap="ActivityFilesMap">
+        select
+        <include refid="columns"/>
+        from activity_files
+        where activity_id = #{activityId}
+
+    </select>
+
+
+
+</mapper>

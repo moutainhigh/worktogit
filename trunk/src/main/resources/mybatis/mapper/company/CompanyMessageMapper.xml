@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.company.CompanyMessageDao">
+    <resultMap id="CompanyMessageMap" type="com.lwxf.industry4.webapp.domain.entity.company.CompanyMessage">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="from_user" property="fromUser" jdbcType="CHAR" />
+        <result column="to_user" property="toUser" jdbcType="CHAR" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="direct" property="direct" jdbcType="TINYINT" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="factory_read" property="factoryRead" jdbcType="TINYINT" />
+        <result column="company_read" property="companyRead" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+    </resultMap>
+    <resultMap id="CompanyMessageDto" type="com.lwxf.industry4.webapp.domain.dto.company.CompanyMessageDto">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="from_user" property="fromUser" jdbcType="CHAR" />
+        <result column="from_user_name" property="fromUserName" jdbcType="VARCHAR" />
+        <result column="to_user" property="toUser" jdbcType="CHAR" />
+        <result column="to_user_name" property="toUserName" jdbcType="VARCHAR" />
+        <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="direct" property="direct" jdbcType="TINYINT" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="factory_read" property="factoryRead" jdbcType="TINYINT" />
+        <result column="company_read" property="companyRead" jdbcType="TINYINT" />
+        <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="created" property="created" jdbcType="TIMESTAMP" />
+        <result column="branch_id" property="branchId" jdbcType="CHAR" />
+        <result column="fromUserAvatar" property="fromUserAvatar" jdbcType="VARCHAR" />
+        <result column="toUserAvatar" property="toUserAvatar" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="columns">
+id, from_user, to_user, message, direct, type, img_url, factory_read, company_read, company_id, created, branch_id
+</sql>
+
+    <select id="selectById" resultMap="CompanyMessageMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   company_message
+WHERE  id = #{id}
+</select>
+
+    <select id="selectByFilter" resultMap="CompanyMessageMap">
+SELECT <include refid="columns" />
+FROM   company_message
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="fromUser != null">
+    AND from_user = #{fromUser}
+</if>
+<if test="toUser != null">
+    AND to_user = #{toUser}
+</if>
+<if test="message != null">
+    AND message = #{message}
+</if>
+<if test="direct != null">
+    AND direct = #{direct}
+</if>
+<if test="type != null">
+    AND type = #{type}
+</if>
+<if test="imgUrl != null">
+    AND img_url = #{imgUrl}
+</if>
+<if test="factoryRead != null">
+    AND factory_read = #{factoryRead}
+</if>
+<if test="companyRead != null">
+    AND company_read = #{companyRead}
+</if>
+<if test="companyId != null">
+    AND company_id = #{companyId}
+</if>
+<if test="created != null">
+    AND created = #{created}
+</if>
+<if test="branchId != null">
+    AND branch_id = #{branchId}
+</if>
+</trim></where>
+
+</select>
+
+    <select id="selectDtoByFilter" resultMap="CompanyMessageDto">
+      select c.* from( SELECT cm.*,sender.name as from_user_name,reciver.name as to_user_name,city.name as
+        city_name,c.name as company_name,sender.avatar as fromUserAvatar,reciver.avatar as toUserAvatar
+        FROM company_message cm
+        left join user sender on cm.from_user=sender.id
+        left join user reciver on cm.to_user=reciver.id
+        left join company c on cm.company_id = c.id
+        left join city_area city on c.city_area_id=city.id
+        <where><trim prefixOverrides="AND">
+            <if test="id != null">
+                cm.id = #{id}
+            </if>
+            <if test="fromUser != null">
+                AND cm.from_user = #{fromUser}
+            </if>
+            <if test="toUser != null">
+                AND cm.to_user = #{toUser}
+            </if>
+            <if test="message != null">
+                AND cm.message = #{message}
+            </if>
+            <if test="direct != null">
+                AND cm.direct = #{direct}
+            </if>
+            <if test="type != null">
+                AND cm.type = #{type}
+            </if>
+            <if test="imgUrl != null">
+                AND cm.img_url = #{imgUrl}
+            </if>
+            <if test="factoryRead != null">
+                AND cm.factory_read = #{factoryRead}
+            </if>
+            <if test="companyRead != null">
+                AND cm.company_read = #{companyRead}
+            </if>
+            <if test="companyId != null">
+                AND cm.company_id = #{companyId}
+            </if>
+            <if test="created != null">
+                AND cm.created = #{created}
+            </if>
+            <if test="branchId != null">
+                AND cm.branch_id = #{branchId}
+            </if>
+        </trim></where>
+    ORDER BY cm.created desc limit 1000000
+    )c
+group by c.branch_id,c.company_id
+    </select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+company_message(id, from_user, to_user, message, direct, type, img_url, factory_read, company_read, company_id, created, branch_id)
+         VALUES(#{id}, #{fromUser}, #{toUser}, #{message}, #{direct}, #{type}, #{imgUrl}, #{factoryRead}, #{companyRead}, #{companyId}, #{created}, #{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE company_message
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('fromUser')">
+    from_user = #{fromUser},
+</if>
+    <if test="_parameter.containsKey('toUser')">
+    to_user = #{toUser},
+</if>
+    <if test="_parameter.containsKey('message')">
+    message = #{message},
+</if>
+    <if test="_parameter.containsKey('direct')">
+    direct = #{direct},
+</if>
+    <if test="_parameter.containsKey('type')">
+    type = #{type},
+</if>
+    <if test="_parameter.containsKey('imgUrl')">
+    img_url = #{imgUrl},
+</if>
+    <if test="_parameter.containsKey('factoryRead')">
+    factory_read = #{factoryRead},
+</if>
+    <if test="_parameter.containsKey('companyRead')">
+    company_read = #{companyRead},
+</if>
+    <if test="_parameter.containsKey('companyId')">
+    company_id = #{companyId},
+</if>
+    <if test="_parameter.containsKey('created')">
+    created = #{created},
+</if>
+    <if test="_parameter.containsKey('branchId')">
+    branch_id = #{branchId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   company_message
+WHERE  id = #{id}
+</delete>
+
+    <select id="findMessagesByFromuser" resultMap="CompanyMessageDto">
+        SELECT cm.*,sender.name as from_user_name,reciver.name as to_user_name,city.name as
+        city_name,c.name as company_name,sender.avatar as fromUserAvatar,reciver.avatar as toUserAvatar
+        FROM company_message cm
+        left join user sender on cm.from_user=sender.id
+        left join user reciver on cm.to_user=reciver.id
+        left join company c on cm.company_id = c.id
+        left join city_area city on c.city_area_id=city.id
+        <where><trim prefixOverrides="AND">
+            <if test="branchId != null">
+                AND cm.branch_id = #{branchId}
+            </if>
+            <if test="companyId != null">
+                AND cm.company_id = #{companyId}
+            </if>
+        </trim></where>
+        ORDER BY cm.created asc
+
+    </select>
+
+</mapper>

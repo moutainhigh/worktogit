@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lwxf.industry4.webapp.domain.dao.contentmng.ContentsTypeDao">
+    <resultMap id="ContentsTypeMap" type="com.lwxf.industry4.webapp.domain.entity.contentmng.ContentsType">
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="notes" property="notes" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="CHAR" />
+        <result column="parent_id" property="parentId" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="columns">
+  id, name, notes, code, parent_id
+</sql>
+
+    <select id="selectById" resultMap="ContentsTypeMap" parameterType="String">
+SELECT <include refid="columns" />
+FROM   contents_type
+WHERE  id = #{id}
+</select>
+    <select id="findContentsTypeListByBranchId" resultMap="ContentsTypeMap">
+        SELECT <include refid="columns" />
+        FROM   contents_type where branch_id = #{branchId}
+    </select>
+    <select id="findContentsListByCode" resultMap="ContentsTypeMap">
+        SELECT <include refid="columns" />
+        from contents_type
+        <if test="_parameter!= null and _parameter!= ''">
+            WHERE  code=#{code}
+        </if>
+
+    </select>
+
+    <select id="selectByFilter" resultMap="ContentsTypeMap">
+SELECT <include refid="columns" />
+FROM   contents_type
+<where><trim prefixOverrides="AND">
+<if test="id != null">
+    id = #{id}
+</if>
+<if test="name != null">
+    AND name = #{name}
+</if>
+<if test="notes != null">
+    AND notes = #{notes}
+</if>
+<if test="code != null">
+    AND code = #{code}
+</if>
+<if test="parentId != null">
+    AND parent_id = #{parentId}
+</if>
+</trim></where>
+
+</select>
+
+    <insert id="insert" useGeneratedKeys="false">
+INSERT INTO 
+contents_type(id, name, notes, code, parent_id,branch_id)
+       VALUES(#{id}, #{name}, #{notes}, #{code}, #{parentId},#{branchId})
+</insert>
+
+    <update id="updateByMapContext">
+UPDATE contents_type
+<set><trim suffixOverrides=",">
+<if test="_parameter.containsKey('name') and name != null">
+    name = #{name},
+</if>
+    <if test="_parameter.containsKey('notes')">
+        notes = #{notes},
+</if>
+    <if test="_parameter.containsKey('code') and code != null">
+    code = #{code},
+</if>
+    <if test="_parameter.containsKey('parentId')">
+    parent_id = #{parentId}
+</if>
+</trim></set>
+WHERE  id = #{id}
+</update>
+
+    <delete id="deleteById" parameterType="String">
+DELETE FROM   contents_type
+WHERE  id = #{id}
+</delete>
+
+
+</mapper>
